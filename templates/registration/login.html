@@ -1,7 +1,30 @@
 <!-- templates/registration/login.html -->
- <h2>Login</h2>
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block style %}
+{#<link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">#}
+   {% endblock %}
+{% block content %}
  <form method="post">
  {% csrf_token %}
- {{ form.as_p }}
- <button type="submit">Login</button>
+
+ <div class="container">
+  <div class="vertical-center">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+ <h2>Please Login</h2>
+     {% for field in form %} <!-- this for used instead of {# {{ form as p }} #} }} -->
+            <div class="fieldWrapper">
+                {{ field.errors }}<br>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <br>
+        <button id="loginBtn" type="submit">Login</button>
+  </div>
+</div>
  </form>
+{% endblock %}
+
+

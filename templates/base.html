@@ -1,5 +1,4 @@
 {% load static %}
-{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +46,10 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <a href="#" class="d-none d-sm-inline-block float-right btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+          <a href="#" class="d-none d-sm-inline-block float-right btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> &nbsp;
+          {% if user.is_authenticated %}
+                <a href="#" style="margin: 0px 15px" class="d-none d-sm-inline-block float-right btn btn-sm btn-primary shadow-sm"><i class="far fa-save fa-sm text-white-50"></i> Save Work State Report</a>
+          {% endif %}
           <div class="row">
             {% block content %}
             {% endblock %}
@@ -86,7 +88,7 @@
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
+          <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
         </div>
       </div>
     </div>

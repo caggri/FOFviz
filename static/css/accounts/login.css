@@ -1,0 +1,18 @@
+    html, body {
+        width: 100%;
+        height: 100%;
+        background: red;
+    }
+    .container {
+        height: 600px;
+        position: relative;
+        text-align: center;
+    }
+
+    .vertical-center {
+        margin: 0;
+        padding-top: 300px;
+
+        top: 50%;
+        -ms-transform: translateY(-50%);
+    }
