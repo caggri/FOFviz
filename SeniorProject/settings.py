@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'tables.apps.TablesConfig',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'channels',
-    'channels_redis'
+    'channels_redis',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -89,13 +90,15 @@ WSGI_APPLICATION = 'SeniorProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'FlowOfFundsDatabase',
-        'USER':'postgres',
-        'PASSWORD':'postgresSeniorProject123',
-        'HOST': 'localhost'
+        'ENGINE': os.environ['db_engine'],
+        'NAME': os.environ['db_name'],
+        'USER': os.environ['db_user'],
+        'PASSWORD': os.environ['db_pass'],
+        'HOST': os.environ['db_host'],
+        'PORT': os.environ['db_port'],
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
