@@ -2,7 +2,30 @@
 {% load static %}
 {% block content %}
 {% load plotly_dash %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-    {{ plot | safe }} 
+<script>
+  $(document).ready(function() {
+      $(function() {
+          $('select option:contains({{selectedSector}})').prop('selected',true);
+      });
+  });
+</script>
+    
+        <form id="select_filter_form" method="GET" action="." >
+            <div class="form-group col-md-4 float-right">
+                <label for="sectors">Sectors</label>
+                <select id="sectors" class="form-control" name="sectors" onchange="this.form.submit()" width: "100%">
+                    <option selected>Choose...</option>
+                    {% for sector in sectors %}
+                    <option value="{{ sector }}">{{ sector }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="float-left">
+            {{ plot | safe }} 
+            </div>
+        </form>
+        
 
 {% endblock %}
