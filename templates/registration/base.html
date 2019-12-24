@@ -13,6 +13,8 @@
 
   <title>FOFViz</title>
 {#  <link href="{% static 'vendor/bootstrap/' %}" rel="stylesheet" type="text/css">#}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
     <style>
 
     html, body {
@@ -29,28 +31,24 @@
 
     .vertical-center {
         margin: 0;
-        padding-top: 300px;
+        padding-top: 200px;
 
         top: 50%;
         -ms-transform: translateY(-50%);
     }
 
         #loginBtn{
-            background-color: #007bff;
-            border-color: #007bff;
             width: 10%;
-            border-radius: 10px;
-            height: 40px;
             color: white;
         }
 
-        #loginBtn:hover{
-            background-color: #006aee;
-            border-color: #006aee;
-            width: 10%;
-            height: 40px;
-            color: white;
-        }
+        {##loginBtn:hover{#}
+        {#    background-color: #006aee;#}
+        {#    border-color: #006aee;#}
+        {#    width: 10%;#}
+        {#    height: 40px;#}
+        {#    color: white;#}
+        {#}#}
     </style>
     {% block style %}
     {% endblock %}

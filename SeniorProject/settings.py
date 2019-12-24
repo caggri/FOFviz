@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'tables.apps.TablesConfig',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'channels',
-    'channels_redis'
+    'channels_redis',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
