@@ -26,8 +26,8 @@ urlpatterns = [
     path('accounts/logout', include('django.contrib.auth.urls'), name='logout'),
     path('accounts/password', include('accounts.urls'), name='password'),
     #path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('', include( 'home.urls')),
-    path('tables/', include( 'tables.urls')),
+    path('', include( 'tables.urls')),
+    path('home/', include( 'home.urls')),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 
 ]

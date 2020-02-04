@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'tables.apps.TablesConfig',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'channels',
-    'channels_redis',
-    'crispy_forms'
+    'channels_redis'
 ]
 
 MIDDLEWARE = [
@@ -80,25 +79,22 @@ WSGI_APPLICATION = 'SeniorProject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': os.environ['db_engine'],
-        'NAME': os.environ['db_name'],
-        'USER': os.environ['db_user'],
-        'PASSWORD': os.environ['db_pass'],
-        'HOST': os.environ['db_host'],
-        'PORT': os.environ['db_port'],
-    }
-}
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+     }
+ }
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'FlowOfFundsDatabase',
+#        'USER':'postgres',
+#        'PASSWORD':'postgresSeniorProject123',
+#        'HOST': 'localhost'
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
