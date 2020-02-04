@@ -7,15 +7,24 @@
 <script>
   $(document).ready(function() {
       $(function() {
-          $('select option:contains({{selectedSector}})').prop('selected',true);
+          $('#sectors option:contains({{selectedSector}})').prop('selected',true);
+          $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
       });
   });
 </script>
     
         <form id="select_filter_form" method="GET" action="." >
             <div class="form-group col-md-4 float-right">
-                <label for="sectors">Sectors</label>
+                <label for="sectors">Sectors 1</label>
                 <select id="sectors" class="form-control" name="sectors" onchange="this.form.submit()" width: "100%">
+                    <option selected>Choose...</option>
+                    {% for sector in sectors %}
+                    <option value="{{ sector }}">{{ sector }}</option>
+                    {% endfor %}
+                </select>
+                <br/><br/><br/>
+                <label for="sectors2">Sectors 2</label>
+                <select id="sectors2" class="form-control" name="sectors2" onchange="this.form.submit()" width: "100%">
                     <option selected>Choose...</option>
                     {% for sector in sectors %}
                     <option value="{{ sector }}">{{ sector }}</option>
