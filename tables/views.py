@@ -1,17 +1,26 @@
 from django.shortcuts import render
 import pandas as pd
 import os.path
+import sys
+sys.path.append("..")
+import DataRetrieve
 
 selectedTimeFrame = None
 # Create your views here.
 def table(request):
     global selectedTimeFrame
-        
-    all_data = pd.read_excel(os.path.dirname(os.path.realpath(__file__)) + '\EVDSdata.xlsx')
-    if selectedTimeFrame is None:
-        selectedTimeFrame = all_data.columns[-1]
-    else:
+   
+    path = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(path, 'EVDSdata.xlsx')
+    retriever = DataRetrieve.DataRetriever()
+    all_data = retriever.retrieve()
+    #all_data = pd.read_excel(path)
+    
+    selectedTimeFrame = all_data.columns[-1]
+    
+    if(request.GET.get('timeFrames') != None):
         selectedTimeFrame = request.GET.get('timeFrames')
+        
     assets_data = pd.DataFrame(all_data[all_data['Entry'].str.contains('__ VF.\d\D')], columns=['Entry', selectedTimeFrame])
     liabilities_data = pd.DataFrame(all_data[all_data['Entry'].str.contains('__ YF.\d\D')], columns=['Entry', selectedTimeFrame])
     assets_and_liabilities_data = pd.merge(assets_data, liabilities_data, on=assets_data.index, how='outer')

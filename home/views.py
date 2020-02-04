@@ -3,24 +3,36 @@ from plotly.offline import plot
 import plotly.graph_objects as go
 import pandas as pd
 import os.path
+from sqlalchemy import create_engine
 
 # Create your views here.
+
+def readFromDB():
+       # sqlEngine = create_engine('mysql+pymysql://newuser:CT1SEr.FtW@localhost:3306/import')
+    table_name = "records" 
+    sqlEngine = create_engine('postgresql+psycopg2://postgres:1234567890@localhost/data')
+    dbConnection = sqlEngine.connect()
+    global a 
+    a = pd.read_sql_table(table_name, dbConnection)
+    dbConnection.close()
 
 selectedSector = None
 def home(request):
     global selectedSector
-    all_data = pd.read_excel(os.path.dirname(os.path.realpath(__file__)) + '\EVDSdata.xlsx')
-    timeFrame_column_names = all_data.columns[all_data.columns.str.startswith('20')]
-    sectors =  all_data[all_data.columns[1]]
+    path = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(path, 'EVDSdata.xlsx')
+    readFromDB()
+    timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
+    sectors =  a[a.columns[1]]
 
-    if selectedSector is None:
-        selectedSector = sectors[1]
-    else:
+       
+    selectedSector = sectors[1]
+    
+    if (request.GET.get('sectors') != None):
         selectedSector = request.GET.get('sectors')
 
-    selected_data = all_data[all_data['Entry'] == selectedSector]
+    selected_data = a[a['Entry'] == selectedSector]
     selected_data.drop(selected_data.columns[[0, 1]], axis=1, inplace=True)
-    print(selected_data.iloc[0])
 
     def scatter():
         x1 = timeFrame_column_names
