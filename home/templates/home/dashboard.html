@@ -7,14 +7,19 @@
 <script>
   $(document).ready(function() {
       $(function() {
+          $('select option:contains({{selectedSector}})').prop('selected',true);
           $('#sectors option:contains({{selectedSector}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
+          $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
+          $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
       });
   });
 </script>
     
         <form id="select_filter_form" method="GET" action="." >
             <div class="form-group col-md-4 float-right">
+                <label for="sectors">Sectors</label>
+                <br>
                 <label for="sectors">Sectors 1</label>
                 <select id="sectors" class="form-control" name="sectors" onchange="this.form.submit()" width: "100%">
                     <option selected>Choose...</option>
@@ -22,7 +27,24 @@
                     <option value="{{ sector }}">{{ sector }}</option>
                     {% endfor %}
                 </select>
-                <br/><br/><br/>
+                <br>
+                <!--When page refreshed it sends the previous request again-->
+                <input type="submit" 
+                        name="addSector"
+                        value="+"
+                        class="btn btn-outline-primary" 
+                        onchange="this.form.submit()">
+                
+                <input type="submit"
+                        name="removeSector"
+                        value="-"
+                        class="btn btn-outline-primary"
+                        onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
+                <!--When page refreshed it sends the previous request again-->
+                
+                <br/><br/>
+
+                {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sectors 2</label>
                 <select id="sectors2" class="form-control" name="sectors2" onchange="this.form.submit()" width: "100%">
                     <option selected>Choose...</option>
@@ -30,11 +52,35 @@
                     <option value="{{ sector }}">{{ sector }}</option>
                     {% endfor %}
                 </select>
+                {% endif %}
+
+                <br/>
+
+                {% if 3 in counterSectorArray %}
+                <label for="sectors3">Sectors 3</label>
+                <select id="sectors3" class="form-control" name="sectors3" onchange="this.form.submit()" width: "100%">
+                    <option selected>Choose...</option>
+                    {% for sector in sectors %}
+                    <option value="{{ sector }}">{{ sector }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                
+                <br/>
+
+                {% if 4 in counterSectorArray %}
+                <label for="sectors4">Sectors 4</label>
+                <select id="sectors4" class="form-control" name="sectors4" onchange="this.form.submit()" width: "100%">
+                    <option selected>Choose...</option>
+                    {% for sector in sectors %}
+                    <option value="{{ sector }}">{{ sector }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+
             </div>
             <div class="float-left">
             {{ plot | safe }} 
             </div>
         </form>
-        
-
 {% endblock %}
