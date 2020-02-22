@@ -22,7 +22,7 @@ selectedSector3 = None
 selectedSector4 = None
 counterSector = 1
 counterSectorArray = [counterSector]
-plotTypes = ['scatter', 'groupedBarChart']
+plotTypes = ['scatter', 'dotPlot', 'lineChart', 'groupedBarChart']
 
 def home(request):
     global selectedSector
@@ -120,6 +120,133 @@ def home(request):
     #     plot_div = plot(fig, output_type='div', include_plotlyjs = False)
     #     return plot_div
 
+    def dotPlot():
+        x1 = timeFrame_column_names
+        y1 = selected_data.iloc[0]
+
+        trace = go.Scatter(
+            x=x1,
+            y=y1,
+            mode='markers'
+        )
+
+        layout = dict(
+            title='Dot Plot',
+            xaxis=dict(range=[x1, x1]),
+            yaxis=dict(range=[y1, y1])
+        )
+
+        fig = go.Figure(data=[trace], layout=layout)
+
+        if 2 in counterSectorArray:
+            x2 = timeFrame_column_names
+            y2 = selected_data_2.iloc[0]
+
+            trace = go.Scatter(
+                x=x1,
+                y=y1,
+                mode='markers',
+                name="Sector 1"
+            )
+
+            trace2 = go.Scatter(
+                x=x2,
+                y=y2,
+                mode='markers',
+                name="Sector 2"
+            )
+
+            layout = dict(
+                title='Dot Plot',
+                xaxis=dict(range=[min(min(x1),min(x2)), max(max(x1),max(x2))]),
+                yaxis=dict(range=[min(min(y1),min(y2)), max(max(y1),max(y2))])
+            )
+
+            fig = go.Figure(data=[trace, trace2], layout=layout)
+
+        plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+        return plot_div
+       
+    def lineChart():
+        x1 = timeFrame_column_names
+        y1 = selected_data.iloc[0]
+
+        trace = go.Line(
+            x=x1,
+            y=y1
+        )
+
+        layout = dict(
+            title='Line Chart Plot',
+            xaxis=dict(range=[x1, x1]),
+            yaxis=dict(range=[y1, y1])
+        )
+
+        fig = go.Figure(data=[trace], layout=layout)
+
+        if 2 in counterSectorArray:
+            x2 = timeFrame_column_names
+            y2 = selected_data_2.iloc[0]
+
+            trace = go.Line(
+                x=x1,
+                y=y1,
+                name="Sector 1"
+            )
+
+            trace2 = go.Line(
+                x=x2,
+                y=y2,
+                name="Sector 2"
+            )
+
+            layout = dict(
+                title='Line Chart Plot',
+                xaxis=dict(range=[min(min(x1),min(x2)), max(max(x1),max(x2))]),
+                yaxis=dict(range=[min(min(y1),min(y2)), max(max(y1),max(y2))])
+            )
+
+            fig = go.Figure(data=[trace, trace2], layout=layout)
+
+        if 3 in counterSectorArray:
+            x3 = timeFrame_column_names
+            y3 = selected_data_3.iloc[0]
+
+            trace3 = go.Line(
+                x=x3,
+                y=y3,
+                name="Sector 3"
+            )
+
+            layout = dict(
+                title='Line Chart Plot',
+                xaxis=dict(range=[min(min(x1),min(x2),min(x3)), max(max(x1),max(x2),max(x3))]),
+                yaxis=dict(range=[min(min(y1),min(y2),min(y3)), max(max(y1),max(y2),max(y3))])
+            )
+
+            fig = go.Figure(data=[trace, trace2, trace3], layout=layout)
+
+        if 4 in counterSectorArray:
+            x4 = timeFrame_column_names
+            y4 = selected_data_4.iloc[0]
+
+            trace4 = go.Line(
+                x=x4,
+                y=y4,
+                name="Sector 4"
+            )
+
+            layout = dict(
+                title='Line Chart Plot',
+                xaxis=dict(range=[min(min(x1),min(x2),min(x3),min(x4)), max(max(x1),max(x2),max(x3),max(x4))]),
+                yaxis=dict(range=[min(min(y1),min(y2),min(y3),min(y4)), max(max(y1),max(y2),max(y3),max(y4))])
+            )
+
+            fig = go.Figure(data=[trace, trace2, trace3, trace4], layout=layout)
+
+        plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+        return plot_div
+
     def groupedBarChart():
         x1 = timeFrame_column_names
         y1 = selected_data.iloc[0]
@@ -201,7 +328,7 @@ def home(request):
         return plot_div
 
     context = {
-        'plot': groupedBarChart(),
+        'plot': lineChart(),
         'sectors': sectors,
         'selectedSector': selectedSector,
         'selectedSector2': selectedSector2,
