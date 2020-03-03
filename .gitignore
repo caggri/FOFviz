@@ -1,5 +1,10 @@
 venv
-
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 # Created by https://www.gitignore.io/api/node,react,python,django,pycharm
 # Edit at https://www.gitignore.io/?templates=node,react,python,django,pycharm
 
