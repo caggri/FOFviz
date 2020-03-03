@@ -1,0 +1,86 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+{% load static %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>FOFViz</title>
+{#  <link href="{% static 'vendor/bootstrap/' %}" rel="stylesheet" type="text/css">#}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <style>
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        background: #f5f5f5;
+
+    }
+    .container {
+        height: 600px;
+        position: relative;
+        text-align: center;
+    }
+
+    .vertical-center {
+        margin: 0;
+        padding-top: 200px;
+
+        top: 50%;
+        -ms-transform: translateY(-50%);
+    }
+
+        #loginBtn{
+            width: 10%;
+            color: white;
+        }
+
+        {##loginBtn:hover{#}
+        {#    background-color: #006aee;#}
+        {#    border-color: #006aee;#}
+        {#    width: 10%;#}
+        {#    height: 40px;#}
+        {#    color: white;#}
+        {#}#}
+    </style>
+    {% block style %}
+    {% endblock %}
+     <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <!-- Custom styles for this template-->
+    <link href="{% static 'css/accounts/login.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+<body id="page-top">
+{% block content %}
+{% endblock %}
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+      <!-- Footer -->
+
+
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  <!-- End of Page Wrapper -->
+
+
+  <!-- Logout Modal-->
+
+
+
+
+</body>
+
+</html>

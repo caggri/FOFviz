@@ -120,6 +120,15 @@ def home(request):
     #     plot_div = plot(fig, output_type='div', include_plotlyjs = False)
     #     return plot_div
 
+    def candleStick():
+        x1 = timeFrame_column_names
+        y1 = selected_data.iloc[0]
+        print("Hej hej:", y1[0], y1[1])
+
+
+
+
+
     def dotPlot():
         x1 = timeFrame_column_names
         y1 = selected_data.iloc[0]
@@ -330,7 +339,7 @@ def home(request):
         return plot_div
 
     context = {
-        'plot': groupedBarChart(),
+        'plot': candleStick(),
         'sectors': sectors,
         'selectedSector': selectedSector,
         'selectedSector2': selectedSector2,

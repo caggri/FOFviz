@@ -1,0 +1,43 @@
+<!-- templates/registration/login.html -->
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block style %}
+
+{% if user.is_authenticated %}
+<meta http-equiv="refresh" content="2;url=/" />
+{% endif %}
+
+{#<link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">#}
+   {% endblock %}
+{% block content %}
+ <form method="post">
+ {% csrf_token %}
+
+ <div class="container">
+  <div class="vertical-center">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+{% if user.is_authenticated %}
+     <h2>You already logged in</h2>
+    <h4>Redirected in 2 seconds</h4>
+
+    {% else %}
+ <h2>Please Login</h2>
+     {% for field in form %} <!-- this for used instead of {# {{ form as p }} #} }} -->
+            <div class="fieldWrapper">
+                {{ field.errors }}<br>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <br>
+        <button id="loginBtn" type="submit" class="btn btn-primary" type="submit">Login</button>
+        <br>
+    <a href="{% url 'signup' %}">Signup</a>
+  {% endif %}
+  </div>
+</div>
+ </form>
+{% endblock %}
+
+
