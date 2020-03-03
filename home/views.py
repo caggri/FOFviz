@@ -4,6 +4,9 @@ import plotly.graph_objects as go
 import pandas as pd
 import os.path
 from sqlalchemy import create_engine
+import sys
+sys.path.append("..")
+import DataRetrieve
 
 
 # Create your views here.
@@ -27,6 +30,9 @@ counterSectorArray = [counterSector]
 plotTypes = ['Scatter', 'Grouped Bar Chart', 'Dot Plot', 'Line Chart']
 plotMap = {plotTypes[0]: 'scatter()', plotTypes[1]: 'groupedBarChart()', plotTypes[2]: 'dotPlot()', plotTypes[3]: 'lineChart()'}
 
+global a
+retriever = DataRetrieve.DataRetriever("records")
+a = retriever.retrieve()
 
 def home(request):
     global selectedSector
@@ -45,9 +51,6 @@ def home(request):
             counterSector = counterSector - 1
             counterSectorArray.pop()
 
-    path = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(path, 'EVDSdata.xlsx')
-    readFromDB()
     timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
     sectors = a[a.columns[1]]
 

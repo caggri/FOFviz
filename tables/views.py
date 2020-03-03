@@ -7,13 +7,17 @@ import DataRetrieve
 
 selectedTimeFrame = None
 # Create your views here.
+
+global all_data
+retriever = DataRetrieve.DataRetriever("records")
+all_data = retriever.retrieve()
+
 def table(request):
     global selectedTimeFrame
    
     path = os.path.dirname(os.path.realpath(__file__))
     path = os.path.join(path, 'EVDSdata.xlsx')
-    retriever = DataRetrieve.DataRetriever()
-    all_data = retriever.retrieve()
+  
     #all_data = pd.read_excel(path)
     
     selectedTimeFrame = all_data.columns[-1]
