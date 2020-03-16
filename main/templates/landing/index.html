@@ -1,0 +1,588 @@
+{% load static %} {% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="{% static 'landing/assets/css/style.css' %}" rel="stylesheet" />
+    <style></style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>FOFviz</title>
+    <meta content="" name="descriptison" />
+    <meta content="" name="keywords" />
+
+    <!-- Favicons -->
+    <!-- <link href="assets/img/favicon.png" rel="icon" />
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" /> -->
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,400,500,600,700"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"
+    />
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/venobox/1.8.6/venobox.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.csss"
+      rel="stylesheet"
+    />
+
+    <!-- Template Main CSS File -->
+
+    <!-- =======================================================
+  * Template Name: Rapid - v2.0.0
+  * Template URL: https://bootstrapmade.com/rapid-multipurpose-bootstrap-business-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  </head>
+
+  <body>
+    <!-- ======= Header ======= -->
+    <header id="header">
+      <div class="container">
+        <div class="logo float-left">
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <h1 class="text-light">
+            <a href="#intro" class="scrollto"><span>FOFviz</span></a>
+          </h1>
+          <!-- <a href="#header" class="scrollto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a> -->
+        </div>
+
+        <nav class="main-nav float-right d-none d-lg-block">
+          <ul>
+            <li class="active"><a href="#intro">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#capabilities">Capabilities</a></li>
+            <!-- <li><a href="#portfolio">Portfolio</a></li> -->
+            <li><a href="#team">Team</a></li>
+            <li class="drop-down">
+              <a href="">Drop Down</a>
+              <ul>
+                <li><a href="#">Drop Down 1</a></li>
+                <li class="drop-down">
+                  <a href="#">Drop Down 2</a>
+                  <ul>
+                    <li><a href="#">Deep Drop Down 1</a></li>
+                    <li><a href="#">Deep Drop Down 2</a></li>
+                    <li><a href="#">Deep Drop Down 3</a></li>
+                    <li><a href="#">Deep Drop Down 4</a></li>
+                    <li><a href="#">Deep Drop Down 5</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Drop Down 3</a></li>
+                <li><a href="#">Drop Down 4</a></li>
+                <li><a href="#">Drop Down 5</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <!-- .main-nav -->
+      </div>
+    </header>
+    <!-- #header -->
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="clearfix">
+      <div class="container p-2 h-100">
+        <div
+          class="row justify-content-center align-self-center"
+          style="margin-top: 20%"
+        >
+          <div class="col-md-7 intro-info order-md-first order-last">
+            <h2>
+              Your wizard and visualizer for<br />
+              <span>Macroeconomics</span>
+            </h2>
+            <div>
+              <a href="#about" class="btn-get-started scrollto">More Info</a>
+              <a href="{% url 'table' %}" class="btn-get-started"
+                >Start Using FOFviz</a
+              >
+            </div>
+            <div></div>
+          </div>
+
+          <div class="col-md-5 intro-img order-md-last order-first">
+            <img
+              id="main-logo"
+              src="{% static 'landing/assets/img/intro-imgc.svg' %}"
+              alt=""
+              class="img-fluid"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Hero -->
+
+    <main id="main">
+      <!-- ======= About Section ======= -->
+      <section id="about" class="about">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-5 col-md-6">
+              <div class="about-img">
+                <img src="{% static 'landing/assets/img/main.png' %}" alt="" />
+              </div>
+            </div>
+
+            <div class="col-lg-7 col-md-6">
+              <div class="about-content">
+                <h2>About FOFviz</h2>
+                <h3>
+                  Senior year project
+                </h3>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+                <p>
+                  Aut dolor id. Sint aliquam consequatur ex ex labore. Et quis
+                  qui dolor nulla dolores neque. Aspernatur consectetur omnis
+                  numquam quaerat. Sed fugiat nisi. Officiis veniam molestiae.
+                  Et vel ut quidem alias veritatis repudiandae ut fugit. Est ut
+                  eligendi aspernatur nulla voluptates veniam iusto vel
+                  quisquam. Fugit ut maxime incidunt accusantium totam
+                  repellendus eum error. Et repudiandae eum iste qui et ut ab
+                  alias.
+                </p>
+                <ul>
+                  <li>
+                    <i class="ion-android-checkmark-circle"></i> Storing and
+                    retrieving data provided by Central Bank of Republic of
+                    Turkey
+                  </li>
+                  <li>
+                    <i class="ion-android-checkmark-circle"></i> Retrieve,
+                    filter and explore data by visualizing it.
+                  </li>
+                  <li>
+                    <i class="ion-android-checkmark-circle"></i>Perform some key
+                    ratio and index calculations
+                  </li>
+                  <li>
+                    <i class="ion-android-checkmark-circle"></i>
+                    Perform scenario, sensitivity and statistical stress testing
+                    for financial stability analysis.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End About Section -->
+
+      <!-- ======= Capabilities Section ======= -->
+      <section id="capabilities" class="capabilities section-bg">
+        <div class="container">
+          <header class="section-header">
+            <h3>Capabilities</h3>
+            <p>
+              Laudem latine persequeris id sed, ex fabulas delectus quo. No vel
+              partiendo abhorreant vituperatoribus.
+            </p>
+          </header>
+
+          <div class="row">
+            <div
+              class="col-md-6 col-lg-4 wow bounceInUp"
+              data-wow-duration="1.4s"
+            >
+              <div class="box">
+                <div class="icon" style="background: #fceef3;">
+                  <i
+                    class="ion-ios-analytics-outline"
+                    style="color: #ff689b;"
+                  ></i>
+                </div>
+                <h4 class="title"><a href="">Data Virtualization</a></h4>
+                <p class="description">
+                  Voluptatum deleniti atque corrupti quos dolores et quas
+                  molestias excepturi sint occaecati cupiditate non provident
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="col-md-6 col-lg-4 wow bounceInUp"
+              data-wow-delay="0.1s"
+              data-wow-duration="1.4s"
+            >
+              <div class="box">
+                <div class="icon" style="background: #e6fdfc;">
+                  <i class="ion-ios-paper-outline" style="color: #3fcdc7;"></i>
+                </div>
+                <h4 class="title"><a href="">Data Display</a></h4>
+                <p class="description">
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse
+                  cillum dolore eu fugiat nulla pariatur
+                </p>
+              </div>
+            </div>
+            <div
+              class="col-md-6 col-lg-4 wow bounceInUp"
+              data-wow-delay="0.1s"
+              data-wow-duration="1.4s"
+            >
+              <div class="box">
+                <div class="icon" style="background: #eafde7;">
+                  <i
+                    class="ion-ios-speedometer-outline"
+                    style="color:#41cf2e;"
+                  ></i>
+                </div>
+                <h4 class="title"><a href="">Macroeconomic Tests</a></h4>
+                <p class="description">
+                  Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                  qui officia deserunt mollit anim id est laborum
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Services Section -->
+
+      <!-- ======= Features Section ======= -->
+      <section id="features" class="features">
+        <div class="container">
+          <div class="row feature-item"></div>
+
+          <div class="row feature-item mt-5 pt-5">
+            <div class="col-lg-6 wow fadeInUp order-1 order-lg-2">
+              <img
+                src="{% static 'landing/assets/img/feat.svg' %}"
+                class="img-fluid"
+                alt=""
+              />
+            </div>
+
+            <div class="col-lg-6 wow fadeInUp pt-4 pt-lg-0 order-2 order-lg-1">
+              <h4>
+                Neque saepe temporibus repellat ea ipsum et. Id vel et quia
+                tempora facere reprehenderit.
+              </h4>
+              <p>
+                Delectus alias ut incidunt delectus nam placeat in consequatur.
+                Sed cupiditate quia ea quis. Voluptas nemo qui aut distinctio.
+                Cumque fugit earum est quam officiis numquam. Ducimus corporis
+                autem at blanditiis beatae incidunt sunt.
+              </p>
+              <p>
+                Voluptas saepe natus quidem blanditiis. Non sunt impedit
+                voluptas mollitia beatae. Qui esse molestias. Laudantium libero
+                nisi vitae debitis. Dolorem cupiditate est perferendis iusto.
+              </p>
+              <p>
+                Eum quia in. Magni quas ipsum a. Quis ex voluptatem inventore
+                sint quia modi. Numquam est aut fuga mollitia exercitationem nam
+                accusantium provident quia.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Features Section -->
+
+      <!-- ======= Team Section ======= -->
+      <section id="team" class="team section-bg">
+        <div class="container">
+          <div class="section-header">
+            <h3>Team</h3>
+            <p>
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+              accusantium doloremque
+            </p>
+          </div>
+          <div class="col-md-8"></div>
+
+          <div
+            class="col-md-6 wow fadeInUp"
+            style="margin: 0 auto;"
+            data-wow-delay="0.1s"
+          >
+            <div class="member">
+              <img
+                src="{% static 'landing/assets/img/team-5.jpg' %}"
+                class="img-fluid"
+                alt=""
+              />
+              <div class="member-info">
+                <div class="member-info-content">
+                  <h4>Seyid Amjad Ali</h4>
+                  <span>Yoda</span>
+                  <div class="social">
+                    <!-- <a href=""><i class="fa fa-twitter"></i></a>
+                    <a href=""><i class="fa fa-facebook"></i></a>
+                    <a href=""><i class="fa fa-google-plus"></i></a>
+                    <a href=""><i class="fa fa-linkedin"></i></a> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3"></div>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-6 wow fadeInUp">
+              <div class="member">
+                <img
+                  src="{% static 'landing/assets/img/team-1.jpg' %}"
+                  class="img-fluid"
+                  alt=""
+                />
+                <div class="member-info">
+                  <div class="member-info-content">
+                    <h4>Çağrı Bayram</h4>
+                    <span>Qui-Gon Jinn</span>
+                    <div class="social">
+                      <!-- <a href=""><i class="fa fa-twitter"></i></a>
+                      <a href=""><i class="fa fa-facebook"></i></a>
+                      <a href=""><i class="fa fa-google-plus"></i></a>
+                      <a href=""><i class="fa fa-linkedin"></i></a> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+              <div class="member">
+                <img
+                  src="{% static 'landing/assets/img/team-2.jpg' %}"
+                  class="img-fluid"
+                  alt=""
+                />
+                <div class="member-info">
+                  <div class="member-info-content">
+                    <h4>Sümer Çetin</h4>
+                    <span>Anakin Skywalker</span>
+                    <div class="social">
+                      <!-- <a href=""><i class="fa fa-twitter"></i></a>
+                      <a href=""><i class="fa fa-facebook"></i></a>
+                      <a href=""><i class="fa fa-google-plus"></i></a>
+                      <a href=""><i class="fa fa-linkedin"></i></a> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+              <div class="member">
+                <img
+                  src="{% static 'landing/assets/img/team-3.jpg' %}"
+                  class="img-fluid"
+                  alt=""
+                />
+                <div class="member-info">
+                  <div class="member-info-content">
+                    <h4>Hassnain Ali</h4>
+                    <span>Dooku</span>
+                    <div class="social">
+                      <!-- <a href=""><i class="fa fa-twitter"></i></a>
+                      <a href=""><i class="fa fa-facebook"></i></a>
+                      <a href=""><i class="fa fa-google-plus"></i></a>
+                      <a href=""><i class="fa fa-linkedin"></i></a> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+              <div class="member">
+                <img
+                  src="{% static 'landing/assets/img/team-4.jpg' %}"
+                  class="img-fluid"
+                  alt=""
+                />
+                <div class="member-info">
+                  <div class="member-info-content">
+                    <h4>Denizhan Çetin</h4>
+                    <span>Jar Jar Binks</span>
+                    <div class="social">
+                      <!-- <a href=""><i class="fa fa-twitter"></i></a>
+                      <a href=""><i class="fa fa-facebook"></i></a>
+                      <a href=""><i class="fa fa-google-plus"></i></a>
+                      <a href=""><i class="fa fa-linkedin"></i></a> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======= F.A.Q Section ======= -->
+      <section id="faq" class="faq wow fadeInUp">
+        <div class="container">
+          <header class="section-header">
+            <h3>Frequently Asked Questions</h3>
+            <p>
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+              accusantium doloremque
+            </p>
+          </header>
+
+          <ul id="faq-list" class="wow fadeInUp">
+            <li>
+              <a data-toggle="collapse" class="collapsed" href="#faq1"
+                >Non consectetur a erat nam at lectus urna duis?
+                <i class="ion-android-remove"></i
+              ></a>
+              <div id="faq1" class="collapse" data-parent="#faq-list">
+                <p>
+                  Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id
+                  volutpat lacus laoreet non curabitur gravida. Venenatis lectus
+                  magna fringilla urna porttitor rhoncus dolor purus non.
+                </p>
+              </div>
+            </li>
+
+            <li>
+              <a data-toggle="collapse" href="#faq2" class="collapsed"
+                >Feugiat scelerisque varius morbi enim nunc faucibus a
+                pellentesque? <i class="ion-android-remove"></i
+              ></a>
+              <div id="faq2" class="collapse" data-parent="#faq-list">
+                <p>
+                  Dolor sit amet consectetur adipiscing elit pellentesque
+                  habitant morbi. Id interdum velit laoreet id donec ultrices.
+                  Fringilla phasellus faucibus scelerisque eleifend donec
+                  pretium. Est pellentesque elit ullamcorper dignissim. Mauris
+                  ultrices eros in cursus turpis massa tincidunt dui.
+                </p>
+              </div>
+            </li>
+
+            <li>
+              <a data-toggle="collapse" href="#faq3" class="collapsed"
+                >Dolor sit amet consectetur adipiscing elit pellentesque
+                habitant morbi? <i class="ion-android-remove"></i
+              ></a>
+              <div id="faq3" class="collapse" data-parent="#faq-list">
+                <p>
+                  Eleifend mi in nulla posuere sollicitudin aliquam ultrices
+                  sagittis orci. Faucibus pulvinar elementum integer enim. Sem
+                  nulla pharetra diam sit amet nisl suscipit. Rutrum tellus
+                  pellentesque eu tincidunt. Lectus urna duis convallis
+                  convallis tellus. Urna molestie at elementum eu facilisis sed
+                  odio morbi quis
+                </p>
+              </div>
+            </li>
+
+            <li>
+              <a data-toggle="collapse" href="#faq4" class="collapsed"
+                >Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?
+                <i class="ion-android-remove"></i
+              ></a>
+              <div id="faq4" class="collapse" data-parent="#faq-list">
+                <p>
+                  Dolor sit amet consectetur adipiscing elit pellentesque
+                  habitant morbi. Id interdum velit laoreet id donec ultrices.
+                  Fringilla phasellus faucibus scelerisque eleifend donec
+                  pretium. Est pellentesque elit ullamcorper dignissim. Mauris
+                  ultrices eros in cursus turpis massa tincidunt dui.
+                </p>
+              </div>
+            </li>
+
+            <li>
+              <a data-toggle="collapse" href="#faq5" class="collapsed"
+                >Tempus quam pellentesque nec nam aliquam sem et tortor
+                consequat? <i class="ion-android-remove"></i
+              ></a>
+              <div id="faq5" class="collapse" data-parent="#faq-list">
+                <p>
+                  Molestie a iaculis at erat pellentesque adipiscing commodo.
+                  Dignissim suspendisse in est ante in. Nunc vel risus commodo
+                  viverra maecenas accumsan. Sit amet nisl suscipit adipiscing
+                  bibendum est. Purus gravida quis blandit turpis cursus in
+                </p>
+              </div>
+            </li>
+
+            <li>
+              <a data-toggle="collapse" href="#faq6" class="collapsed"
+                >Tortor vitae purus faucibus ornare. Varius vel pharetra vel
+                turpis nunc eget lorem dolor? <i class="ion-android-remove"></i
+              ></a>
+              <div id="faq6" class="collapse" data-parent="#faq-list">
+                <p>
+                  Laoreet sit amet cursus sit amet dictum sit amet justo. Mauris
+                  vitae ultricies leo integer malesuada nunc vel. Tincidunt eget
+                  nullam non nisi est sit amet. Turpis nunc eget lorem dolor
+                  sed. Ut venenatis tellus in metus vulputate eu scelerisque.
+                  Pellentesque diam volutpat commodo sed egestas egestas
+                  fringilla phasellus faucibus. Nibh tellus molestie nunc non
+                  blandit massa enim nec.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- End F.A.Q Section -->
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="section-bg">
+      <div class="container">
+        <div class="copyright">
+          &copy; Copyright <strong>Rapid</strong>. All Rights Reserved
+        </div>
+      </div>
+    </footer>
+    <!-- End  Footer -->
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.4/countUp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/venobox/1.8.6/venobox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+    <!-- <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"></script>
+    <!-- Template Main JS File -->
+    <script src="{% static 'landing/assets/js/main.js' %}"></script>
+  </body>
+</html>
