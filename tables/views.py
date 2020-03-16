@@ -8,15 +8,13 @@ import DataRetrieve
 selectedTimeFrame = None
 # Create your views here.
 
-global all_data
-retriever = DataRetrieve.DataRetriever("records")
-all_data = retriever.retrieve()
+#this loads all of the data available, must be moved to inital page.
+load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
+
+all_data = DataRetrieve.DataRetriever.retrieveFofData()
 
 def table(request):
     global selectedTimeFrame
-   
-    path = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(path, 'EVDSdata.xlsx')
   
     #all_data = pd.read_excel(path)
     
