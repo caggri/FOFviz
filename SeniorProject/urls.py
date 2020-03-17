@@ -29,7 +29,7 @@ urlpatterns = [
     #path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('tables/', include( 'tables.urls')),
     path('home/', include( 'home.urls')),
-    path('django_plotly_dash/', include('django_plotly_dash.urls')),
+    path('django_plotly_dash/', include('django_plotly_dash.urls'))
 
 ]
 
