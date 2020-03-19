@@ -7,8 +7,7 @@
 <script>
   $(document).ready(function() {
       $(function() {
-          $('select option:contains({{selectedSector}})').prop('selected',true);
-          $('#sectors option:contains({{selectedSector}})').prop('selected',true);
+          $('#sectors option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
           $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
@@ -28,21 +27,6 @@
                     {% endfor %}
                 </select>
                 <br>
-                <!--When page refreshed it sends the previous request again-->
-                <input type="submit" 
-                        name="addSector"
-                        value="+"
-                        class="btn btn-outline-primary" 
-                        onchange="this.form.submit()">
-                
-                <input type="submit"
-                        name="removeSector"
-                        value="-"
-                        class="btn btn-outline-primary"
-                        onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
-                <!--When page refreshed it sends the previous request again-->
-                
-                <br/><br/>
 
                 {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sectors 2</label>
@@ -78,6 +62,26 @@
                 </select>
                 {% endif %}
 
+                <!--When page refreshed it sends the previous request again-->
+                <input type="submit" 
+                        name="addSector"
+                        value="+"
+                        class="btn btn-outline-primary" 
+                        onchange="this.form.submit()">
+                
+                <input type="submit"
+                        name="removeSector"
+                        value="-"
+                        class="btn btn-outline-primary"
+                        onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
+
+                <!--When page refreshed it sends the previous request again-->
+                
+                <!-- <a href="#" class="d-none d-sm-inline-block float-right btn btn-sm btn-primary shadow-sm">
+                     <i class="fas fa-download fa-sm text-white-50"></i> 
+                     Generate Report
+                </a> &nbsp; -->
+                
             </div>
             <div class="float-left">
             {{ plot | safe }} 

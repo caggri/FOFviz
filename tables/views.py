@@ -1,21 +1,31 @@
 from django.shortcuts import render
 import pandas as pd
+import numpy as np
 import os.path
 import sys
+from sklearn.svm import SVR
 sys.path.append("..")
 import DataRetrieve
+import matplotlib.pyplot as plt
 
 selectedTimeFrame = None
+
+path = os.path.dirname(os.path.realpath(__file__))
+path = os.path.join(path, 'EVDSdata.xlsx')
+#retriever = DataRetrieve.DataRetriever()
+#all_data = retriever.retrieve()
+all_data = pd.read_excel(path)
+
+dates = []
+prices = []
+
 # Create your views here.
 def table(request):
     global selectedTimeFrame
-   
-    path = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(path, 'EVDSdata.xlsx')
-    retriever = DataRetrieve.DataRetriever()
-    all_data = retriever.retrieve()
-    #all_data = pd.read_excel(path)
-    
+    global all_data
+    global dates
+    global prices
+
     selectedTimeFrame = all_data.columns[-1]
     
     if(request.GET.get('timeFrames') != None):
@@ -36,3 +46,27 @@ def table(request):
 
     return render(request, 'tables/datatable.html', context)
 
+def predict_prices(dates, prices, x):
+    dates = np.reshape(dates, (len(dates), 1))
+
+    svr_lin = SVR(kernel='linear', C=1e3)
+    svr_poly = SVR(kernel='poly', C=1e3, degree=2)
+    svr_rbf = SVR(kernel='rbf', C=1e3, gamma= 0.1)
+
+    svr_lin.fit(dates, prices)
+    svr_poly.fit(dates, prices)
+    svr_rbf.fit(dates, prices)
+    
+    plt.scatter(dates, prices, color='black', label='Data')
+    plt.plot(dates, svr_rbf.predict(dates), color='red', label='RBF model')
+    plt.plot(dates, svr_lin.predict(dates), color='green', label='Linear model')
+    plt.plot(dates, svr_poly.predict(dates), color='blue', label='Polynomial model')
+
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    plt.title('Support Vector Regression')
+    plt.legend()
+    plt.show()
+
+    return svr_rbf.predict(x)[0], svr_lin.predict(x)[0], svr_poly.predict(x)[0]
+    
