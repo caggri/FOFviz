@@ -7,81 +7,88 @@
 <script>
   $(document).ready(function() {
       $(function() {
-          $('#sectors option:contains({{selectedSector1}})').prop('selected',true);
+          $('select option:contains({{selectedSector}})').prop('selected',true);
+          $('#sectors option:contains({{selectedSector}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
           $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
+          $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
       });
+
+
   });
 </script>
     
         <form id="select_filter_form" method="GET" action="." >
             <div class="form-group col-md-4 float-right">
-                <label for="sectors">Sectors</label>
-                <br>
+                <label for="plotType">Plot type</label>
+                <select id="plotType" class="form-control" name="plots" onchange="this.form.submit()" width="100%">
+                    {% for plotType in plotTypes %}
+                    <option value="{{ plotType }}">{{ plotType }}</option>
+                    {% endfor %}
+                </select>
+
+                <br/>
                 <label for="sectors">Sectors 1</label>
-                <select id="sectors" class="form-control" name="sectors" onchange="this.form.submit()" width: "100%">
+                <select id="sectors" class="form-control" name="sectors" onchange="this.form.submit()" width="100%">
                     <option selected>Choose...</option>
                     {% for sector in sectors %}
                     <option value="{{ sector }}">{{ sector }}</option>
                     {% endfor %}
                 </select>
-                <br>
+
+                <br/>
 
                 {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sectors 2</label>
-                <select id="sectors2" class="form-control" name="sectors2" onchange="this.form.submit()" width: "100%">
+                <select id="sectors2" class="form-control" name="sectors2" onchange="this.form.submit()" width= "100%">
                     <option selected>Choose...</option>
                     {% for sector in sectors %}
                     <option value="{{ sector }}">{{ sector }}</option>
                     {% endfor %}
                 </select>
+                <br/>
                 {% endif %}
 
-                <br/>
+
 
                 {% if 3 in counterSectorArray %}
                 <label for="sectors3">Sectors 3</label>
-                <select id="sectors3" class="form-control" name="sectors3" onchange="this.form.submit()" width: "100%">
+                <select id="sectors3" class="form-control" name="sectors3" onchange="this.form.submit()" width= "100%">
                     <option selected>Choose...</option>
                     {% for sector in sectors %}
                     <option value="{{ sector }}">{{ sector }}</option>
                     {% endfor %}
                 </select>
-                {% endif %}
-                
                 <br/>
+                {% endif %}
 
                 {% if 4 in counterSectorArray %}
                 <label for="sectors4">Sectors 4</label>
-                <select id="sectors4" class="form-control" name="sectors4" onchange="this.form.submit()" width: "100%">
+                <select id="sectors4" class="form-control" name="sectors4" onchange="this.form.submit()" width= "100%">
                     <option selected>Choose...</option>
                     {% for sector in sectors %}
                     <option value="{{ sector }}">{{ sector }}</option>
                     {% endfor %}
                 </select>
+                <br/>
                 {% endif %}
 
+
                 <!--When page refreshed it sends the previous request again-->
-                <input type="submit" 
+                <input type="submit"
                         name="addSector"
                         value="+"
-                        class="btn btn-outline-primary" 
+                        class="btn btn-outline-primary"
                         onchange="this.form.submit()">
-                
+
                 <input type="submit"
                         name="removeSector"
                         value="-"
                         class="btn btn-outline-primary"
                         onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
-
                 <!--When page refreshed it sends the previous request again-->
-                
-                <!-- <a href="#" class="d-none d-sm-inline-block float-right btn btn-sm btn-primary shadow-sm">
-                     <i class="fas fa-download fa-sm text-white-50"></i> 
-                     Generate Report
-                </a> &nbsp; -->
-                
+
             </div>
             <div class="float-left">
             {{ plot | safe }} 

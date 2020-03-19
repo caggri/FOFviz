@@ -20,6 +20,12 @@ dates = []
 prices = []
 
 # Create your views here.
+
+#this loads all of the data available, must be moved to inital page.
+load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
+
+all_data = DataRetrieve.DataRetriever.retrieveFofData()
+
 def table(request):
     global selectedTimeFrame
     global all_data

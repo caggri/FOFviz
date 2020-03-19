@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'tables.apps.TablesConfig',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'channels',
-    'channels_redis'
+    'channels_redis',
+    'main'
 ]
 
 MIDDLEWARE = [
@@ -163,7 +164,8 @@ STATICFILES_LOCATION = 'static'
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'SeniorProject/static')
+    os.path.join(BASE_DIR, 'SeniorProject/static'),
+    os.path.join(BASE_DIR, 'main/static')
 ]
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
