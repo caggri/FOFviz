@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from plotly.offline import plot
 import plotly.graph_objects as go
+import plotly.express as px
 import pandas as pd
 import os.path
 from sqlalchemy import create_engine
@@ -21,7 +22,8 @@ selectedSectors = [None,None,None,None]
 selected_data = [None,None,None,None]
 counterSector = 1
 counterSectorArray = [counterSector]
-plotTypes = ['scatter', 'dotPlot', 'lineChart', 'groupedBarChart']
+plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
+
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
 path = os.path.dirname(os.path.realpath(__file__))
@@ -57,211 +59,57 @@ def home(request):
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
         selected_data[i-1].drop(selected_data[i-1].columns[[0, 1]], axis=1, inplace=True)
 
-    # def scatter():
-    #     x1 = timeFrame_column_names
-    #     y1 = selected_data[0].iloc[0]
+    def getParams(chartType):
+        if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
+            params = {'x':'years', 'y':'value','color':'variable'}
+        elif (chartType=='Alluvial Diagram'):
+            params = {'color':'value', 'color_continuous_scale':px.colors.sequential.Inferno}
+        elif (chartType == 'Heat Map'):
+            params = {'x':'years', 'y':'value'}
+        elif (chartType == 'Grouped Bar Chart'):
+            params = {'x':'years', 'y':'value','color':'variable', 'barmode':'group'} 
+        return params
 
-    #     trace = go.Scatter(
-    #         x=x1,
-    #         y=y1
-    #     )
-    #     layout = dict(
-    #         title='Line Plot',
-    #         xaxis=dict(range=[min(x1), max(x1)]),
-    #         yaxis=dict(range=[min(y1), max(y1)])
-    #     )
-    #     fig = go.Figure(data=[trace], layout=layout)
-    #     x2 = timeFrame_column_names
-    #     y2 = selected_data[1].iloc[0]
+    def drawChart(chartType):
+        x = timeFrame_column_names
+        data = {'years': x}
 
-    #     trace = go.Scatter(
-    #         x=x1,
-    #         y=y1,
-    #         name="Sector 1"
-    #     )
-
-    #     trace2= go.Scatter(
-    #         x=x2,
-    #         y=y2,
-    #         name="Sector 2"
-    #     )
-    #     layout = dict(
-    #         title='Line Plot',
-    #         xaxis=dict(range=[min(min(x1),min(x2)), max(max(x1),max(x2))]),
-    #         yaxis=dict(range=[min(min(y1),min(y2)), max(max(y1),max(y2))])
-    #     )
-    #     fig = go.Figure(data=[trace, trace2], layout=layout)
-    #     plot_div = plot(fig, output_type='div', include_plotlyjs = False)
-    #     return plot_div
-
-    def dotPlot():
-        x1 = timeFrame_column_names
-        y1 = selected_data[0].iloc[0]
-
-        trace = go.Scatter(
-            x=x1,
-            y=y1,
-            mode='markers'
-        )
-
-        layout = dict(
-            title='Dot Plot',
-            xaxis=dict(range=[x1, x1]),
-            yaxis=dict(range=[y1, y1])
-        )
-
-        fig = go.Figure(data=[trace], layout=layout)
-
-        if 2 in counterSectorArray:
-            x2 = timeFrame_column_names
-            y2 = selected_data[1].iloc[0]
-
-            trace = go.Scatter(
-                x=x1,
-                y=y1,
-                mode='markers',
-                name="Sector 1"
-            )
-
-            trace2 = go.Scatter(
-                x=x2,
-                y=y2,
-                mode='markers',
-                name="Sector 2"
-            )
-
-            layout = dict(
-                title='Dot Plot',
-                xaxis=dict(range=[min(min(x1),min(x2)), max(max(x1),max(x2))]),
-                yaxis=dict(range=[min(min(y1),min(y2)), max(max(y1),max(y2))])
-            )
-
-            fig = go.Figure(data=[trace, trace2], layout=layout)
-
-        plot_div = plot(fig, output_type='div', include_plotlyjs=False)
-        return plot_div
-       
-    def lineChart():
-        allPlotDatas = []
-        minimumsX = []
-        maximumsX = []
-        minimumsY = []
-        maximumsY = []
         for i in counterSectorArray:
-            x = timeFrame_column_names
+            sectorName = 'Sector ' + str(i)
             y = selected_data[i-1].iloc[0]
-            minimumsX.append(min(x))
-            maximumsX.append(max(x))
-            minimumsY.append(min(y))
-            maximumsY.append(max(y))
+            data[sectorName] = y
 
-            trace = go.Line(
-                x=x,
-                y=y,
-                name = "sector " + str(i)
+        df= (pd.DataFrame.from_dict(data,orient='index').transpose()).melt(id_vars="years")
+
+        params = getParams(chartType)        
+
+        fig = getattr(px, plotDictionary[chartType])(
+                df,
+                **params
             )
-
-            allPlotDatas.append(trace)
-
-        layout = dict(
-            title='Line Chart Plot',
-            xaxis=dict(range=[min(minimumsX), max(maximumsX)]),
-            yaxis=dict(range=[min(minimumsY), max(maximumsY)])
-        )
-
-        fig = go.Figure(data=allPlotDatas, layout=layout)
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
         return plot_div
-    
-    def groupedBarChart():
-        x1 = timeFrame_column_names
-        y1 = selected_data[0].iloc[0]
 
-        trace = go.Bar(
-            x=x1,
-            y=y1
-        )
-
-        layout = dict(
-            title='Grouped Bar Plot',
-            xaxis=dict(range=[min(x1), max(x1)]),
-            yaxis=dict(range=[min(y1), max(y1)])
-        )
-
-        fig = go.Figure(data=[trace], layout=layout)
-
-        if 2 in counterSectorArray:
-            x2 = timeFrame_column_names
-            y2 = selected_data[1].iloc[0]
-
-            trace = go.Bar(
-                x=x1,
-                y=y1,
-                name="Sector 1"
-            )
-
-            trace2 = go.Bar(
-                x=x2,
-                y=y2,
-                name="Sector 2"
-            )
-
-            layout = dict(
-                title='Grouped Bar Plot',
-                xaxis=dict(range=[min(min(x1),min(x2)), max(max(x1),max(x2))]),
-                yaxis=dict(range=[min(min(y1),min(y2)), max(max(y1),max(y2))])
-            )
-
-            fig = go.Figure(data=[trace, trace2], layout=layout)
-        
-        if 3 in counterSectorArray:
-            x3 = timeFrame_column_names
-            y3 = selected_data[2].iloc[0]
-
-            trace3 = go.Bar(
-                x=x3,
-                y=y3,
-                name="Sector 3"
-            )
-
-            layout = dict(
-                title='Grouped Bar Plot',
-                xaxis=dict(range=[min(min(x1),min(x2),min(x3)), max(max(x1),max(x2),max(x3))]),
-                yaxis=dict(range=[min(min(y1),min(y2),min(y3)), max(max(y1),max(y2),max(y3))])
-            )
-
-            fig = go.Figure(data=[trace, trace2, trace3], layout=layout)
-
-        if 4 in counterSectorArray:
-            x4 = timeFrame_column_names
-            y4 = selected_data[3].iloc[0]
-
-            trace4 = go.Bar(
-                x=x4,
-                y=y4,
-                name="Sector 4"
-            )
-
-            layout = dict(
-                title='Grouped Bar Plot',
-                xaxis=dict(range=[min(min(x1),min(x2),min(x3),min(x4)), max(max(x1),max(x2),max(x3),max(x4))]),
-                yaxis=dict(range=[min(min(y1),min(y2),min(y3),min(y4)), max(max(y1),max(y2),max(y3),max(y4))])
-            )
-
-            fig = go.Figure(data=[trace, trace2, trace3, trace4], layout=layout)
-
-        plot_div = plot(fig, output_type='div', include_plotlyjs=False)
-        return plot_div
+    if request.GET.get('plots') is None:
+        getSelectedPlot = drawChart(list(plotDictionary.keys())[-1])
+    else:
+        getSelectedPlot = drawChart(request.GET.get('plots'))
 
     context = {
-        'plot': lineChart(),
+        'plot': getSelectedPlot,
         'sectors': sectors,
         'selectedSector1': selectedSectors[0],
         'selectedSector2': selectedSectors[1],
         'selectedSector3': selectedSectors[2],
         'selectedSector4': selectedSectors[3],
-        'counterSectorArray': counterSectorArray
+        'counterSectorArray': counterSectorArray,
+        'plotTypes': plotDictionary.keys(),
+        'selectedPlot': request.GET.get('plots')
     }
 
     return render(request, 'home/dashboard.html', context)
+
+    
+
+            
