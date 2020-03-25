@@ -25,7 +25,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')), # new
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout', include('django.contrib.auth.urls'), name='logout'),
-    path('accounts/password', include('accounts.urls'), name='password'),
+    # path('accounts/password', include('accounts.urls'), name='password'),
+    # path('accounts/password', include('accounts.urls'), name='password'),
     #path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('tables/', include( 'tables.urls')),
     path('home/', include( 'home.urls')),
