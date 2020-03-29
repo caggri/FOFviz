@@ -7,7 +7,6 @@
 <meta http-equiv="refresh" content="2;url=/" />
 {% endif %}
 
-{#<link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">#}
    {% endblock %}
 {% block content %}
  <form method="post">
@@ -25,15 +24,25 @@
     {% else %}
  <h2>Please Login</h2>
      {% for field in form %} <!-- this for used instead of {# {{ form as p }} #} }} -->
-            <div class="fieldWrapper">
+            <div class="bord">
                 {{ field.errors }}<br>
-                {{ field }}
+                {{ field.label_tag }}<br>{{ field }}
             </div>
         {% endfor %}
-        <br>
-        <button id="loginBtn" type="submit" class="btn btn-primary" type="submit">Login</button>
-        <br>
-    <a href="{% url 'signup' %}">Signup</a>
+        
+        <button id="loginBtn" type="submit" class="login100-form-btn" type="submit" style="margin-top: 20px;">Login</button>
+    
+
+    <div class="text-center p-t-136">
+      <a class="txt2" href="/">
+        Back to main page
+        <i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
+      </a><br>
+      <a class="txt2" href="{% url 'register' %}">
+        Create your Account
+        <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+      </a>
+    </div>
   {% endif %}
   </div>
 </div>
