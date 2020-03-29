@@ -5,7 +5,7 @@
   $(document).ready(function() {
     $(function() {
       $("select option:contains({{selectedTimeFrame}})").prop("selected", true);
-
+      $("select option:contains({{selectedDataName}})").prop("selected", true);
       /*$("table tbody tr")
         .filter(
           $(this)
@@ -33,6 +33,20 @@
         <h6 class="m-0 font-weight-bold text-primary">Available Data</h6>
       </div>
       <div class="card-body">
+        <div class="form-group col-md-4 float-left">
+          <label for="dataName">Selected Data</label>
+          <select
+            id="dataName"
+            class="form-control"
+            name="dataName"
+            onchange="this.form.submit()"
+          >
+            <option selected disabled>Choose...</option>
+            {% for dataname in dataNames %}
+            <option value="{{ dataname }}">{{ dataname }}</option>
+            {% endfor %}
+          </select>
+        </div>
         <div class="form-group col-md-4 float-right">
           <label for="timeFrames">Time Frames</label>
           <select
@@ -41,7 +55,7 @@
             name="timeFrames"
             onchange="this.form.submit()"
           >
-            <option selected>Choose...</option>
+            <option selected disabled>Choose...</option>
             {% for timeframe in timeFrames %}
             <option value="{{ timeframe }}">{{ timeframe }}</option>
             {% endfor %}
