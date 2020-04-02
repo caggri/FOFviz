@@ -8,71 +8,104 @@
   $(document).ready(function() {
       $(function() {
           $("#plotType").val($("#plotType option:first").val());
-          $('select option:contains({{selectedSector}})').prop('selected',true);
-          $('#sectors option:contains({{selectedSector}})').prop('selected',true);
+          $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
+          $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
           $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
+          
       });
   });
 </script>
     
         <form id="select_filter_form" method="GET" action="." >
+            <div class="form-group col-md-4 float-left">
+                <label for="importantGraph">Important Graphs</label>
+                <select id="importantGraph" class="form-control" name="importantGraph" onchange="this.form.submit()" width="100%">
+                    <option selected disabled>Choose...</option>
+                    {% for importantGraph in importantGraphs %}
+                    <option value="{{ importantGraph }}">{{ importantGraph }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="form-group col-md-4 float-right">
+                <label for="dataName">Data</label>
+                <select id="dataName" class="form-control" name="datas" onchange="this.form.submit()" width="100%">
+                    {% for dataName in dataNames %}
+                    <option value="{{ dataName }}">{{ dataName }}</option>
+                    {% endfor %}
+                </select>
+                <br/>
                 <label for="plotType">Plot type</label>
                 <select id="plotType" class="form-control" name="plots" onchange="this.form.submit()" width="100%">
                     {% for plotType in plotTypes %}
                     <option value="{{ plotType }}">{{ plotType }}</option>
                     {% endfor %}
                 </select>
-
-                <br/>
-                <label for="sectors">Sectors 1</label>
-                <select id="sectors" class="form-control" name="sectors" onchange="this.form.submit()" width="100%">
-                    <option selected>Choose...</option>
-                    {% for sector in sectors %}
-                    <option value="{{ sector }}">{{ sector }}</option>
-                    {% endfor %}
-                </select>
-
                 <br/>
 
+                <label for="sectors1">Sector 1</label>
+                <div class="form-check form-check-inline">
+                    
+                    <select id="sectors1" class="form-control mr-3" name="sectors1" onchange="this.form.submit()" width="100%">
+                        <option selected>Choose...</option>
+                        {% for sector in sectors %}
+                        <option value="{{ sector }}">{{ sector }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if sectors1 %}
+                    <input type="checkbox" id="sectors1_cb" name="sectors1_cb" value="sectors1" checked>
+                    {% else %}
+                    <input type="checkbox" id="sectors1_cb" name="sectors1_cb" value="sectors1">
+                    {% endif %}                    
+                </div>
+                <br/>
+                <br/>
                 {% if 2 in counterSectorArray %}
-                <label for="sectors2">Sectors 2</label>
-                <select id="sectors2" class="form-control" name="sectors2" onchange="this.form.submit()" width= "100%">
-                    <option selected>Choose...</option>
-                    {% for sector in sectors %}
-                    <option value="{{ sector }}">{{ sector }}</option>
-                    {% endfor %}
-                </select>
+                <label for="sectors2">Sector 2</label>
+                <div class="form-check form-check-inline">
+                    <select id="sectors2" class="form-control mr-3" name="sectors2" onchange="this.form.submit()" width= "100%">
+                        <option selected>Choose...</option>
+                        {% for sector in sectors %}
+                        <option value="{{ sector }}">{{ sector }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="checkbox" id="sectors2_cb" name="sectors2_cb" value="sectors2">
+                </div>
+                <br/>
                 <br/>
                 {% endif %}
 
-
-
                 {% if 3 in counterSectorArray %}
-                <label for="sectors3">Sectors 3</label>
-                <select id="sectors3" class="form-control" name="sectors3" onchange="this.form.submit()" width= "100%">
-                    <option selected>Choose...</option>
-                    {% for sector in sectors %}
-                    <option value="{{ sector }}">{{ sector }}</option>
-                    {% endfor %}
-                </select>
+                <label for="sectors3">Sector 3</label>
+                <div class="form-check form-check-inline">
+                    <select id="sectors3" class="form-control mr-3" name="sectors3" onchange="this.form.submit()" width= "100%">
+                        <option selected>Choose...</option>
+                        {% for sector in sectors %}
+                        <option value="{{ sector }}">{{ sector }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="checkbox" id="sectors3_cb" name="sectors3_cb" value="sectors3">
+                </div>
+                <br/>
                 <br/>
                 {% endif %}
 
                 {% if 4 in counterSectorArray %}
-                <label for="sectors4">Sectors 4</label>
-                <select id="sectors4" class="form-control" name="sectors4" onchange="this.form.submit()" width= "100%">
-                    <option selected>Choose...</option>
-                    {% for sector in sectors %}
-                    <option value="{{ sector }}">{{ sector }}</option>
-                    {% endfor %}
-                </select>
+                <label for="sectors4">Sector 4</label>
+                <div class="form-check form-check-inline">
+                    <select id="sectors4" class="form-control mr-3" name="sectors4" onchange="this.form.submit()" width= "100%">
+                        <option selected>Choose...</option>
+                        {% for sector in sectors %}
+                        <option value="{{ sector }}">{{ sector }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="checkbox" id="sectors4_cb" name="sectors4_cb" value="sectors4">
+                </div>
+                <br/>
                 <br/>
                 {% endif %}
-
 
                 <!--When page refreshed it sends the previous request again-->
                 <input type="submit"
