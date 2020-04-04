@@ -17,8 +17,13 @@ plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar
 dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
 selectedPreviousDataName = None
 selectedDataName = None
-importantGraphs = ['C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
-                    'E.14.Official Reserves(Million USD)']
+'''importantGraphs = ['C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
+                    'E.14.Official Reserves(Million USD)']'''
+
+importantGraphs = {'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)': 'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
+                     'E.14.Official Reserves(Million USD)' : 'E.14.Official Reserves(Million USD)',
+                      'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)(Equity-Debt)' : ['C.11.1.Equity Securities(Million USD)', 'C.11.2.Debt Securities(Million USD)']}
+
 
 selectedImportantGraph = None
 
@@ -44,7 +49,7 @@ def home(request):
     selectedPreviousDataName = selectedDataName
     selectedDataName = request.GET.get('datas')
     
-    print("selectedDataName",selectedDataName)
+    
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
             if selectedDataName == dataNames[0]:
@@ -61,10 +66,10 @@ def home(request):
         selectedDataName = dataNames[1]
         a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
 
-        if selectedImportantGraph == importantGraphs[0] or selectedImportantGraph == importantGraphs[1]:
+        if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
             counterSector = 1
             counterSectorArray = [counterSector]
-        elif selectedImportantGraph == importantGraphs[2]:
+        elif selectedImportantGraph == list(importantGraphs)[2]:
             counterSector = 2
             counterSectorArray = [1, 2]
     
@@ -89,7 +94,11 @@ def home(request):
             selectedSectors[i-1] = request.GET.get(requestString)
 
         if selectedImportantGraph != None:
-            selectedSectors[i-1] = selectedImportantGraph
+            if selectedImportantGraph != list(importantGraphs)[2]:
+                selectedSectors[i-1] = selectedImportantGraph
+            else:
+                selectedSectors[i-1] = importantGraphs.get(selectedImportantGraph)[i-1]
+
 
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
         selected_data[i-1].drop(selected_data[i-1].columns[[0, 1]], axis=1, inplace=True)
@@ -144,7 +153,7 @@ def home(request):
         'selectedPlot': request.GET.get('plots'),
         'dataNames': dataNames,
         'selectedDataName': selectedDataName,
-        'importantGraphs': importantGraphs,
+        'importantGraphs': importantGraphs.keys(),
         'selectedImportantGraph': selectedImportantGraph
     }
 
