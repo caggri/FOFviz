@@ -49,8 +49,6 @@
                 <br/>
                 {% endif %}
 
-
-
                 {% if 3 in counterSectorArray %}
                 <label for="sectors3">Sectors 3</label>
                 <select id="sectors3" class="form-control" name="sectors3" onchange="this.form.submit()" width= "100%">
@@ -86,11 +84,18 @@
                         value="-"
                         class="btn btn-outline-primary"
                         onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
+
+                <input type="submit"
+                        name="makePredictions"
+                        value="Make Predictions"
+                        class="btn btn-outline-primary"
+                        onchange="this.form.submit()">
                 <!--When page refreshed it sends the previous request again-->
 
             </div>
             <div class="float-left">
             {{ plot | safe }} 
             </div>
+
         </form>
 {% endblock %}

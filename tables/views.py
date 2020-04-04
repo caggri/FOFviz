@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 selectedTimeFrame = None
 selectedDataName = None
 
-#path = os.path.dirname(os.path.realpath(__file__))
-#path = os.path.join(path, 'EVDSdata.xlsx')
+path = os.path.dirname(os.path.realpath(__file__))
+path = os.path.join(path, 'EVDSdata.xlsx')
 #retriever = DataRetrieve.DataRetriever()
 #all_data = retriever.retrieve()
-#all_data = pd.read_excel(path)
+load_all_data = pd.read_excel(path)
 
 dates = []
 prices = []
@@ -25,7 +25,7 @@ currencyNames = [['Assets (Thousand TRY)','Liabilities (Thousand TRY)'],['Assets
 # Create your views here.
 
 #this loads all of the data available, must be moved to inital page.
-load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
+#load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
 
 def table(request):
     global selectedDataName
@@ -45,14 +45,14 @@ def table(request):
         selectedDataName = dataNames[0]
 
     if selectedDataName == dataNames[0]:
-        all_data = DataRetrieve.DataRetriever.retrieveFofData()
+        all_data = load_all_data
         currency = currencyNames[0]
-    elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
-        if selectedDataName == dataNames[1]:
-            all_data = DataRetrieve.DataRetriever.retrieveAnnuallyData()
-        else:
-            all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
-        currency = currencyNames[1]
+    # elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
+    #     if selectedDataName == dataNames[1]:
+    #         all_data = DataRetrieve.DataRetriever.retrieveAnnuallyData()
+    #     else:
+    #         all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
+    #     currency = currencyNames[1]
     
 
     if(request.GET.get('timeFrames') != None and selectedPreviousDataName == selectedDataName):
