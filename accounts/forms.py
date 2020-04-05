@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 class Register(forms.ModelForm):
 
@@ -22,12 +22,51 @@ class Register(forms.ModelForm):
             raise forms.ValidationError('This e-mail address already exist.')
 
         return email
-# class SignUpForm(UserCreationForm):
-#     username = forms.CharField(max_length=30)
-#     # email = forms.EmailField(max_length=200)
-#     # email2 = forms.CharField(max_length=200)
 
+
+class EditProfileForm(UserChangeForm):
+    
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'first_name',
+            'last_name',
+        
+        )
+
+# class EditProfileForm(UserChangeForm):
+#     class Meta:
+#         model=User
+#         fields=(
+#             'email',
+#             'username',
+#             'instutition',
+#             'full_name'
+#         )
+
+# class UserProfile(forms.ModelForm):
+#     institution = forms.CharField(widget=forms.TextInput, max_length=30)
+#     full_name = forms.CharField(widget=forms.TextInput, max_length=30)
 #     class Meta:
 #         model = User
-#         fields = ('username', 'password1', 'password2', )
+#         fields=['username','email', 'institution', 'full_name']
+
+#     def __init__(self, *args, **kwargs):
+#         super(UserProfile, self).__init__(*args, **kwargs)
+
+#         for field in self.fields:
+#             fields[field].widgett.attrs={'class':'form-control'}
+
+# class UserProfile(forms.ModelForm):
+#     institution = forms.CharField(widget=forms.TextInput, max_length=35, label="Institution")
+#     full_name = forms.CharField(widget=forms.TextInput, max_length=35, label="Full Name")
+#     class Meta:
+#         model = User
+#         fields = ['username', 'full_name', 'institution', 'email']
+
+#     def __init__(self, *args,  **kwargs):
+#         super(UserProfile, self).__init__(*args, **kwargs)
+#         for field in self.fields:
+#             self.fields[field].widget.attrs={'form': 'form-control'}
 

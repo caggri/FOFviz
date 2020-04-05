@@ -497,3 +497,19 @@ iframe {
   border-radius: 10px;
   padding: 0 10px;
 }
+
+#red > li{
+  color: red;
+  font-size: 10px;
+  list-style-type: circle;
+}
+
+.note {
+  padding: 5px;
+}
+
+.note > ul,li {
+  font-size: 12px;
+  list-style-type: circle;
+
+}
