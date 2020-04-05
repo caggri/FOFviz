@@ -8,9 +8,10 @@ driver = webdriver.Chrome(chromedriver)
 driver.get('http://127.0.0.1:8000/')
 
 #intro page
-moreinfo_btn = '//*[@id="hero"]/div/div/div[1]/div[1]/a[1]'
-getstarted_btn = '//*[@id="hero"]/div/div/div[1]/div[1]/a[2]'
 back_to_top_btn = '/html/body/a'
+moreinfo_btn = '//*[@id="hero"]/div/div/div[1]/div[1]/a[1]'
+visualiser_btn = '//*[@id="hero"]/div/div/div[1]/div[2]/a[1]'
+data_displayer_btn = '//*[@id="hero"]/div/div/div[1]/div[2]/a[2]'
 
 #Inside the fof
 #dashboard_btn = '//*[@id="accordionSidebar"]/li[1]/a'
@@ -67,7 +68,7 @@ driver.find_element_by_xpath(moreinfo_btn).click()
 time.sleep(4)
 driver.find_element_by_xpath(back_to_top_btn).click()
 time.sleep(3)
-driver.find_element_by_xpath(getstarted_btn).click()
+driver.find_element_by_xpath(data_displayer_btn).click()
 
 #Tables tab clicked, side toolbar hide clicked
 print("Tables tab, side toolbar hide")
