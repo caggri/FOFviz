@@ -1,0 +1,25 @@
+{% extends 'upload/base.html' %}
+
+{% block title %}Database Update Page{% endblock %}
+
+{% block content %}
+{% if user.is_superuser %}
+      <form method="POST" class="post-form" enctype="multipart/form-data">  
+        {% csrf_token %} 
+        Excel File to be Uploaded:
+        {% for field in form %} <!-- this for used instead of {# {{ form as p }} #} }} -->
+        <div class="noUlStyle"></div>
+            {{ field.errors }}<br>
+            <br>{{ field }}
+            <br>
+    {% endfor %}
+       
+        <button id="loginBtn" value="Register" type="submit" class="login100-form-btn" type="submit" style="margin-top: 20px;">Upload</button>
+
+</form>
+{% else %}
+
+<p>Insuficcent Privileges.</p>
+<a href="/">HOME</a>
+{% endif %}
+{% endblock %}
