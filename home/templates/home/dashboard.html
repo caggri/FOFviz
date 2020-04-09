@@ -8,6 +8,7 @@
   $(document).ready(function() {
       $(function() {
           $("#plotType").val($("#plotType option:first").val());
+          {#$('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);#}
           $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
@@ -49,7 +50,7 @@
                 <div class="form-check form-check-inline">
                     
                     <select id="sectors1" class="form-control mr-3" name="sectors1" onchange="this.form.submit()" width="100%">
-                        <option selected>Choose...</option>
+                        <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
@@ -66,7 +67,7 @@
                 <label for="sectors2">Sector 2</label>
                 <div class="form-check form-check-inline">
                     <select id="sectors2" class="form-control mr-3" name="sectors2" onchange="this.form.submit()" width= "100%">
-                        <option selected>Choose...</option>
+                        <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
@@ -81,7 +82,7 @@
                 <label for="sectors3">Sector 3</label>
                 <div class="form-check form-check-inline">
                     <select id="sectors3" class="form-control mr-3" name="sectors3" onchange="this.form.submit()" width= "100%">
-                        <option selected>Choose...</option>
+                        <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
@@ -96,7 +97,7 @@
                 <label for="sectors4">Sector 4</label>
                 <div class="form-check form-check-inline">
                     <select id="sectors4" class="form-control mr-3" name="sectors4" onchange="this.form.submit()" width= "100%">
-                        <option selected>Choose...</option>
+                        <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
