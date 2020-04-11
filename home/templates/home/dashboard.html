@@ -7,8 +7,6 @@
 <script>
   $(document).ready(function() {
       $(function() {
-          $("#plotType").val($("#plotType option:first").val());
-          {#$('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);#}
           $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
@@ -17,13 +15,44 @@
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
           
       });
+      
+      $( "#plotType, .sectorDropdowns" ).change(function() {
+        $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
+            $('#plot').html(data.plot)
+        }, "json");
+      });
+
+      /*
+      $('input[value="+"]').on('click', function(){
+        event.preventDefault();
+        let req = $( "#select_filter_form" ).serialize() +'&'+ encodeURIComponent('addSector')+'='+encodeURIComponent('+')
+        console.log(req)
+        $.get('', req, function( data ) {
+            $('#plot').html(data.plot)
+        }, "json");
+        
+      })
+
+      $('input[value="-"]').on('click', function(){
+        event.preventDefault();
+
+        let req = $( "#select_filter_form" ).serialize() +'&'+ encodeURIComponent('removeSector')+'='+encodeURIComponent('-')
+        console.log(req)
+        $.get('', req, function( data ) {
+            $('#plot').html(data.plot)
+        }, "json");
+        
+      })
+      
+      */
   });
+  
 </script>
     
         <form id="select_filter_form" method="GET" action="." >
             <div class="form-group col-md-4 float-left">
                 <label for="importantGraph">Important Graphs</label>
-                <select id="importantGraph" class="form-control" name="importantGraph" onchange="this.form.submit()" width="100%">
+                <select id="importantGraph" class="form-control" name="importantGraph" width="100%" onchange="this.form.submit()">
                     <option selected disabled>Choose...</option>
                     {% for importantGraph in importantGraphs %}
                     <option value="{{ importantGraph }}">{{ importantGraph }}</option>
@@ -32,14 +61,14 @@
             </div>
             <div class="form-group col-md-4 float-right">
                 <label for="dataName">Data</label>
-                <select id="dataName" class="form-control" name="datas" onchange="this.form.submit()" width="100%">
+                <select id="dataName" class="form-control" name="datas" width="100%" onchange="this.form.submit()">
                     {% for dataName in dataNames %}
                     <option value="{{ dataName }}">{{ dataName }}</option>
                     {% endfor %}
                 </select>
                 <br/>
                 <label for="plotType">Plot type</label>
-                <select id="plotType" class="form-control" name="plots" onchange="this.form.submit()" width="100%">
+                <select id="plotType" class="form-control" name="plots" width="100%">
                     {% for plotType in plotTypes %}
                     <option value="{{ plotType }}">{{ plotType }}</option>
                     {% endfor %}
@@ -49,7 +78,7 @@
                 <label for="sectors1">Sector 1</label>
                 <div class="form-check form-check-inline">
                     
-                    <select id="sectors1" class="form-control mr-3" name="sectors1" onchange="this.form.submit()" width="100%">
+                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -66,7 +95,7 @@
                 {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sector 2</label>
                 <div class="form-check form-check-inline">
-                    <select id="sectors2" class="form-control mr-3" name="sectors2" onchange="this.form.submit()" width= "100%">
+                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -81,7 +110,7 @@
                 {% if 3 in counterSectorArray %}
                 <label for="sectors3">Sector 3</label>
                 <div class="form-check form-check-inline">
-                    <select id="sectors3" class="form-control mr-3" name="sectors3" onchange="this.form.submit()" width= "100%">
+                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -96,7 +125,7 @@
                 {% if 4 in counterSectorArray %}
                 <label for="sectors4">Sector 4</label>
                 <div class="form-check form-check-inline">
-                    <select id="sectors4" class="form-control mr-3" name="sectors4" onchange="this.form.submit()" width= "100%">
+                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -108,7 +137,7 @@
                 <br/>
                 {% endif %}
 
-                <!--When page refreshed it sends the previous request again-->
+                
                 <input type="submit"
                         name="addSector"
                         value="+"
@@ -120,10 +149,10 @@
                         value="-"
                         class="btn btn-outline-primary"
                         onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
-                <!--When page refreshed it sends the previous request again-->
+                
 
             </div>
-            <div class="float-left">
+            <div id="plot" class="float-left">
             {{ plot | safe }} 
             </div>
         </form>
