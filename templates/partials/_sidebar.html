@@ -1,18 +1,21 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+{% load static %}
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
+      <!-- <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}"> -->
+        <div id="resizeImg" class="resizeImage">
+          <!-- <i class="fas fa-laugh-wink"></i> -->
+          <a href="/">
+          <img class= "resizeImage" src="{% static 'login/images/sidebarLogo.png' %}" alt="IMG" />
+        </a>
         </div>
-        <div class="sidebar-brand-text mx-3">FOFviz</div>
+        
       </a>
 
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
+      <li class="nav-item active resizeIcon">
         <a class="nav-link" href="{% url 'home' %}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>

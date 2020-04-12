@@ -1,4 +1,7 @@
 from django.shortcuts import render
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 from plotly.offline import plot
 import plotly.graph_objects as go
 import plotly.express as px
@@ -7,19 +10,11 @@ from pmdarima import model_selection
 import datetime
 import pandas as pd
 import os.path
+import DataRetrieve
 from sqlalchemy import create_engine
 
+
 # Create your views here.
-
-# def readFromDB():
-#        # sqlEngine = create_engine('mysql+pymysql://newuser:CT1SEr.FtW@localhost:3306/import')
-#     table_name = "records" 
-#     sqlEngine = create_engine('postgresql+psycopg2://postgres:1234567890@localhost/data')
-#     dbConnection = sqlEngine.connect()
-#     global a 
-#     a = pd.read_sql_table(table_name, dbConnection)
-#     dbConnection.close()
-
 
 selectedSectors = [None,None,None,None]
 selected_data = [None,None,None,None]
@@ -27,26 +22,74 @@ counterSector = 1
 counterSectorArray = [counterSector]
 plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
 showPredictions = False
+dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
+selectedPreviousDataName = None
+selectedDataName = None
+importantGraphs = {'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)': 'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
+                     'E.14.Official Reserves(Million USD)' : 'E.14.Official Reserves(Million USD)',
+                      'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)(Equity-Debt)' : ['C.11.1.Equity Securities(Million USD)', 'C.11.2.Debt Securities(Million USD)']}
+
+selectedImportantGraph = None
+selectedPreviousImportantGraph = None
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path, 'EVDSdata.xlsx')
 #retriever = DataRetrieve.DataRetriever()
 #all_data = retriever.retrieve()
-a = pd.read_excel(path)
+#a = pd.read_excel(path)
+#a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
 
-def home(request):
+@csrf_exempt
+def home(request, copy=None):
     global selectedSectors
     global counterSector
     global a
     global showPredictions
 
+    global dataNames
+    global selectedDataName
+    global selectedPreviousDataName
+    global importantGraphs
+    global selectedImportantGraph
+    global selectedPreviousImportantGraph
+    global counterSectorArray
+    
+    
+    selectedPreviousImportantGraph = selectedImportantGraph
+    selectedImportantGraph = request.GET.get('importantGraph')
+    selectedPreviousDataName = selectedDataName
+    selectedDataName = request.GET.get('datas')
+    
+    if selectedDataName != None:
+        if selectedDataName != selectedPreviousDataName:
+            if selectedDataName == dataNames[0]:
+                a = pd.read_excel(path)
+            elif selectedDataName == dataNames[1]:
+                a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
+            elif selectedDataName == dataNames[2]:
+                a = DataRetrieve.DataRetriever.retrieveMonthlyData()
+    else:
+        selectedDataName = dataNames[0]
+        a = pd.read_excel(path)
+    
+    if selectedImportantGraph != None:
+        selectedDataName = dataNames[1]
+        a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
+
+        if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
+            counterSector = 1
+            counterSectorArray = [counterSector]
+        elif selectedImportantGraph == list(importantGraphs)[2]:
+            counterSector = 2
+            counterSectorArray = [1, 2]
+    
     #handling button requests addSector-removeSector
-    if (request.GET.get('addSector') != None):
+    if (request.GET.get('addSector') != None and request.is_ajax() == False):
         if (counterSector != 4):
             counterSector = counterSector + 1
             counterSectorArray.append(counterSector)
-    if (request.GET.get('removeSector') != None):
+    if (request.GET.get('removeSector') != None and request.is_ajax() == False):
         if (counterSector != 1):
             counterSector = counterSector - 1
             counterSectorArray.pop()
@@ -60,8 +103,18 @@ def home(request):
     for i in counterSectorArray:
         selectedSectors[i-1] = sectors[i]
         requestString = 'sectors' + str(i)
-        if (request.GET.get(requestString) != None):
+
+        if (request.GET.get(requestString) != None and selectedDataName == selectedPreviousDataName):
             selectedSectors[i-1] = request.GET.get(requestString)
+
+        if selectedImportantGraph != None:
+            if selectedImportantGraph != list(importantGraphs)[2]:
+                selectedSectors[i-1] = selectedImportantGraph
+            else:
+                selectedSectors[i-1] = importantGraphs.get(selectedImportantGraph)[i-1]
+            if selectedImportantGraph == selectedPreviousImportantGraph:
+                selectedSectors[i-1] = request.GET.get(requestString)
+        
 
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
         selected_data[i-1].drop(selected_data[i-1].columns[[0, 1]], axis=1, inplace=True)
@@ -186,7 +239,7 @@ def home(request):
         return plot_div
 
     if request.GET.get('plots') is None:
-        getSelectedPlot = drawChart(list(plotDictionary.keys())[-1])
+        getSelectedPlot = drawChart(list(plotDictionary.keys())[0])
     else:
         getSelectedPlot = drawChart(request.GET.get('plots'))
 
@@ -197,13 +250,20 @@ def home(request):
         'selectedSector2': selectedSectors[1],
         'selectedSector3': selectedSectors[2],
         'selectedSector4': selectedSectors[3],
+        'selectedSectors': selectedSectors,
         'counterSectorArray': counterSectorArray,
         'plotTypes': plotDictionary.keys(),
-        'selectedPlot': request.GET.get('plots')
+        'selectedPlot': request.GET.get('plots'),
+        'dataNames': dataNames,
+        'selectedDataName': selectedDataName,
+        'importantGraphs': importantGraphs.keys(),
+        'selectedImportantGraph': selectedImportantGraph
     }
-
-    return render(request, 'home/dashboard.html', context)
-
-    
-
-            
+    if request.is_ajax():
+        context['sectors'] = sectors.tolist()
+        context['plotTypes'] = list(plotDictionary.keys())
+        context['importantGraphs'] = list(importantGraphs.keys())
+        
+        return HttpResponse(json.dumps(context))
+    else:
+        return render(request, 'home/dashboard.html', context)

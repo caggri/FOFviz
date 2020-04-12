@@ -21,7 +21,7 @@ dates = []
 prices = []
 dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
 currencyNames = [['Assets (Thousand TRY)','Liabilities (Thousand TRY)'],['Assets (Million USD)','Liabilities (Million USD)']]
-
+currencyPatternList = ["\(Thousand TRY\)","\(Million USD\)"]
 # Create your views here.
 
 #this loads all of the data available, must be moved to inital page.
@@ -37,6 +37,8 @@ def table(request):
     global dataNames
     global currencyNames
     global currency
+    global currencyPatternList
+    global currencyPattern
 
     if(request.GET.get('dataName') != None):
         selectedPreviousDataName = selectedDataName
@@ -47,13 +49,14 @@ def table(request):
     if selectedDataName == dataNames[0]:
         all_data = load_all_data
         currency = currencyNames[0]
-    # elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
-    #     if selectedDataName == dataNames[1]:
-    #         all_data = DataRetrieve.DataRetriever.retrieveAnnuallyData()
-    #     else:
-    #         all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
-    #     currency = currencyNames[1]
-    
+        currencyPattern = currencyPatternList[0]
+    elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
+        if selectedDataName == dataNames[1]:
+            all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
+        else:
+            all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
+        currency = currencyNames[1]
+        currencyPattern = currencyPatternList[1]
 
     if(request.GET.get('timeFrames') != None and selectedPreviousDataName == selectedDataName):
             selectedTimeFrame = request.GET.get('timeFrames')
@@ -76,9 +79,9 @@ def table(request):
         
         assets_and_liabilities_data.columns = ['Assets (Million USD)',selectedTimeFrame, 'Liabilities (Million USD)', selectedTimeFrame]
         
-    assets_and_liabilities_data[currency[0]] = assets_and_liabilities_data[currency[0]].str.replace("\(Million USD\)","")
-    assets_and_liabilities_data[currency[1]] = assets_and_liabilities_data[currency[1]].str.replace("\(Million USD\)","")
-
+    assets_and_liabilities_data[currency[0]] = assets_and_liabilities_data[currency[0]].str.replace(currencyPattern,"")
+    assets_and_liabilities_data[currency[1]] = assets_and_liabilities_data[currency[1]].str.replace(currencyPattern,"")
+    
     context = {
             'table': assets_and_liabilities_data.to_html(table_id='dataTable', classes='table table-bordered', index=False),
             'timeFrames': all_data.columns[all_data.columns.str.startswith('20')],
