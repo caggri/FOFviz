@@ -85,10 +85,10 @@
             <!-- <li><a href="#portfolio">Portfolio</a></li> -->
             <li><a href="#team">Team</a></li>
             {% if user.is_authenticated %}
-            <li><a href="{% url 'profile' %}">{{request.user}}</a></li> <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'profile' %}">{{request.user}}</a></li> <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
             
             {% else %}
-            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'accounts:login' %}">Login</a></li>
           {% endif %}
           </ul>
         </nav>
@@ -306,8 +306,9 @@
               <div class="member-info">
                 <div class="member-info-content">
                   <h4>Seyid Amjad Ali</h4>
-                  <span>Yoda</span>
+                  <span>Advisor</span>
                   <div class="social">
+                    <span>Yoda</span>
                     <!-- <a href=""><i class="fa fa-twitter"></i></a>
                     <a href=""><i class="fa fa-facebook"></i></a>
                     <a href=""><i class="fa fa-google-plus"></i></a>
@@ -330,8 +331,9 @@
                 <div class="member-info">
                   <div class="member-info-content">
                     <h4>Çağrı Bayram</h4>
-                    <span>Qui-Gon Jinn</span>
+                    <span>Group Member</span>
                     <div class="social">
+                      <span>Qui-Gon Jinn</span>
                       <!-- <a href=""><i class="fa fa-twitter"></i></a>
                       <a href=""><i class="fa fa-facebook"></i></a>
                       <a href=""><i class="fa fa-google-plus"></i></a>
@@ -352,8 +354,9 @@
                 <div class="member-info">
                   <div class="member-info-content">
                     <h4>Sümer Çetin</h4>
-                    <span>Anakin Skywalker</span>
+                    <span>Group Member</span>
                     <div class="social">
+                      <span>Anakin Skywalker</span>
                       <!-- <a href=""><i class="fa fa-twitter"></i></a>
                       <a href=""><i class="fa fa-facebook"></i></a>
                       <a href=""><i class="fa fa-google-plus"></i></a>
@@ -374,8 +377,9 @@
                 <div class="member-info">
                   <div class="member-info-content">
                     <h4>Hassnain Ali</h4>
-                    <span>Dooku</span>
+                    <span>Group Member</span>
                     <div class="social">
+                      <span>Dooku</span>
                       <!-- <a href=""><i class="fa fa-twitter"></i></a>
                       <a href=""><i class="fa fa-facebook"></i></a>
                       <a href=""><i class="fa fa-google-plus"></i></a>
@@ -396,8 +400,10 @@
                 <div class="member-info">
                   <div class="member-info-content">
                     <h4>Denizhan Çetin</h4>
-                    <span>Jar Jar Binks</span>
+                    <span>Group Member</span>
                     <div class="social">
+                      <span>Chewbacca or Jar Jar Binks</span>
+                      <span>(we couldn't decide)</span>
                       <!-- <a href=""><i class="fa fa-twitter"></i></a>
                       <a href=""><i class="fa fa-facebook"></i></a>
                       <a href=""><i class="fa fa-google-plus"></i></a>
@@ -476,7 +482,10 @@
     <footer id="footer" class="section-bg">
       <div class="container">
         <div class="copyright">
-          &copy; Copyright <strong>Rapid</strong>. All Rights Reserved
+         <strong>FOFviz</strong>. From Bilkent University Department of CTIS
+         </div>
+        <div class="copyright">
+         template design: &copy; Copyright <strong>Rapid</strong>. All Rights Reserved
         </div>
       </div>
     </footer>

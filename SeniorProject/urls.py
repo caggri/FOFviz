@@ -18,11 +18,13 @@ from django.urls import path, include
 from django.views.generic.base import TemplateView
 from django.contrib.auth import views as auth_views
 
+app_name = "SeniorProject"
+
 
 urlpatterns = [
     path('', include('main.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')), # new
+    path('accounts/', include('accounts.urls', "accounts")), # new
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout', include('django.contrib.auth.urls'), name='logout'),
     # path('accounts/password', include('accounts.urls'), name='password'),

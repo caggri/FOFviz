@@ -107,7 +107,7 @@
                         </span>
                       </a>
                     {% else %}
-                       <a class="nav-link dropdown-toggle" href="{% url 'login' %}" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                       <a class="nav-link dropdown-toggle" href="{% url 'accounts:login' %}" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                       <span class="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
                        </a>
 
@@ -119,11 +119,11 @@
 
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="{% url 'profile' %}">
+                <a class="dropdown-item" href="{% url 'accounts:profile' %}">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
-                <a class="dropdown-item" href="{% url 'edit' %}">
+                <a class="dropdown-item" href="{% url 'accounts:edit' %}">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Settings
                 </a>
@@ -132,7 +132,7 @@
                   Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url 'logout' %}" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="{% url 'accounts:logout' %}" data-toggle="modal" data-target="#logoutModal">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   Logout
                 </a>
