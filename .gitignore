@@ -1,5 +1,7 @@
 venv
 env
+project_end_main
+project_env
 # Created by https://www.gitignore.io/api/node,react,python,django,pycharm
 # Edit at https://www.gitignore.io/?templates=node,react,python,django,pycharm
 
