@@ -177,7 +177,7 @@ def home(request, copy=None):
             # pyplot.plot(training_data_diff2, 'g')
             # pyplot.show()
 
-            #analyzing prediction plots
+            #analyzing prediction plots and determining parameters
             # plot_acf(training_data_diff2)
             # pyplot.show()
             # plot_pacf(training_data_diff2)

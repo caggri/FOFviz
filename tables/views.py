@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 selectedTimeFrame = None
 selectedDataName = None
 
-path = os.path.dirname(os.path.realpath(__file__))
-path = os.path.join(path, 'EVDSdata.xlsx')
-#retriever = DataRetrieve.DataRetriever()
-#all_data = retriever.retrieve()
-load_all_data = pd.read_excel(path)
+# path = os.path.dirname(os.path.realpath(__file__))
+# path = os.path.join(path, 'EVDSdata.xlsx')
+# retriever = DataRetrieve.DataRetriever()
+# all_data = retriever.retrieve()
+# load_all_data = pd.read_excel(path)
 
 dates = []
 prices = []
@@ -25,12 +25,12 @@ currencyPatternList = ["\(Thousand TRY\)","\(Million USD\)"]
 # Create your views here.
 
 #this loads all of the data available, must be moved to inital page.
-#load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
+load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
 
 def table(request):
     global selectedDataName
     global selectedPreviousDataName
-    global selectedTimeFrame
+    global selectedTimeFrame    
     global all_data
     global dates
     global prices
@@ -47,19 +47,19 @@ def table(request):
         selectedDataName = dataNames[0]
 
     if selectedDataName == dataNames[0]:
-        all_data = load_all_data
+        all_data = DataRetrieve.DataRetriever.retrieveFofData()
         currency = currencyNames[0]
         currencyPattern = currencyPatternList[0]
     elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
         if selectedDataName == dataNames[1]:
-            all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
+            all_data = DataRetrieve.DataRetriever.retrieveAnnuallyData()
         else:
             all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
         currency = currencyNames[1]
         currencyPattern = currencyPatternList[1]
 
     if(request.GET.get('timeFrames') != None and selectedPreviousDataName == selectedDataName):
-            selectedTimeFrame = request.GET.get('timeFrames')
+        selectedTimeFrame = request.GET.get('timeFrames')
     else:
         selectedTimeFrame = all_data.columns[-1]
 
