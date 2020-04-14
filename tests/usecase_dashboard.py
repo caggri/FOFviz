@@ -45,16 +45,16 @@ sector1_dropdown_element_1 = '//*[@id="sectors1"]/option[2]'
 sector1_dropdown_element_2 = '//*[@id="sectors1"]/option[3]'
 
 sector2_dropdown = '//*[@id="sectors2"]'
-sector2_dropdown_element_1 = '//*[@id="sectors2"]/option[2]'
-sector2_dropdown_element_2 = '//*[@id="sectors2"]/option[3]'
+sector2_dropdown_element_3 = '//*[@id="sectors2"]/option[4]'
+sector2_dropdown_element_4 = '//*[@id="sectors2"]/option[5]'
 
 sector3_dropdown = '//*[@id="sectors3"]'
-sector3_dropdown_element_1 = '//*[@id="sectors3"]/option[2]'
-sector3_dropdown_element_2 = '//*[@id="sectors3"]/option[3]'
+sector3_dropdown_element_5 = '//*[@id="sectors3"]/option[6]'
+sector3_dropdown_element_6 = '//*[@id="sectors3"]/option[7]'
 
 sector4_dropdown = '//*[@id="sectors4"]'
-sector4_dropdown_element_1 = '//*[@id="sectors4"]/option[2]'
-sector4_dropdown_element_2 = '//*[@id="sectors4"]/option[3]'
+sector4_dropdown_element_7 = '//*[@id="sectors4"]/option[8]'
+sector4_dropdown_element_8 = '//*[@id="sectors4"]/option[9]'
 
 add_sector_btn = '//*[@id="select_filter_form"]/div[2]/input[1]'
 remove_sector_btn = '//*[@id="select_filter_form"]/div[2]/input[2]'
@@ -121,6 +121,8 @@ time.sleep(2)
 driver.find_element_by_xpath(plot_type_dropdown_element_7).click()
 time.sleep(2)
 driver.find_element_by_xpath(plot_type_dropdown_element_8).click()
+time.sleep(2)
+driver.find_element_by_xpath(plot_type_dropdown_element_4).click()
 
 #Sector1 dropdown
 print("Sector 1 dropdown")
@@ -136,9 +138,9 @@ print("Sector 2 dropdown")
 time.sleep(2)
 driver.find_element_by_xpath(sector2_dropdown).click()
 time.sleep(2)
-driver.find_element_by_xpath(sector2_dropdown_element_1).click()
+driver.find_element_by_xpath(sector2_dropdown_element_3).click()
 time.sleep(2)
-driver.find_element_by_xpath(sector2_dropdown_element_2).click()
+driver.find_element_by_xpath(sector2_dropdown_element_4).click()
 
 #Add sectors
 print("Add sectors")
@@ -152,18 +154,18 @@ print("Sector 3 dropdown")
 time.sleep(2)
 driver.find_element_by_xpath(sector3_dropdown).click()
 time.sleep(2)
-driver.find_element_by_xpath(sector3_dropdown_element_1).click()
+driver.find_element_by_xpath(sector3_dropdown_element_5).click()
 time.sleep(2)
-driver.find_element_by_xpath(sector3_dropdown_element_2).click()
+driver.find_element_by_xpath(sector3_dropdown_element_6).click()
 
 #Sector4 dropdown
 print("Sector 4 dropdown")
 time.sleep(2)
 driver.find_element_by_xpath(sector4_dropdown).click()
 time.sleep(2)
-driver.find_element_by_xpath(sector4_dropdown_element_1).click()
+driver.find_element_by_xpath(sector4_dropdown_element_7).click()
 time.sleep(2)
-driver.find_element_by_xpath(sector4_dropdown_element_2).click()
+driver.find_element_by_xpath(sector4_dropdown_element_8).click()
 
 #Remove sectors
 print("Remove sectors")
