@@ -23,7 +23,7 @@
 
       {% else %}
       <h2>Register </h2>
-      <form method="POST" action="{% url 'register' %}">
+      <form method="POST" action="{% url 'accounts:register' %}">
         {% for field in form %}
         <!-- this for used instead of {# {{ form as p }} #} }} -->
         <div class="bord">
@@ -40,7 +40,7 @@
             <i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
           </a>
           <br>
-          <a class="txt2" href="{% url 'login' %}">
+          <a class="txt2" href="{% url 'accounts:login' %}">
             Back to login page
             <i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
           </a>

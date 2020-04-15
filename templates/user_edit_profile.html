@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" action="{% url 'edit' %}">
+    <form method="POST" action="{% url 'accounts:edit' %}">
     {% for field in form %}
         <!-- this for used instead of {# {{ form as p }} #} }} -->
         <div class="bord">

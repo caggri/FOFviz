@@ -85,7 +85,7 @@
             <!-- <li><a href="#portfolio">Portfolio</a></li> -->
             <li><a href="#team">Team</a></li>
             {% if user.is_authenticated %}
-            <li><a href="{% url 'profile' %}">{{request.user}}</a></li> <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+            <li><a href="{% url 'accounts:profile' %}">{{request.user}}</a></li> <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
             
             {% else %}
             <li><a href="{% url 'accounts:login' %}">Login</a></li>
