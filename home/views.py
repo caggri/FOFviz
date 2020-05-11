@@ -14,31 +14,32 @@ import DataRetrieve
 from sqlalchemy import create_engine
 
 
-# Create your views here.
-
-selectedSectors = [None,None,None,None]
-selected_data = [None,None,None,None]
 counterSector = 1
 counterSectorArray = [counterSector]
-plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
 showPredictions = False
-dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
+plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 
+'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 
+'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
+
+
+#determine selection
 selectedPreviousDataName = None
 selectedDataName = None
+selectedSectors = [None,None,None,None]
+selected_data = [None,None,None,None]
+selectedImportantGraph = None
+selectedPreviousImportantGraph = None
+
+#List Elements
+dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
 importantGraphs = {'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)': 'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
                      'E.14.Official Reserves(Million USD)' : 'E.14.Official Reserves(Million USD)',
                       'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)(Equity-Debt)' : ['C.11.1.Equity Securities(Million USD)', 'C.11.2.Debt Securities(Million USD)']}
-
-selectedImportantGraph = None
-selectedPreviousImportantGraph = None
+predictionModes = ['Disable Forecast', 'Enable Forecast']
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path, 'EVDSdata.xlsx')
-#retriever = DataRetrieve.DataRetriever()
-#all_data = retriever.retrieve()
-#a = pd.read_excel(path)
-#a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
 
 @csrf_exempt
 def home(request, copy=None):
@@ -53,6 +54,7 @@ def home(request, copy=None):
     global importantGraphs
     global selectedImportantGraph
     global selectedPreviousImportantGraph
+    global selectedPredictionMode
     global counterSectorArray
     
     
@@ -60,6 +62,7 @@ def home(request, copy=None):
     selectedImportantGraph = request.GET.get('importantGraph')
     selectedPreviousDataName = selectedDataName
     selectedDataName = request.GET.get('datas')
+    selectedPredictionMode = request.GET.get('makePredictions')
     
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
@@ -84,6 +87,12 @@ def home(request, copy=None):
             counterSector = 2
             counterSectorArray = [1, 2]
     
+    if selectedPredictionMode != None:
+        if selectedPredictionMode == predictionModes[0]:
+            showPredictions = False
+        elif selectedPredictionMode == predictionModes[1]:
+             showPredictions = True
+
     #handling button requests addSector-removeSector
     if (request.GET.get('addSector') != None and request.is_ajax() == False):
         if (counterSector != 4):
@@ -93,8 +102,6 @@ def home(request, copy=None):
         if (counterSector != 1):
             counterSector = counterSector - 1
             counterSectorArray.pop()
-    if (request.GET.get('makePredictions') != None):
-        showPredictions = True
 
     # readFromDB()
     timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
@@ -182,9 +189,10 @@ def home(request, copy=None):
             # pyplot.show()
             # plot_pacf(training_data_diff2)
             # pyplot.show()
+        
 
             arima = pm.auto_arima(train, seasonal=True, m=4, error_action='ignore', trace=True,
-                                suppress_warnings=True, maxiter=10)
+                                suppress_warnings=True, maxiter=20)
             
             forecastValues = arima.predict(futureStepsN)
             
@@ -257,12 +265,14 @@ def home(request, copy=None):
         'dataNames': dataNames,
         'selectedDataName': selectedDataName,
         'importantGraphs': importantGraphs.keys(),
-        'selectedImportantGraph': selectedImportantGraph
+        'selectedImportantGraph': selectedImportantGraph,
+        'selectedPredictionMode': selectedPredictionMode
     }
     if request.is_ajax():
         context['sectors'] = sectors.tolist()
         context['plotTypes'] = list(plotDictionary.keys())
         context['importantGraphs'] = list(importantGraphs.keys())
+        context['makePredictions'] = predictionModes
         
         return HttpResponse(json.dumps(context))
     else:

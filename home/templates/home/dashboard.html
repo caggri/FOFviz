@@ -7,13 +7,14 @@
 <script>
   $(document).ready(function() {
       $(function() {
-          {#$('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);#}
+          $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
           $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
           $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
+          $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
           
       });
       
@@ -84,12 +85,7 @@
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
-                    </select>
-                    {% if sectors1 %}
-                    <input type="checkbox" id="sectors1_cb" name="sectors1_cb" value="sectors1" checked>
-                    {% else %}
-                    <input type="checkbox" id="sectors1_cb" name="sectors1_cb" value="sectors1">
-                    {% endif %}                    
+                    </select>                  
                 </div>
                 <br/>
                 <br/>
@@ -102,7 +98,6 @@
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
-                    <input type="checkbox" id="sectors2_cb" name="sectors2_cb" value="sectors2">
                 </div>
                 <br/>
                 <br/>
@@ -117,7 +112,6 @@
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
-                    <input type="checkbox" id="sectors3_cb" name="sectors3_cb" value="sectors3">
                 </div>
                 <br/>
                 <br/>
@@ -132,7 +126,6 @@
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
-                    <input type="checkbox" id="sectors4_cb" name="sectors4_cb" value="sectors4">
                 </div>
                 <br/>
                 <br/>
@@ -153,11 +146,18 @@
                 
                 <br/>
                 <br/>
-                <input type="submit"
+                <div class="form-group col-md-8 float-right">
+                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
+                        <option selected>Disable Forecast</option>
+                        <option>Enable Forecast</option>
+                    </select>
+                </div>
+
+                <!-- <input type="submit"
                         name="makePredictions"
                         value="Forecast"
                         class="btn btn-outline-primary"
-                        onchange="this.form.submit()">
+                        onchange="this.form.submit()"> -->
                 <!--When page refreshed it sends the previous request again-->
                 
 
