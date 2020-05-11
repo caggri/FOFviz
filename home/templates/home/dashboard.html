@@ -50,7 +50,7 @@
   });
   
 </script>
-    
+
         <form id="select_filter_form" method="GET" action="." >
             <div class="form-group col-md-4 float-left">
                 <label for="importantGraph">Important Graphs</label>
@@ -61,97 +61,118 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="form-group col-md-4 float-right">
-                <label for="dataName">Data</label>
-                <select id="dataName" class="form-control" name="datas" width="100%" onchange="this.form.submit()">
-                    {% for dataName in dataNames %}
-                    <option value="{{ dataName }}">{{ dataName }}</option>
-                    {% endfor %}
-                </select>
-                <br/>
-                <label for="plotType">Plot type</label>
-                <select id="plotType" class="form-control" name="plots" width="100%">
-                    {% for plotType in plotTypes %}
-                    <option value="{{ plotType }}">{{ plotType }}</option>
-                    {% endfor %}
-                </select>
-                <br/>
 
-                <label for="sectors1">Sector 1</label>
-                <div class="form-check form-check-inline">
-                    
-                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
-                        <option selected disabled>Choose...</option>
-                        {% for sector in sectors %}
-                        <option value="{{ sector }}">{{ sector }}</option>
-                        {% endfor %}
-                    </select>                  
-                </div>
-                <br/>
-                <br/>
-                {% if 2 in counterSectorArray %}
-                <label for="sectors2">Sector 2</label>
-                <div class="form-check form-check-inline">
-                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
-                        <option selected disabled>Choose...</option>
-                        {% for sector in sectors %}
-                        <option value="{{ sector }}">{{ sector }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <br/>
-                <br/>
-                {% endif %}
 
-                {% if 3 in counterSectorArray %}
-                <label for="sectors3">Sector 3</label>
-                <div class="form-check form-check-inline">
-                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
-                        <option selected disabled>Choose...</option>
-                        {% for sector in sectors %}
-                        <option value="{{ sector }}">{{ sector }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+            
+            <div class="form-group shadow-sm col-md-4 float-right" style="margin-top:90px">
+                <!-- tab list -->
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-default-tab" data-toggle="tab" href="#nav-default" role="tab" aria-controls="nav-default" aria-selected="true">Default</a>
+                    <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom" role="tab" aria-controls="nav-custom" aria-selected="false">Add Customized Graph</a>
+                    </div>
+                </nav>
                 <br/>
-                <br/>
-                {% endif %}
+                <!-- default tab -->
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-default" role="tabpanel" aria-labelledby="nav-default-tab">
+                        <label for="dataName">Data</label>
+                        <select id="dataName" class="form-control" name="datas" width="100%" onchange="this.form.submit()">
+                            {% for dataName in dataNames %}
+                            <option value="{{ dataName }}">{{ dataName }}</option>
+                            {% endfor %}
+                        </select>
+                        <br/>
+                        <label for="plotType">Plot type</label>
+                        <select id="plotType" class="form-control" name="plots" width="100%">
+                            {% for plotType in plotTypes %}
+                            <option value="{{ plotType }}">{{ plotType }}</option>
+                            {% endfor %}
+                        </select>
+                        <br/>
 
-                {% if 4 in counterSectorArray %}
-                <label for="sectors4">Sector 4</label>
-                <div class="form-check form-check-inline">
-                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
-                        <option selected disabled>Choose...</option>
-                        {% for sector in sectors %}
-                        <option value="{{ sector }}">{{ sector }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <br/>
-                <br/>
-                {% endif %}
+                        <label for="sectors1">Sector 1</label>
+                        <div class="form-check form-check-inline">
+                            
+                            <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
+                                <option selected disabled>Choose...</option>
+                                {% for sector in sectors %}
+                                <option value="{{ sector }}">{{ sector }}</option>
+                                {% endfor %}
+                            </select>                  
+                        </div>
+                        <br/>
+                        <br/>
+                        {% if 2 in counterSectorArray %}
+                        <label for="sectors2">Sector 2</label>
+                        <div class="form-check form-check-inline">
+                            <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
+                                <option selected disabled>Choose...</option>
+                                {% for sector in sectors %}
+                                <option value="{{ sector }}">{{ sector }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br/>
+                        <br/>
+                        {% endif %}
 
+                        {% if 3 in counterSectorArray %}
+                        <label for="sectors3">Sector 3</label>
+                        <div class="form-check form-check-inline">
+                            <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
+                                <option selected disabled>Choose...</option>
+                                {% for sector in sectors %}
+                                <option value="{{ sector }}">{{ sector }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br/>
+                        <br/>
+                        {% endif %}
+
+                        {% if 4 in counterSectorArray %}
+                        <label for="sectors4">Sector 4</label>
+                        <div class="form-check form-check-inline">
+                            <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
+                                <option selected disabled>Choose...</option>
+                                {% for sector in sectors %}
+                                <option value="{{ sector }}">{{ sector }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br/>
+                        <br/>
+                        {% endif %}
+
+                        
+                        <input type="submit"
+                                name="addSector"
+                                value="+"
+                                class="btn btn-outline-primary"
+                                onchange="this.form.submit()">
+
+                        <input type="submit"
+                                name="removeSector"
+                                value="-"
+                                class="btn btn-outline-primary"
+                                onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
+                        
+                        <br/>
+                        <br/>
+                        <div class="form-group col-md-8 float-right">
+                            <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
+                                <option selected>Disable Forecast</option>
+                                <option>Enable Forecast</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Custom Graph Tab -->
+                    <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">
+                        ...
+                    </div>
+                </div>
                 
-                <input type="submit"
-                        name="addSector"
-                        value="+"
-                        class="btn btn-outline-primary"
-                        onchange="this.form.submit()">
-
-                <input type="submit"
-                        name="removeSector"
-                        value="-"
-                        class="btn btn-outline-primary"
-                        onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
-                
-                <br/>
-                <br/>
-                <div class="form-group col-md-8 float-right">
-                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
-                        <option selected>Disable Forecast</option>
-                        <option>Enable Forecast</option>
-                    </select>
-                </div>
 
                 <!-- <input type="submit"
                         name="makePredictions"

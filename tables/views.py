@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 selectedTimeFrame = None
 selectedDataName = None
 
-# path = os.path.dirname(os.path.realpath(__file__))
-# path = os.path.join(path, 'EVDSdata.xlsx')
+path = os.path.dirname(os.path.realpath(__file__))
+path = os.path.join(path, 'EVDSdata.xlsx')
 # retriever = DataRetrieve.DataRetriever()
 # all_data = retriever.retrieve()
-# load_all_data = pd.read_excel(path)
+load_all_data = pd.read_excel(path)
 
 dates = []
 prices = []
@@ -25,7 +25,7 @@ currencyPatternList = ["\(Thousand TRY\)","\(Million USD\)"]
 # Create your views here.
 
 #this loads all of the data available, must be moved to inital page.
-load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
+# load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
 
 def table(request):
     global selectedDataName
