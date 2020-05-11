@@ -190,9 +190,17 @@ def home(request, copy=None):
             # plot_pacf(training_data_diff2)
             # pyplot.show()
         
+            seasonality_m=4
 
-            arima = pm.auto_arima(train, seasonal=True, m=4, error_action='ignore', trace=True,
-                                suppress_warnings=True, maxiter=20)
+            if selectedDataName == dataNames[0]:
+                seasonality_m=4
+            elif selectedDataName == dataNames[1]:
+                seasonality_m=1
+            elif selectedDataName == dataNames[2]:
+                seasonality_m=12
+
+            arima = pm.auto_arima(train, seasonal=True, m=seasonality_m, error_action='ignore', trace=True,
+                                suppress_warnings=True, maxiter=10)
             
             forecastValues = arima.predict(futureStepsN)
             
