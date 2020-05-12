@@ -59,7 +59,6 @@ def home(request, copy=None):
     global selectedPredictionMode
     global counterSectorArray
     
-    
     selectedPreviousImportantGraph = selectedImportantGraph
     selectedImportantGraph = request.GET.get('importantGraph')
     selectedPreviousDataName = selectedDataName
