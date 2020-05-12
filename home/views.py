@@ -12,6 +12,7 @@ import pandas as pd
 import os.path
 import DataRetrieve
 from sqlalchemy import create_engine
+import operator
 
 
 counterSector = 1
@@ -20,6 +21,7 @@ showPredictions = False
 plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 
 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 
 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
+ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul }
 
 
 #determine selection
@@ -86,6 +88,33 @@ def home(request, copy=None):
         elif selectedImportantGraph == list(importantGraphs)[2]:
             counterSector = 2
             counterSectorArray = [1, 2]
+
+    if (request.GET.get('saveCustom') != None):
+        customSector1Name = request.GET.get('sectors1custom')
+        customSector2Name = request.GET.get('sectors2custom')
+        operator = request.GET.get('operatorCustom')
+
+        firstEntry = a[a['Entry'] == customSector1Name]
+        firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
+        secondEntry = a[a['Entry'] == customSector2Name]
+        secondEntryVals = secondEntry.drop(secondEntry.columns[[0, 1]], axis=1).values
+        
+        newEntry = ops_dictionary[operator](firstEntryVals, secondEntryVals)
+        
+        columnsList = (firstEntry.iloc[:,2:].columns).tolist()
+        columnsList.insert(0,'Entry')
+        columnsList.insert(0, 'Unnamed: 0')
+
+        newEntryName = request.GET.get('inputEntryName')
+
+        valuesList = newEntry.tolist()[0]
+        valuesList.insert(0, newEntryName)
+        valuesList.insert(0, 2)
+
+        sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
+        sumFrameVals.columns = columnsList
+
+        a = pd.concat([a,sumFrameVals])
     
     if selectedPredictionMode != None:
         if selectedPredictionMode == predictionModes[0]:
@@ -102,35 +131,6 @@ def home(request, copy=None):
         if (counterSector != 1):
             counterSector = counterSector - 1
             counterSectorArray.pop()
-
-    if (request.GET.get('saveCustom') != None):
-        customSector1Name = request.GET.get('sectors1custom')
-        customSector2Name = request.GET.get('sectors2custom')
-        firstEntry = a[a['Entry'] == customSector1Name]
-        firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
-        secondEntry = a[a['Entry'] == customSector2Name]
-        secondEntryVals = secondEntry.drop(secondEntry.columns[[0, 1]], axis=1).values
-        
-        sumEntry = firstEntryVals + secondEntryVals
-        
-        columnsList = (firstEntry.iloc[:,2:].columns).tolist()
-        columnsList.insert(0,'Entry')
-        columnsList.insert(0, 'Unnamed: 0')
-
-        valuesList = sumEntry.tolist()[0]
-        valuesList.insert(0, request.GET.get('inputEntryName'))
-        valuesList.insert(0, 2)
-
-        sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
-        sumFrameVals.columns = columnsList
-
-        print(a)
-        print(sumFrameVals)
-
-        a = pd.concat([a,sumFrameVals])
-
-        
-
 
     # readFromDB()
     timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
