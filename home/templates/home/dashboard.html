@@ -169,23 +169,77 @@
                     </div>
                     <!-- Custom Graph Tab -->
                     <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">
-                        ...
+                        <label for="dataName">Data</label>
+                        <select id="dataName" class="form-control" name="datas" width="100%">
+                            {% for dataName in dataNames %}
+                            <option value="{{ dataName }}">{{ dataName }}</option>
+                            {% endfor %}
+                        </select>
+                        <br/>
+
+                        <label for="sectors1">Sector 1</label>
+                        <div class="form-check form-check-inline">
+                            
+                            <select id="sectors1custom" class="form-control mr-3 sectorDropdowns" name="sectors1custom" width="100%">
+                                {% for sector in sectors %}
+                                <option value="{{ sector }}">{{ sector }}</option>
+                                {% endfor %}
+                            </select>                  
+                        </div>
+                        <br/><br/>
+                        <div class="form-check form-check-inline">
+                            <select id="operator1" class="form-control mr-3" name="operator1custom" width="100%">
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                                <option value="*">*</option>
+                            </select>                  
+                        </div>
+                        <br/><br/>
+                        <div class="form-check form-check-inline">
+                            
+                            <select id="sectors2custom" class="form-control mr-3 sectorDropdowns" name="sectors2custom" width="100%">
+                                {% for sector in sectors %}
+                                <option value="{{ sector }}">{{ sector }}</option>
+                                {% endfor %}
+                            </select>                  
+                        </div>
+                        <br><br>
+                        <button
+                            class="btn btn-outline-primary float-right" 
+                            type="button"
+                            onclick="return false"
+                            data-target="#customNameModal"
+                            data-toggle="modal"
+                            style="margin-bottom: 20px">Create Custom Entry</button>
+
+
+                            <div class="modal" id="customNameModal" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Custom Entry</h4>
+                                            <button class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <input class="form-control" placeholder="Enter the name of the new Entry" type="text" id="inputEntryName" name="inputEntryName"/>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-primary" name="saveCustom" onclick="this.form.submit()">Save</button>
+                                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
-                
-
-                <!-- <input type="submit"
-                        name="makePredictions"
-                        value="Forecast"
-                        class="btn btn-outline-primary"
-                        onchange="this.form.submit()"> -->
-                <!--When page refreshed it sends the previous request again-->
-                
-
             </div>
             <div id="plot" class="float-left">
             {{ plot | safe }} 
             </div>
 
         </form>
+
+        
 {% endblock %}

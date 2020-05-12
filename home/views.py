@@ -103,6 +103,12 @@ def home(request, copy=None):
             counterSector = counterSector - 1
             counterSectorArray.pop()
 
+    if (request.GET.get('saveCustom') != None):
+        customSector1Name = request.GET.get('sectors1custom')
+        customSector2Name = request.GET.get('sectors2custom')
+        print(a[customSector1Name])
+
+
     # readFromDB()
     timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
     sectors =  a[a.columns[1]]
