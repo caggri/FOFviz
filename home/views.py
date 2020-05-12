@@ -106,7 +106,30 @@ def home(request, copy=None):
     if (request.GET.get('saveCustom') != None):
         customSector1Name = request.GET.get('sectors1custom')
         customSector2Name = request.GET.get('sectors2custom')
-        print(a[customSector1Name])
+        firstEntry = a[a['Entry'] == customSector1Name]
+        firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
+        secondEntry = a[a['Entry'] == customSector2Name]
+        secondEntryVals = secondEntry.drop(secondEntry.columns[[0, 1]], axis=1).values
+        
+        sumEntry = firstEntryVals + secondEntryVals
+        
+        columnsList = (firstEntry.iloc[:,2:].columns).tolist()
+        columnsList.insert(0,'Entry')
+        columnsList.insert(0, 'Unnamed: 0')
+
+        valuesList = sumEntry.tolist()[0]
+        valuesList.insert(0, request.GET.get('inputEntryName'))
+        valuesList.insert(0, 2)
+
+        sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
+        sumFrameVals.columns = columnsList
+
+        print(a)
+        print(sumFrameVals)
+
+        a = pd.concat([a,sumFrameVals])
+
+        
 
 
     # readFromDB()

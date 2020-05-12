@@ -180,7 +180,7 @@
                         <label for="sectors1">Sector 1</label>
                         <div class="form-check form-check-inline">
                             
-                            <select id="sectors1custom" class="form-control mr-3 sectorDropdowns" name="sectors1custom" width="100%">
+                            <select id="sectors1custom" class="form-control mr-3 sectorDropdowns" name="sectors1custom" onclick="return false" onchange="return false" width="100%">
                                 {% for sector in sectors %}
                                 <option value="{{ sector }}">{{ sector }}</option>
                                 {% endfor %}
@@ -197,7 +197,7 @@
                         <br/><br/>
                         <div class="form-check form-check-inline">
                             
-                            <select id="sectors2custom" class="form-control mr-3 sectorDropdowns" name="sectors2custom" width="100%">
+                            <select id="sectors2custom" class="form-control mr-3 sectorDropdowns" name="sectors2custom" onclick="return false" onchange="return false" width="100%">
                                 {% for sector in sectors %}
                                 <option value="{{ sector }}">{{ sector }}</option>
                                 {% endfor %}
