@@ -69,6 +69,11 @@ body {
   background-color: #fff;
 }
 
+.tooltip-inner {
+  /* If max-width does not work, try using width instead */
+  max-width: 400px !important;
+}
+
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
