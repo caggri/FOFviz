@@ -207,6 +207,12 @@ img {
   margin: 25px;
 }
 
+.resizeImage {
+  vertical-align: middle;
+  border-style: none;
+  margin: 11%;
+}
+
 svg {
   overflow: hidden;
   vertical-align: middle;

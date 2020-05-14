@@ -52,7 +52,7 @@
 </script>
 
 <form id="select_filter_form" method="GET" action="." >
-    <div class="form-group col-md-4 float-left">
+    <div class="form-group col-md-3 float-left">
         <label for="importantGraph">Important Graphs</label>
         <select id="importantGraph" class="form-control" name="importantGraph" width="100%" onchange="this.form.submit()">
             <option selected disabled>Choose...</option>
@@ -62,8 +62,6 @@
         </select>
     </div>
 
-
-        
     <div class="form-group shadow-sm col-md-4 float-right" style="margin-top:90px">
         <!-- tab list -->
         <nav>
@@ -92,7 +90,7 @@
                 <br/>
 
                 <label for="sectors1">Sector 1</label>
-                <div class="form-check form-check-inline">
+                <div>
                     
                     <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
                         <option selected disabled>Choose...</option>
@@ -102,10 +100,10 @@
                     </select>                  
                 </div>
                 <br/>
-                <br/>
+                
                 {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sector 2</label>
-                <div class="form-check form-check-inline">
+                <div>
                     <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
@@ -114,12 +112,11 @@
                     </select>
                 </div>
                 <br/>
-                <br/>
                 {% endif %}
 
                 {% if 3 in counterSectorArray %}
                 <label for="sectors3">Sector 3</label>
-                <div class="form-check form-check-inline">
+                <div>
                     <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
@@ -128,12 +125,12 @@
                     </select>
                 </div>
                 <br/>
-                <br/>
+                
                 {% endif %}
 
                 {% if 4 in counterSectorArray %}
                 <label for="sectors4">Sector 4</label>
-                <div class="form-check form-check-inline">
+                <div>
                     <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
@@ -142,29 +139,28 @@
                     </select>
                 </div>
                 <br/>
-                <br/>
+                
                 {% endif %}
+                <div class="row">
+                    <div class="form-group col-md-7 float-left">
+                        <input type="submit"
+                                name="addSector"
+                                value="+"
+                                class="btn btn-outline-primary"
+                                onchange="this.form.submit()">
 
-                
-                <input type="submit"
-                        name="addSector"
-                        value="+"
-                        class="btn btn-outline-primary"
-                        onchange="this.form.submit()">
-
-                <input type="submit"
-                        name="removeSector"
-                        value="-"
-                        class="btn btn-outline-primary"
-                        onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
-                
-                <br/>
-                <br/>
-                <div class="form-group col-md-8 float-right">
-                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
-                        <option selected>Disable Forecast</option>
-                        <option>Enable Forecast</option>
-                    </select>
+                        <input type="submit"
+                                name="removeSector"
+                                value="-"
+                                class="btn btn-outline-primary"
+                                onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
+                    </div>
+                    <div class="form-group col-md-5 float-right">
+                        <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
+                            <option selected>Disable Forecast</option>
+                            <option>Enable Forecast</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <!-- Custom Graph Tab -->
@@ -178,7 +174,7 @@
                 <br/>
 
                 <label for="sectors1">Sector 1</label>
-                <div class="form-check form-check-inline">
+                <div>
                     <select id="sectors1custom" class="form-control mr-3" name="sectors1custom"  width="100%">
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -186,7 +182,7 @@
                     </select>                  
                 </div>
                 <br/><br/>
-                <div class="form-check form-check-inline">
+                <div>
                     <select id="operatorCustom" class="form-control mr-3" name="operatorCustom" width="100%">
                         <option value="+">+</option>
                         <option value="-">-</option>
@@ -194,7 +190,7 @@
                     </select>                  
                 </div>
                 <br/><br/>
-                <div class="form-check form-check-inline">
+                <div>
                     <select id="sectors2custom" class="form-control mr-3" name="sectors2custom" width="100%">
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -233,7 +229,7 @@
             </div>
         </div>
     </div>
-    <div id="plot" class="float-left">
+    <div id="plot" class="shadow p-3 mb-5 bg-white rounded col-md-7 float-left">
     {{ plot | safe }} 
     </div>
 

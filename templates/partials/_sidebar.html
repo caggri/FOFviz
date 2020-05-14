@@ -4,8 +4,8 @@
       <!-- <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}"> -->
         <div id="resizeImg" class="resizeImage">
           <!-- <i class="fas fa-laugh-wink"></i> -->
-          <a href="/">
-          <img class= "resizeImage" src="{% static 'login/images/sidebarLogo.png' %}" alt="IMG" />
+          <a href="/home">
+          <img class="resizeImage" src="{% static 'login/images/sidebarLogo.png' %}" alt="IMG"/>
         </a>
         </div>
         
@@ -52,3 +52,23 @@
       </div>
 
     </ul>
+
+    <script>
+      $(document).ready(function() {
+        
+        var sidebarToggle = true
+        $("#sidebarToggle").on('click', function(){
+          if(sidebarToggle){
+            sidebarToggle = false
+            $(".resizeImage").css({"margin-bottom": "20%", "height": "120px", "width": "70px"})
+          } else {
+            sidebarToggle = true
+            $(".resizeImage").css({"border-style": "none", "margin": "10%", "vertical-align": "middle", "height": "", "width" : ""})
+          }
+
+        })
+        
+      });
+    </script>
+
+    
