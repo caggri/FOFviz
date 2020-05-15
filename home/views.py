@@ -14,7 +14,6 @@ import DataRetrieve
 from sqlalchemy import create_engine
 import operator
 
-
 counterSector = 1
 counterSectorArray = [counterSector]
 showPredictions = False
@@ -31,6 +30,8 @@ selectedSectors = [None,None,None,None]
 selected_data = [None,None,None,None]
 selectedImportantGraph = None
 selectedPreviousImportantGraph = None
+timeFrame_column_names = []
+sectors = []
 
 #List Elements
 dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
@@ -43,28 +44,12 @@ predictionModes = ['Disable Forecast', 'Enable Forecast']
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path, 'EVDSdata.xlsx')
 
-@csrf_exempt
-def home(request, copy=None):
-    global selectedSectors
-    global counterSector
-    global a
-    global showPredictions
+def handleDataSourceGraphRequest(request):
+    global selectedPreviousDataName, selectedDataName, a
 
-    global dataNames
-    global selectedDataName
-    global selectedPreviousDataName
-    global importantGraphs
-    global selectedImportantGraph
-    global selectedPreviousImportantGraph
-    global selectedPredictionMode
-    global counterSectorArray
-    
-    selectedPreviousImportantGraph = selectedImportantGraph
-    selectedImportantGraph = request.GET.get('importantGraph')
     selectedPreviousDataName = selectedDataName
     selectedDataName = request.GET.get('datas')
-    selectedPredictionMode = request.GET.get('makePredictions')
-    
+
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
             if selectedDataName == dataNames[0]:
@@ -76,17 +61,28 @@ def home(request, copy=None):
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(path)
+
+
     
+def handleImportantGraphRequest(request):
+    global selectedPreviousImportantGraph, selectedImportantGraph
+
+    selectedPreviousImportantGraph = selectedImportantGraph
+    selectedImportantGraph = request.GET.get('importantGraph')
+
     if selectedImportantGraph != None:
         selectedDataName = dataNames[1]
         a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
 
-        if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
-            counterSector = 1
-            counterSectorArray = [counterSector]
-        elif selectedImportantGraph == list(importantGraphs)[2]:
-            counterSector = 2
-            counterSectorArray = [1, 2]
+    if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
+        counterSector = 1
+        counterSectorArray = [counterSector]
+    elif selectedImportantGraph == list(importantGraphs)[2]:
+        counterSector = 2
+        counterSectorArray = [1, 2]
+
+def handleCustomGraphRequest(request):
+    global a, selectedImportantGraph, columnsList, valuesList
 
     if (request.GET.get('saveCustom') != None):
         customSector1Name = request.GET.get('sectors1custom')
@@ -114,12 +110,19 @@ def home(request, copy=None):
         sumFrameVals.columns = columnsList
 
         a = pd.concat([a,sumFrameVals])
-    
+
+def handlePredictionRequest(request):
+    global selectedPredictionMode, predictionModes
+
+    selectedPredictionMode = request.GET.get('makePredictions')
     if selectedPredictionMode != None:
         if selectedPredictionMode == predictionModes[0]:
             showPredictions = False
         elif selectedPredictionMode == predictionModes[1]:
-             showPredictions = True
+            showPredictions = True
+
+def handleAddRemoveSectorRequest(request):
+    global counterSector
 
     #handling button requests addSector-removeSector
     if (request.GET.get('addSector') != None and request.is_ajax() == False):
@@ -131,10 +134,9 @@ def home(request, copy=None):
             counterSector = counterSector - 1
             counterSectorArray.pop()
 
-    # readFromDB()
-    timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
-    sectors =  a[a.columns[1]]
-    
+def handleListingRequest(request):
+    global selectedSectors, sectors
+
     for i in counterSectorArray:
         selectedSectors[i-1] = sectors[i]
         requestString = 'sectors' + str(i)
@@ -153,6 +155,22 @@ def home(request, copy=None):
 
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
         selected_data[i-1].drop(selected_data[i-1].columns[[0, 1]], axis=1, inplace=True)
+
+
+@csrf_exempt
+def home(request, copy=None):
+    global timeFrame_column_names, sectors
+
+    handleDataSourceGraphRequest(request)
+    handleImportantGraphRequest(request)
+    handleCustomGraphRequest(request)
+    handlePredictionRequest(request)
+    handleAddRemoveSectorRequest(request)
+
+    timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
+    sectors =  a[a.columns[1]]
+
+    handleListingRequest(request)
 
     def getParams(chartType):
         if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
@@ -183,14 +201,6 @@ def home(request, copy=None):
             sectorName = 'Sector ' + str(i)
             values = sectorsData[sectorName]
 
-            #clip1
-            # print(vals)
-            # minVal = min(vals)
-            # maxval = max(vals)
-            # meanVals = statistics.mean(vals)
-            # sdVals = statistics.stdev(vals)
-            # normVals = (vals-meanVals)/(sdVals)
-
             #creating data frame
             data = pd.DataFrame(
                 {'dates': dates,
@@ -198,52 +208,23 @@ def home(request, copy=None):
                 })
 
             data.set_index('dates', inplace=True)
-
-            #splitting into train_test data
-            #train, test = model_selection.train_test_split(data, train_size=14)
             train = data
-
-            #clip2
-            # training_data_diff1 = training_data.diff().fillna(training_data)
-            # training_data_diff2 = training_data_diff1.diff().fillna(training_data)
-            #comparing differencing plots
-            # pyplot.plot(training_data, 'b')
-            # pyplot.plot(training_data_diff1, 'r')
-            # pyplot.plot(training_data_diff2, 'g')
-            # pyplot.show()
-
-            #analyzing prediction plots and determining parameters
-            # plot_acf(training_data_diff2)
-            # pyplot.show()
-            # plot_pacf(training_data_diff2)
-            # pyplot.show()
         
+            seasonality_m=4
 
-            arima = pm.auto_arima(train, seasonal=True, m=4, error_action='ignore', trace=True,
-                                suppress_warnings=True, maxiter=20)
+            if selectedDataName == dataNames[0]:
+                seasonality_m=4
+            elif selectedDataName == dataNames[1]:
+                seasonality_m=1
+            elif selectedDataName == dataNames[2]:
+                seasonality_m=12
+
+            arima = pm.auto_arima(train, seasonal=True, m=seasonality_m, error_action='ignore', trace=True,
+                                suppress_warnings=True, maxiter=10)
             
             forecastValues = arima.predict(futureStepsN)
             
             forecast_data = pd.Series(forecastValues, index = forecastDates) 
-
-            #clip3
-            # forecastDates = []
-            # lastDate = dates[-1]
-
-            # for i in range(futureStepsN):
-            #     lastDate = lastDate + datetime.timedelta(days=365)
-            #     forecastDates.append(lastDate)
-
-            # forecast_data = pd.DataFrame(
-            #     {'datetime': forecastDates,
-            #      'values': forecastValues
-            #     })
-            # forecast_data.set_index('datetime', inplace=True)
-            # training_data.values = vals
-
-            # pyplot.plot(training_data, 'b')
-            # pyplot.plot(forecast_data, 'g')
-            # pyplot.show()
 
             sectorsData[sectorName] = sectorsData[sectorName].append(forecast_data)
 

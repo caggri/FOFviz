@@ -154,6 +154,11 @@ sub {
   bottom: -.25em;
 }
 
+.tooltip-inner {
+  /* If max-width does not work, try using width instead */
+  max-width: 400px !important;
+}
+
 sup {
   top: -.5em;
 }
