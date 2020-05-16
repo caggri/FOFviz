@@ -13,6 +13,7 @@ import os.path
 import DataRetrieve
 from sqlalchemy import create_engine
 import operator
+import wikipedia
 
 counterSector = 1
 counterSectorArray = [counterSector]
@@ -32,6 +33,7 @@ selectedImportantGraph = None
 selectedPreviousImportantGraph = None
 timeFrame_column_names = []
 sectors = []
+selectedSectorsDefinitions = [None,None,None,None]
 
 #List Elements
 dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
@@ -43,6 +45,22 @@ predictionModes = ['Disable Forecast', 'Enable Forecast']
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path, 'EVDSdata.xlsx')
+
+def fillDefinitions():
+    global selectedSectorsDefinitions
+    for i in range(len(selectedSectors)):
+        s =  selectedSectors[i]
+        if(s!=None):
+            s = s.split('.')[-1]
+            if "(Thousand TRY)" in s: 
+                s = s.replace('(Thousand TRY)', '')
+            
+            try:
+                selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=3)
+            except:
+                selectedSectorsDefinitions[i] = "Definition not available"
+            
+            print(selectedSectorsDefinitions[0])
 
 def handleDataSourceGraphRequest(request):
     global selectedPreviousDataName, selectedDataName, a
@@ -62,7 +80,7 @@ def handleDataSourceGraphRequest(request):
         selectedDataName = dataNames[0]
         a = pd.read_excel(path)
 
-
+    
     
 def handleImportantGraphRequest(request):
     global selectedPreviousImportantGraph, selectedImportantGraph
@@ -136,6 +154,8 @@ def handleAddRemoveSectorRequest(request):
 
 def handleListingRequest(request):
     global selectedSectors, sectors
+
+    selectedSectors[0] = sectors[0]
 
     for i in counterSectorArray:
         selectedSectors[i-1] = sectors[i]
@@ -253,6 +273,9 @@ def home(request, copy=None):
             )
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+
+        fillDefinitions()
+
         return plot_div
 
     if request.GET.get('plots') is None:
@@ -260,14 +283,18 @@ def home(request, copy=None):
     else:
         getSelectedPlot = drawChart(request.GET.get('plots'))
 
+    
+
     context = {
         'plot': getSelectedPlot,
         'sectors': sectors,
+
         'selectedSector1': selectedSectors[0],
         'selectedSector2': selectedSectors[1],
         'selectedSector3': selectedSectors[2],
         'selectedSector4': selectedSectors[3],
         'selectedSectors': selectedSectors,
+
         'counterSectorArray': counterSectorArray,
         'plotTypes': plotDictionary.keys(),
         'selectedPlot': request.GET.get('plots'),
@@ -275,13 +302,23 @@ def home(request, copy=None):
         'selectedDataName': selectedDataName,
         'importantGraphs': importantGraphs.keys(),
         'selectedImportantGraph': selectedImportantGraph,
-        'selectedPredictionMode': selectedPredictionMode
+        'selectedPredictionMode': selectedPredictionMode,
+
+        'selectedSectorsDefinitions1': selectedSectorsDefinitions[0],
+        'selectedSectorsDefinitions2': selectedSectorsDefinitions[1],
+        'selectedSectorsDefinitions3': selectedSectorsDefinitions[2],
+        'selectedSectorsDefinitions4': selectedSectorsDefinitions[3],
+        'selectedSectorsDefinitions': selectedSectorsDefinitions
     }
     if request.is_ajax():
         context['sectors'] = sectors.tolist()
         context['plotTypes'] = list(plotDictionary.keys())
         context['importantGraphs'] = list(importantGraphs.keys())
         context['makePredictions'] = predictionModes
+        context['selectedSectorsDefinitions1'] = selectedSectorsDefinitions[0]
+        context['makePredictions'] = predictionModes
+        context['makePredictions'] = predictionModes
+
         
         return HttpResponse(json.dumps(context))
     else:

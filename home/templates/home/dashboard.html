@@ -9,22 +9,32 @@
       $(function() {
           $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
           $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
+
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
           $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
+
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
           $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
+
           
       });
       
       $( "#plotType, .sectorDropdowns" ).change(function() {
+        $(document).ajaxStart(function(){
+                $("#plot").html('<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>')         
+        });  
         $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
             $('#plot').html(data.plot)
+            $('#tooltip1').tooltip('hide')
+                .attr('data-original-title', data.selectedSectorsDefinitions1)
+            .tooltip('show');
         }, "json");
       });
 
     $('[data-toggle="tooltip"]').tooltip()
+    
       /*
       $('input[value="+"]').on('click', function(){
         event.preventDefault();
@@ -77,7 +87,7 @@
             <div class="tab-pane fade show active" id="nav-default" role="tabpanel" aria-labelledby="nav-default-tab">
                 <label for="dataName">Data 
                     {% if selectedDataName == "Flow of Funds" %}
-                    <svg class="bi bi-question-circle" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="rgb(165, 255, 0)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
+                    <svg class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
                     Flow of funds (FOF) are financial accounts that are used to track the net inflows and outflows of money to and from various sectors of a national economy. Macroeconomic data from flow of funds accounts are collected and analyzed by a country's central bank. In the United States, this data is released by the Federal Reserve Bank approximately 10 weeks after the end of each quarter. 
                     Note that a different term 'fund flows' is used to denote the amount of assets moving in and out of different types of mutual funds, e.g. among equity and fixed income funds.
                     ">
@@ -86,7 +96,7 @@
                     </svg>
                     {% endif %}
                     {% if selectedDataName == "Balance Sheet (Annual)" or selectedDataName == "Balance Sheet (Monthly)" %}
-                    <svg class="bi bi-question-circle" width="1.5em" height="1.5em" viewBox="0 0 16 16" fill="rgb(165, 255, 0)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
+                    <svg class="bi bi-question-circle" width="1.2em" height="1.2em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
                     A balance sheet is a financial statement that reports a company's assets, liabilities and shareholders' equity at a specific point in time, and provides a basis for computing rates of return and evaluating its capital structure. It is a financial statement that provides a snapshot of what a company owns and owes, as well as the amount invested by shareholders.
                     The balance sheet is used alongside other important financial statements such as the income statement and statement of cash flows in conducting fundamental analysis or calculating financial ratios.
                     The balance sheet adheres to the following accounting equation: Assets = Liabilities + Shareholders' Equity. The formula is intuitive: a company has to pay for all the things it owns (assets) by either borrowing money (taking on liabilities) or taking it from investors (issuing shareholders' equity). 
@@ -113,24 +123,37 @@
                 <label for="sectors1">Sector 1</label>
                 <div>
                     
-                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
+                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="80%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
-                    </select>                  
+                    </select>                 
+                    
+                    <svg id="tooltip1" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" title= "{{selectedSectorsDefinitions1}}" data-toggle="tooltip" data-placement="bottom">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                    </svg>
                 </div>
                 <br/>
                 
                 {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sector 2</label>
                 <div>
-                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
+                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "80%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
+
+                    <svg id="tooltip2" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
+                    Flow of funds (FOF) are financial accounts that are used to track the net inflows and outflows of money to and from various sectors of a national economy. Macroeconomic data from flow of funds accounts are collected and analyzed by a country's central bank. In the United States, this data is released by the Federal Reserve Bank approximately 10 weeks after the end of each quarter. 
+                    Note that a different term 'fund flows' is used to denote the amount of assets moving in and out of different types of mutual funds, e.g. among equity and fixed income funds.
+                    ">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                    </svg>
                 </div>
                 <br/>
                 {% endif %}
@@ -138,12 +161,20 @@
                 {% if 3 in counterSectorArray %}
                 <label for="sectors3">Sector 3</label>
                 <div>
-                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
+                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "80%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
+
+                    <svg id="tooltip3" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
+                    Flow of funds (FOF) are financial accounts that are used to track the net inflows and outflows of money to and from various sectors of a national economy. Macroeconomic data from flow of funds accounts are collected and analyzed by a country's central bank. In the United States, this data is released by the Federal Reserve Bank approximately 10 weeks after the end of each quarter. 
+                    Note that a different term 'fund flows' is used to denote the amount of assets moving in and out of different types of mutual funds, e.g. among equity and fixed income funds.
+                    ">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                    </svg>
                 </div>
                 <br/>
                 
@@ -152,12 +183,20 @@
                 {% if 4 in counterSectorArray %}
                 <label for="sectors4">Sector 4</label>
                 <div>
-                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
+                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "80%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
+
+                    <svg id="tooltip4" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
+                    Flow of funds (FOF) are financial accounts that are used to track the net inflows and outflows of money to and from various sectors of a national economy. Macroeconomic data from flow of funds accounts are collected and analyzed by a country's central bank. In the United States, this data is released by the Federal Reserve Bank approximately 10 weeks after the end of each quarter. 
+                    Note that a different term 'fund flows' is used to denote the amount of assets moving in and out of different types of mutual funds, e.g. among equity and fixed income funds.
+                    ">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                    </svg>
                 </div>
                 <br/>
                 
