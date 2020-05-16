@@ -56,7 +56,7 @@ def fillDefinitions():
                 s = s.replace('(Thousand TRY)', '')
             
             try:
-                selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=3)
+                selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=2)
             except:
                 selectedSectorsDefinitions[i] = "Definition not available"
 
@@ -269,6 +269,8 @@ def home(request, copy=None):
                 df,
                 **params
             )
+
+        fig.update_layout(height=450, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 

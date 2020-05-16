@@ -129,54 +129,50 @@
                 <br/>
 
                 <label for="sectors1">Sector 1</label>
+                <svg id="tooltip1" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" title= "" data-toggle="tooltip" data-placement="bottom">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                    <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                </svg>
                 <div>
-                    
-                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="80%">
+                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
-                    </select>                 
-                    
-                    <svg id="tooltip1" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" title= "" data-toggle="tooltip" data-placement="bottom">
-                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
-                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                    </svg>
+                    </select>       
                 </div>
                 <br/>
                 
                 {% if 2 in counterSectorArray %}
                 <label for="sectors2">Sector 2</label>
+                <svg id="tooltip2" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                    <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                </svg>
                 <div>
-                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "80%">
+                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
-
-                    <svg id="tooltip2" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
-                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
-                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                    </svg>
                 </div>
                 <br/>
                 {% endif %}
 
                 {% if 3 in counterSectorArray %}
                 <label for="sectors3">Sector 3</label>
+                <svg id="tooltip3" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                    <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                </svg>
                 <div>
-                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "80%">
+                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
-
-                    <svg id="tooltip3" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
-                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
-                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                    </svg>
                 </div>
                 <br/>
                 
@@ -184,24 +180,23 @@
 
                 {% if 4 in counterSectorArray %}
                 <label for="sectors4">Sector 4</label>
+                <svg id="tooltip4" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                    <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                </svg>
                 <div>
-                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "80%">
+                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
                     </select>
-
-                    <svg id="tooltip4" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
-                        <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
-                        <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                    </svg>
                 </div>
                 <br/>
                 
                 {% endif %}
                 <div class="row">
-                    <div class="form-group col-md-7 float-left">
+                    <div class="form-group col-md-9 ">
                         <input type="submit"
                                 name="addSector"
                                 value="+"
@@ -212,15 +207,14 @@
                                 name="removeSector"
                                 value="-"
                                 class="btn btn-outline-primary"
-                                onchange="this.form.submit()"><span style="margin-left: 15px">Add / Remove Sector</span>
+                                onchange="this.form.submit()"><span class="ml-2"><label>Add / Remove Sector</label></span>
                     </div>
-                    
-                    <div class="form-group col-md-5 float-right">
-                        <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
-                            <option selected>Disable Forecast</option>
-                            <option>Enable Forecast</option>
-                        </select>
-                    </div>
+                </div>
+                <div class="form-group col-md-7 float-right">
+                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
+                        <option selected>Disable Forecast</option>
+                        <option>Enable Forecast</option>
+                    </select>
                 </div>
             </div>
             <!-- Custom Graph Tab -->
@@ -289,7 +283,7 @@
             </div>
         </div>
     </div>
-    <div id="plot" class="shadow p-3 mb-5 bg-white rounded col-md-7 float-left">
+    <div id="plot" class="p-3 mb-5 bg-transparent text-white rounded col-sm-8 float-left">
     {{ plot | safe }} 
     </div>
     
