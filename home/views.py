@@ -59,8 +59,6 @@ def fillDefinitions():
                 selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=3)
             except:
                 selectedSectorsDefinitions[i] = "Definition not available"
-            
-            print(selectedSectorsDefinitions[0])
 
 def handleDataSourceGraphRequest(request):
     global selectedPreviousDataName, selectedDataName, a
@@ -315,11 +313,7 @@ def home(request, copy=None):
         context['plotTypes'] = list(plotDictionary.keys())
         context['importantGraphs'] = list(importantGraphs.keys())
         context['makePredictions'] = predictionModes
-        context['selectedSectorsDefinitions1'] = selectedSectorsDefinitions[0]
-        context['makePredictions'] = predictionModes
-        context['makePredictions'] = predictionModes
 
-        
         return HttpResponse(json.dumps(context))
     else:
         return render(request, 'home/dashboard.html', context)
