@@ -46,6 +46,11 @@ predictionModes = ['Disable Forecast', 'Enable Forecast']
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path, 'EVDSdata.xlsx')
 
+
+def connectToDatabase():
+    sqlEngine = create_engine('postgresql+psycopg2://postgres:CT1SEr.FtW@database-1.cczlh6s4kbhf.us-east-1.rds.amazonaws.com/data')
+    dbConnection = sqlEngine.connect()
+
 def fillDefinitions():
     global selectedSectorsDefinitions
     for i in range(len(selectedSectors)):
@@ -77,6 +82,7 @@ def handleDataSourceGraphRequest(request):
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(path)
+        DataRetrieve.DataRetriever.push("asd","asd")
 
     
     
