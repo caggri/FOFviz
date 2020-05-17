@@ -161,11 +161,11 @@ def handleAddRemoveSectorRequest(request):
     global counterSector
 
     #handling button requests addSector-removeSector
-    if (request.GET.get('addSector') != None and request.is_ajax() == False):
+    if (request.GET.get('addSector') != None):
         if (counterSector != 4):
             counterSector = counterSector + 1
             counterSectorArray.append(counterSector)
-    if (request.GET.get('removeSector') != None and request.is_ajax() == False):
+    if (request.GET.get('removeSector') != None):
         if (counterSector != 1):
             counterSector = counterSector - 1
             counterSectorArray.pop()
