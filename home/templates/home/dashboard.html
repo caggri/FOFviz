@@ -27,7 +27,7 @@
       
       $( "#plotType, .sectorDropdowns" ).change(function() {
         $(document).ajaxStart(function(){
-                $("#plot").html('<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>')         
+                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>')         
         });  
         $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
             $('#plot').html(data.plot)
