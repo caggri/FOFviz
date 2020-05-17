@@ -14,6 +14,7 @@ import DataRetrieve
 from sqlalchemy import create_engine
 import operator
 import wikipedia
+from io import StringIO
 
 counterSector = 1
 counterSectorArray = [counterSector]
@@ -46,11 +47,6 @@ predictionModes = ['Disable Forecast', 'Enable Forecast']
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path, 'EVDSdata.xlsx')
 
-
-def connectToDatabase():
-    sqlEngine = create_engine('postgresql+psycopg2://postgres:CT1SEr.FtW@database-1.cczlh6s4kbhf.us-east-1.rds.amazonaws.com/data')
-    dbConnection = sqlEngine.connect()
-
 def fillDefinitions():
     global selectedSectorsDefinitions
     for i in range(len(selectedSectors)):
@@ -82,10 +78,18 @@ def handleDataSourceGraphRequest(request):
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(path)
-        
 
+        retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data","Hassnain Ali")
     
+        lenData = len(retrievedCustomData)
+
+        if(lenData>0):
+            for i in range(lenData):
+                retrievedString = retrievedCustomData[i][0]
+                retrieveDF = pd.read_csv(StringIO(retrievedString))
+                a = pd.concat([a,retrieveDF])
     
+
 def handleImportantGraphRequest(request):
     global selectedPreviousImportantGraph, selectedImportantGraph
 
@@ -120,20 +124,25 @@ def handleCustomGraphRequest(request):
         
         columnsList = (firstEntry.iloc[:,2:].columns).tolist()
         columnsList.insert(0,'Entry')
-        columnsList.insert(0, 'Unnamed: 0')
 
         newEntryName = request.GET.get('inputEntryName')
 
         valuesList = newEntry.tolist()[0]
         valuesList.insert(0, newEntryName)
+
+        pushFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[2]).T)
+        pushFrameVals.columns = columnsList
+
+        columnsList.insert(0, 'Unnamed: 0')
+
         valuesList.insert(0, 2)
 
         sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
+        
         sumFrameVals.columns = columnsList
         
-        dataFrameInfo = sumFrameVals.to_csv() 
-        
-        DataRetrieve.DataRetriever.pushString("custom_user_data",dataFrameInfo)
+        dataFrameInfo = pushFrameVals.to_csv() 
+        DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo)
         
         a = pd.concat([a,sumFrameVals])
 

@@ -48,13 +48,14 @@ class DataRetriever:
 
         dbConnection.execute(sqlStatement)
 
-        # try:
-        #     df.to_sql(tablename, dbConnection, if_exists='append')
 
-        # except ValueError as vx:
+    def pullString(tablename, username):
+        dbConnection = DataRetriever.openConnection()
+        
+        sqlStatement = "SELECT userdata FROM " + tablename + " WHERE username='" + username +"';"
+         
+        print(sqlStatement) 
 
-        #     print(vx)
+        rs = dbConnection.execute(sqlStatement).fetchall()
 
-        # except Exception as ex:   
-
-        #     print(ex)
+        return rs
