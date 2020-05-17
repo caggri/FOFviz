@@ -6,23 +6,27 @@
 
 <script>
   $(document).ready(function() {
-      $(function() {
-          $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
-          $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
-          $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
-          $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
-          $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
-          $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
-          $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
-          $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
-          
-      });
-      
-      $( "#plotType, .sectorDropdowns" ).change(function() {
-        $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
-            $('#plot').html(data.plot)
-        }, "json");
-      });
+    $(function() {
+        $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
+        $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
+        $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
+        $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
+        $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
+        $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
+        $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
+        $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
+        
+    });
+
+    $(document).ajaxStart(function(){
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>')
+    });
+    
+    $( "#plotType, .sectorDropdowns" ).change(function() {
+    $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
+        $('#plot').html(data.plot)
+    }, "json");
+    });
 
     $('[data-toggle="tooltip"]').tooltip()
       /*

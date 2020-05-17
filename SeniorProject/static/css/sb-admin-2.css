@@ -74,6 +74,11 @@ body {
   max-width: 400px !important;
 }
 
+.resizeImage {
+  height: 120px;
+  width: 70px;
+}
+
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
