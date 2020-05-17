@@ -110,7 +110,8 @@ def handleImportantGraphRequest(request):
 def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
 
-    if (request.GET.get('saveCustom') != None):
+    requestGet = request.GET.get('saveCustom')
+    if (requestGet!= None):
         customSector1Name = request.GET.get('sectors1custom')
         customSector2Name = request.GET.get('sectors2custom')
         operator = request.GET.get('operatorCustom')
