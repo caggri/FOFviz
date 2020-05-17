@@ -82,7 +82,7 @@ def handleDataSourceGraphRequest(request):
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(path)
-        DataRetrieve.DataRetriever.push("asd","asd")
+        
 
     
     
@@ -130,7 +130,11 @@ def handleCustomGraphRequest(request):
 
         sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
         sumFrameVals.columns = columnsList
-
+        
+        dataFrameInfo = sumFrameVals.to_csv() 
+        
+        DataRetrieve.DataRetriever.pushString("custom_user_data",dataFrameInfo)
+        
         a = pd.concat([a,sumFrameVals])
 
 def handlePredictionRequest(request):

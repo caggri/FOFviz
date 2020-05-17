@@ -43,7 +43,7 @@ class DataRetriever:
         
         testName = "Hassnain Ali"
         
-        sqlStatement = "INSERT INTO custom_user_data (username, userdata) VALUES ('"+testName+"', '"+ serializedString +"')"
+        sqlStatement = "INSERT INTO "+ tablename + "(username, userdata) VALUES ('"+testName+"', '"+ serializedString +"')"
         print(sqlStatement) 
 
         dbConnection.execute(sqlStatement)
