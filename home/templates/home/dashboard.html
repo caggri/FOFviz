@@ -9,12 +9,15 @@
       $(function() {
           $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
           $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
-
+        
+          $('#sectors2').prop("disabled", true);
+          $('#sectors3').prop("disabled", true);
+          $('#sectors4').prop("disabled", true);
 
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
-          $('#sectors2 option:contains({{selectedSector2}})').prop('selected',true);
-          $('#sectors3 option:contains({{selectedSector3}})').prop('selected',true);
-          $('#sectors4 option:contains({{selectedSector4}})').prop('selected',true);
+          $('#sectors2 option:contains({{selectedSector2}})').prop('selected',false);
+          $('#sectors3 option:contains({{selectedSector3}})').prop('selected',false);
+          $('#sectors4 option:contains({{selectedSector4}})').prop('selected',false);
 
           $('#tooltip1').attr('data-original-title', "{{selectedSectorsDefinitions1}}");
           $('#tooltip2').attr('data-original-title', "{{selectedSectorsDefinitions2}}");
@@ -24,14 +27,29 @@
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
           $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
       });
+
+    function handleSectorVisibility(counterSectorArray, selectedSectors) {
+          console.log(selectedSectors)
+        for(let i=1;i<=4;i++){
+            if(counterSectorArray.includes(i)){
+                $('#sectors'+i).prop("disabled", false);
+                $('#sectors'+i+' option:contains('+selectedSectors[i-1]+')').prop('selected',true);
+            }
+            else{
+                $('#sectors'+i+' option:nth-child(1)').prop('selected',true);
+                $('#sectors'+i).prop("disabled", true);
+            }
+        }
+      }
       
-      $( "#plotType, .sectorDropdowns" ).change(function() {
+    $( "#plotType, .sectorDropdowns" ).change(function() {
         $(document).ajaxStart(function(){
-                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>')         
+                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
         });  
         $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
+            
             $('#plot').html(data.plot)
-
+            
             //reloading tooltips
             $('#tooltip1').attr('data-original-title', data.selectedSectorsDefinitions[0])
             $('#tooltip2').attr('data-original-title', data.selectedSectorsDefinitions[1])
@@ -43,13 +61,20 @@
 
     $('[data-toggle="tooltip"]').tooltip()
     
-      /*
+      
       $('input[value="+"]').on('click', function(){
+
         event.preventDefault();
-        let req = $( "#select_filter_form" ).serialize() +'&'+ encodeURIComponent('addSector')+'='+encodeURIComponent('+')
-        console.log(req)
+
+        let req = $( "#select_filter_form" ).serializeArray()
+        req.push({ name: "addSector", value: "+" })
+        $(document).ajaxStart(function(){
+                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
+        });  
+
         $.get('', req, function( data ) {
             $('#plot').html(data.plot)
+            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
         }, "json");
         
       })
@@ -57,15 +82,20 @@
       $('input[value="-"]').on('click', function(){
         event.preventDefault();
 
-        let req = $( "#select_filter_form" ).serialize() +'&'+ encodeURIComponent('removeSector')+'='+encodeURIComponent('-')
-        console.log(req)
+        let req = $( "#select_filter_form" ).serializeArray()
+        req.push({ name: "removeSector", value: "-" })
+        $(document).ajaxStart(function(){
+                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
+        });  
+        
         $.get('', req, function( data ) {
             $('#plot').html(data.plot)
+            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
         }, "json");
         
       })
       
-      */
+      
   });
   
 </script>
@@ -143,7 +173,7 @@
                 </div>
                 <br/>
                 
-                {% if 2 in counterSectorArray %}
+                
                 <label for="sectors2">Sector 2</label>
                 <svg id="tooltip2" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
                     <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
@@ -158,9 +188,9 @@
                     </select>
                 </div>
                 <br/>
-                {% endif %}
+                
 
-                {% if 3 in counterSectorArray %}
+                
                 <label for="sectors3">Sector 3</label>
                 <svg id="tooltip3" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
                     <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
@@ -176,9 +206,9 @@
                 </div>
                 <br/>
                 
-                {% endif %}
+                
 
-                {% if 4 in counterSectorArray %}
+                
                 <label for="sectors4">Sector 4</label>
                 <svg id="tooltip4" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
                     <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
@@ -194,20 +224,20 @@
                 </div>
                 <br/>
                 
-                {% endif %}
+                
                 <div class="row">
                     <div class="form-group col-md-9 ">
                         <input type="submit"
                                 name="addSector"
                                 value="+"
                                 class="btn btn-outline-primary"
-                                onchange="this.form.submit()">
+                               >
 
                         <input type="submit"
                                 name="removeSector"
                                 value="-"
                                 class="btn btn-outline-primary"
-                                onchange="this.form.submit()"><span class="ml-2"><label>Add / Remove Sector</label></span>
+                                ><span class="ml-2"><label>Add / Remove Sector</label></span>
                     </div>
                 </div>
                 <div class="form-group col-md-7 float-right">
