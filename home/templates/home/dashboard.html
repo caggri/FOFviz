@@ -8,18 +8,21 @@
   $(document).ready(function() {
     $(function() {
           $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
-          $('#dataName1 option:contains({{selectedDataName}})').prop('selected',true);
+          $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
+        
+          $('#sectors2').prop("disabled", true);
+          $('#sectors3').prop("disabled", true);
+          $('#sectors4').prop("disabled", true);
 
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',false);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',false);
-
-          $('#sectors2').prop("disabled", true);
-          $('#sectors3').prop("disabled", true);
+          $('#sectors4 option:contains({{selectedSector4}})').prop('selected',false);
 
           $('#tooltip1').attr('data-original-title', "{{selectedSectorsDefinitions1}}");
           $('#tooltip2').attr('data-original-title', "{{selectedSectorsDefinitions2}}");
           $('#tooltip3').attr('data-original-title', "{{selectedSectorsDefinitions3}}");
+          $('#tooltip4').attr('data-original-title', "{{selectedSectorsDefinitions4}}");
 
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
           $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
@@ -56,7 +59,8 @@
         $('#sectors1').empty()
         $('#sectors2').empty()
         $('#sectors3').empty()
-//adding new sectors
+        
+        //adding new sectors
         for(let i=1;i<=3;i++){
             $("<option />", {
             val: "asdasdas",
@@ -67,7 +71,7 @@
     }
 
     function handleSectorVisibility(counterSectorArray, selectedSectors) {
-        for(let i=1;i<=3;i++){
+        for(let i=1;i<=4;i++){
             if(counterSectorArray.includes(i)){
                 $('#sectors'+i).prop("disabled", false);
                 $('#sectors'+i+' option:contains('+selectedSectors[i-1]+')').prop('selected',true);
@@ -83,6 +87,7 @@
         $('#sectors1').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors2').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors3').append(`<option value="${chartName}"> ${chartName} </option>`);
+        $('#tooltip4').attr('data-original-title', data.selectedSectorsDefinitions[3])
     }
 
     $( "#plotType, .sectorDropdowns" ).change(function() {
@@ -267,8 +272,6 @@
                 </div>
                 <br/>
                 
-
-                
                 <label for="sectors3">Sector 3</label>
                 <svg id="tooltip3" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
                     <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
@@ -276,6 +279,21 @@
                 </svg>
                 <div>
                     <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
+                        <option selected disabled>Choose...</option>
+                        {% for sector in sectors %}
+                        <option value="{{ sector }}">{{ sector }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br/>
+
+                <label for="sectors4">Sector 4</label>
+                <svg id="tooltip4" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title= "">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
+                    <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                </svg>
+                <div>
+                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -299,11 +317,19 @@
                                 ><span class="ml-2"><label>Add / Remove Sector</label></span>
                     </div>
                 </div>
-                <div class="form-group col-md-7 float-right">
-                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%">
-                        <option selected>Disable Forecast</option>
-                        <option>Enable Forecast</option>
+                <div>
+                    <select id="predictionTime" class="form-control col-md-2 d-inline float-right" name="predictionTime" width="100%">
+                        <option selected>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
                     </select>
+                    <div class="form-group col-md-7 float-right">
+                        <select id="makePredictions" class="form-control" name="makePredictions" width="100%">
+                            <option selected>Disable Forecast</option>
+                            <option>Enable Forecast</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <!-- Custom Graph Tab -->

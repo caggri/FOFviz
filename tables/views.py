@@ -11,11 +11,18 @@ import matplotlib.pyplot as plt
 selectedTimeFrame = None
 selectedDataName = None
 
-path = os.path.dirname(os.path.realpath(__file__))
-path = os.path.join(path, 'EVDSdata.xlsx')
+fofPath = os.path.dirname(os.path.realpath(__file__))
+fofPath = os.path.join(fofPath, 'EVDSdata.xlsx')
+
+monthlyBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
+monthlyBalanceSheetPath = os.path.join(monthlyBalanceSheetPath, 'BalanceSheet-Monthly.xlsx')
+
+annualBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
+annualBalanceSheetPath = os.path.join(annualBalanceSheetPath, 'BalanceSheet-Annual.xlsx')
+
 # retriever = DataRetrieve.DataRetriever()
 # all_data = retriever.retrieve()
-load_all_data = pd.read_excel(path)
+# load_all_data = pd.read_excel(path)
 
 dates = []
 prices = []
@@ -47,14 +54,14 @@ def table(request):
         selectedDataName = dataNames[0]
 
     if selectedDataName == dataNames[0]:
-        all_data = DataRetrieve.DataRetriever.retrieveFofData()
+        all_data = pd.read_excel(fofPath)
         currency = currencyNames[0]
         currencyPattern = currencyPatternList[0]
     elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
         if selectedDataName == dataNames[1]:
-            all_data = DataRetrieve.DataRetriever.retrieveAnnuallyData()
+            all_data = pd.read_excel(annualBalanceSheetPath)
         else:
-            all_data = DataRetrieve.DataRetriever.retrieveMonthlyData()
+            all_data = pd.read_excel(monthlyBalanceSheetPath)
         currency = currencyNames[1]
         currencyPattern = currencyPatternList[1]
 
