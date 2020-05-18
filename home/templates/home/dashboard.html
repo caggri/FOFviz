@@ -55,22 +55,54 @@
 
     adjustVisibilityStart()*/
 
-    function flushSectors(){
-        $('#sectors1').empty()
-        $('#sectors2').empty()
-        $('#sectors3').empty()
+    function flushSectors(sectors){
+
+        for(let i=1;i<=4;i++){
+            $('#sectors'+i).empty()
+
+            $("<option />", {
+                text: "Choose..."
+            }).appendTo($('#sectors'+i))
+
+            $.each(sectors, function(index) {
+            $("<option />", {
+                val: sectors[index],
+                text: sectors[index]
+            }).appendTo($('#sectors'+i));
+        });
+
+        }
+        
+        
         
         //adding new sectors
-        for(let i=1;i<=3;i++){
+        
+        
+        $.each(sectors, function(index) {
             $("<option />", {
-            val: "asdasdas",
-            text: "asdqweqwesa"
-            }).appendTo($('#sectors'+i));
-        }
+                val: sectors[index],
+                text: sectors[index]
+            }).appendTo($('#sectors2'));
+        });
+
+        $.each(sectors, function(index) {
+            $("<option />", {
+                val: sectors[index],
+                text: sectors[index]
+            }).appendTo($('#sectors3'));
+        });
+
+        $.each(sectors, function(index) {
+            $("<option />", {
+                val: sectors[index],
+                text: sectors[index]
+            }).appendTo($('#sectors4'));
+        });
 
     }
 
     function handleSectorVisibility(counterSectorArray, selectedSectors) {
+        
         for(let i=1;i<=4;i++){
             if(counterSectorArray.includes(i)){
                 $('#sectors'+i).prop("disabled", false);
@@ -178,6 +210,17 @@
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
         }, "json");
     })
+
+    $('#dataName1').change(function(){
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
+        
+        $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
+            $('#plot').html(data.plot)
+            
+            flushSectors(data.sectors)
+            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+        }, "json");
+    })
       
   });
   
@@ -227,7 +270,7 @@
                     </svg>
                     {% endif %}
                 </label>
-                <select id="dataName1" class="form-control" name="datas" width="100%" onchange="this.form.submit()">
+                <select id="dataName1" class="form-control" name="datas" width="100%">
                     {% for dataName in dataNames %}
                     <option value="{{ dataName }}">{{ dataName }}</option>
                     {% endfor %}
