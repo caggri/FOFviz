@@ -6,16 +6,16 @@
 
 <script>
   $(document).ready(function() {
-      $(function() {
+    $(function() {
           $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
-          $('#dataName option:contains({{selectedDataName}})').prop('selected',true);
-        
-          $('#sectors2').prop("disabled", true);
-          $('#sectors3').prop("disabled", true);
+          $('#dataName1 option:contains({{selectedDataName}})').prop('selected',true);
 
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',false);
           $('#sectors3 option:contains({{selectedSector3}})').prop('selected',false);
+
+          $('#sectors2').prop("disabled", true);
+          $('#sectors3').prop("disabled", true);
 
           $('#tooltip1').attr('data-original-title', "{{selectedSectorsDefinitions1}}");
           $('#tooltip2').attr('data-original-title', "{{selectedSectorsDefinitions2}}");
@@ -23,7 +23,48 @@
 
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
           $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
+
       });
+
+    /*function adjustVisibilityStart(){
+        let counterSectorArray = "{{counterSectorArray}}";
+        let selectedSector1 = "{{selectedSector1}}";
+        let selectedSector2 = "{{selectedSector2}}";
+        let selectedSector3 = "{{selectedSector3}}";
+        for(let i=1;i<=3;i++){
+            if(counterSectorArray.includes(i)){
+                console.log(i)
+                $('#sectors'+i).prop("disabled", false);
+
+                if(i === 1)
+                    $('#sectors'+i+' option:contains('+selectedSector1+')').prop('selected',true);
+                else if (i === 2)
+                    $('#sectors'+i+' option:contains('+selectedSector2+')').prop('selected',true);
+                else if( i === 3)
+                    $('#sectors'+i+' option:contains('+selectedSector3+')').prop('selected',true);
+            }
+            else{
+                $('#sectors'+i+' option:nth-child(1)').prop('selected',true);
+                $('#sectors'+i).prop("disabled", true);
+            }
+        }
+        }
+
+    adjustVisibilityStart()*/
+
+    function flushSectors(){
+        $('#sectors1').empty()
+        $('#sectors2').empty()
+        $('#sectors3').empty()
+//adding new sectors
+        for(let i=1;i<=3;i++){
+            $("<option />", {
+            val: "asdasdas",
+            text: "asdqweqwesa"
+            }).appendTo($('#sectors'+i));
+        }
+
+    }
 
     function handleSectorVisibility(counterSectorArray, selectedSectors) {
         for(let i=1;i<=3;i++){
@@ -121,6 +162,17 @@
             
     }, "json");
     })
+
+    $('#importantGraph').change(function(){
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
+        
+        $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
+            $('#plot').html(data.plot)
+            $('#dataName1').val("Balance Sheet (Annual)")
+            //flushSectors()
+            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+        }, "json");
+    })
       
   });
   
@@ -129,7 +181,7 @@
 <form id="select_filter_form" method="GET" action="." >
     <div class="form-group col-md-3 float-left">
         <label for="importantGraph">Important Graphs</label>
-        <select id="importantGraph" class="form-control" name="importantGraph" width="100%" onchange="this.form.submit()">
+        <select id="importantGraph" class="form-control" name="importantGraph" width="100%">
             <option selected disabled>Choose...</option>
             {% for importantGraph in importantGraphs %}
             <option value="{{ importantGraph }}">{{ importantGraph }}</option>
@@ -149,7 +201,7 @@
         <!-- default tab -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-default" role="tabpanel" aria-labelledby="nav-default-tab">
-                <label for="dataName">Data 
+                <label for="dataName1">Data 
                     {% if selectedDataName == "Flow of Funds" %}
                     <svg class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="bottom" title="
                     Flow of funds (FOF) are financial accounts that are used to track the net inflows and outflows of money to and from various sectors of a national economy. Macroeconomic data from flow of funds accounts are collected and analyzed by a country's central bank. In the United States, this data is released by the Federal Reserve Bank approximately 10 weeks after the end of each quarter. 
@@ -170,7 +222,7 @@
                     </svg>
                     {% endif %}
                 </label>
-                <select id="dataName" class="form-control" name="datas" width="100%" onchange="this.form.submit()">
+                <select id="dataName1" class="form-control" name="datas" width="100%" onchange="this.form.submit()">
                     {% for dataName in dataNames %}
                     <option value="{{ dataName }}">{{ dataName }}</option>
                     {% endfor %}

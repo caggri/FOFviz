@@ -80,11 +80,10 @@ def handleDataSourceGraphRequest(request):
                 a = pd.read_excel(monthlyBalanceSheetPath)
             elif selectedDataName == dataNames[2]:
                 a = pd.read_excel(annualBalanceSheetPath)
-                print(a)
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(fofPath)
-
+        
         retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data",request.user.username)
     
         lenData = len(retrievedCustomData)
@@ -117,8 +116,6 @@ def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
 
     requestGet = request.GET.get('saveCustom')
-    print("requestGet",requestGet)
-    print(type(requestGet))
     if (requestGet!= None):
         newEntryName = request.GET.get('inputEntryName')
         if(newEntryName != ""):
@@ -288,7 +285,7 @@ def home(request, copy=None):
 
         if (showPredictions):
             data = makePredictions(data)
-            print(data)
+            
 
         df= (pd.DataFrame.from_dict(data,orient='index').transpose()).melt(id_vars="years")
 
