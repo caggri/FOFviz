@@ -26,7 +26,6 @@
       });
 
     function handleSectorVisibility(counterSectorArray, selectedSectors) {
-          console.log(selectedSectors)
         for(let i=1;i<=3;i++){
             if(counterSectorArray.includes(i)){
                 $('#sectors'+i).prop("disabled", false);
@@ -38,11 +37,17 @@
             }
         }
       }
-      
+    
+    function appendToDropdown(chartName){
+        $('#sectors1').append(`<option value="${chartName}"> ${chartName} </option>`);
+        $('#sectors2').append(`<option value="${chartName}"> ${chartName} </option>`);
+        $('#sectors3').append(`<option value="${chartName}"> ${chartName} </option>`);
+    }
+
     $( "#plotType, .sectorDropdowns" ).change(function() {
-        $(document).ajaxStart(function(){
-                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
-        });  
+        
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
+        
         $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
             
             $('#plot').html(data.plot)
@@ -55,34 +60,40 @@
         }, "json");
       });
 
-    $('[data-toggle="tooltip"]').tooltip()
-    
-      
-      $('input[value="+"]').on('click', function(){
-
-        event.preventDefault();
-
-        let req = $( "#select_filter_form" ).serializeArray()
-        req.push({ name: "addSector", value: "+" })
-        $(document).ajaxStart(function(){
-                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
-        });  
-
-        $.get('', req, function( data ) {
-            $('#plot').html(data.plot)
-            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
-        }, "json");
+    $("#makePredictions").change(function() {
         
-      })
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
+        $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
+            $('#plot').html(data.plot)
+        }, "json");
 
-      $('input[value="-"]').on('click', function(){
+    });
+
+    $('[data-toggle="tooltip"]').tooltip()
+      
+    $('input[value="+"]').on('click', function(){
+
+    event.preventDefault();
+
+    let req = $( "#select_filter_form" ).serializeArray()
+    req.push({ name: "addSector", value: "+" })
+    
+    $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
+
+    $.get('', req, function( data ) {
+        $('#plot').html(data.plot)
+        handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+    }, "json");
+    
+    })
+
+    $('input[value="-"]').on('click', function(){
         event.preventDefault();
 
         let req = $( "#select_filter_form" ).serializeArray()
         req.push({ name: "removeSector", value: "-" })
-        $(document).ajaxStart(function(){
-                $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
-        });  
+        
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')          
         
         $.get('', req, function( data ) {
             $('#plot').html(data.plot)
@@ -91,6 +102,22 @@
         
       })
       
+    $('#saveCustom').on('click', function(){
+        $(this).prop("disabled", true);
+        $("#saveCustomText").text("Saving...")
+        $("#saveCustomSpinner").addClass("spinner-border spinner-border-sm")
+
+        let req = $( "#select_filter_form" ).serializeArray()
+        req.push({ name: "saveCustom", value: "" })
+        
+        $.get('', req, function( data ) {
+            appendToDropdown($("#inputEntryName").val())
+
+            $("#saveCustomSpinner").removeClass("spinner-border spinner-border-sm")
+            $("#saveCustomText").text("Saved")
+            $("#inputEntryName").val("")
+    }, "json");
+    })
       
   });
   
@@ -218,7 +245,7 @@
                     </div>
                 </div>
                 <div class="form-group col-md-7 float-right">
-                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%" onchange="this.form.submit()">
+                    <select id="makePredictions" class="form-control" name="makePredictions" width="100%">
                         <option selected>Disable Forecast</option>
                         <option>Enable Forecast</option>
                     </select>
@@ -283,7 +310,10 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary" name="saveCustom" onclick="this.form.submit()">Save</button>
+                                <button id="saveCustom" name="saveCustom" class="btn btn-primary" type="button">
+                                    <span id="saveCustomSpinner" class="" role="status" aria-hidden="true"></span>
+                                    <span id="saveCustomText">Save</span>
+                                </button>
                                 <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
