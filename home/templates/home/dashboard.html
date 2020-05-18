@@ -57,6 +57,8 @@
 
     function flushSectors(sectors){
 
+        //adding new sectors
+
         for(let i=1;i<=4;i++){
             $('#sectors'+i).empty()
 
@@ -72,32 +74,7 @@
         });
 
         }
-        
-        
-        
-        //adding new sectors
-        
-        
-        $.each(sectors, function(index) {
-            $("<option />", {
-                val: sectors[index],
-                text: sectors[index]
-            }).appendTo($('#sectors2'));
-        });
 
-        $.each(sectors, function(index) {
-            $("<option />", {
-                val: sectors[index],
-                text: sectors[index]
-            }).appendTo($('#sectors3'));
-        });
-
-        $.each(sectors, function(index) {
-            $("<option />", {
-                val: sectors[index],
-                text: sectors[index]
-            }).appendTo($('#sectors4'));
-        });
 
     }
 
