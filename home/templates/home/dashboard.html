@@ -59,9 +59,10 @@
         $('#sectors1').empty()
         $('#sectors2').empty()
         $('#sectors3').empty()
+        $('#sectors4').empty()
         
         //adding new sectors
-        for(let i=1;i<=3;i++){
+        for(let i=1;i<=4;i++){
             $("<option />", {
             val: "asdasdas",
             text: "asdqweqwesa"
@@ -87,7 +88,7 @@
         $('#sectors1').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors2').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors3').append(`<option value="${chartName}"> ${chartName} </option>`);
-        $('#tooltip4').attr('data-original-title', data.selectedSectorsDefinitions[3])
+        $('#sectors4').append(`<option value="${chartName}"> ${chartName} </option>`);
     }
 
     $( "#plotType, .sectorDropdowns" ).change(function() {
@@ -102,6 +103,7 @@
             $('#tooltip1').attr('data-original-title', data.selectedSectorsDefinitions[0])
             $('#tooltip2').attr('data-original-title', data.selectedSectorsDefinitions[1])
             $('#tooltip3').attr('data-original-title', data.selectedSectorsDefinitions[2])
+            $('#tooltip4').attr('data-original-title', data.selectedSectorsDefinitions[2])
 
         }, "json");
       });

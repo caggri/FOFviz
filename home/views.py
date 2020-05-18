@@ -84,7 +84,7 @@ def handleDataSourceGraphRequest(request):
         selectedDataName = dataNames[0]
         a = pd.read_excel(fofPath)
         
-        retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data",request.user.username)
+        retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data",request.user.username, selectedDataName)
     
         lenData = len(retrievedCustomData)
 
@@ -122,6 +122,7 @@ def handleCustomGraphRequest(request):
             customSector1Name = request.GET.get('sectors1custom')
             customSector2Name = request.GET.get('sectors2custom')
             operator = request.GET.get('operatorCustom')
+            datasource = request.GET.get('datas2')
 
             firstEntry = a[a['Entry'] == customSector1Name]
             firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
@@ -148,7 +149,7 @@ def handleCustomGraphRequest(request):
             sumFrameVals.columns = columnsList
             
             dataFrameInfo = pushFrameVals.to_csv() 
-            DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo, request.user.username)
+            DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo, request.user.username, datasource)
             
             a = pd.concat([a,sumFrameVals])
 

@@ -38,10 +38,10 @@ class DataRetriever:
     def retrieveAnnuallyData():
         return annually
 
-    def pushString(tablename, serializedString, username):
+    def pushString(tablename, serializedString, username, datasource):
         dbConnection = DataRetriever.openConnection()
         
-        sqlStatement = "INSERT INTO "+ tablename + "(username, userdata) VALUES ('"+username+"', '"+ serializedString +"')"
+        sqlStatement = "INSERT INTO "+ tablename + "(username, userdata, datasource) VALUES ('"+username+"', '"+ serializedString +"' , '" + datasource +"')"
         print(sqlStatement) 
 
         dbConnection.execute(sqlStatement)
@@ -49,10 +49,10 @@ class DataRetriever:
         dbConnection.close()
 
 
-    def pullString(tablename, username):
+    def pullString(tablename, username, datasource):
         dbConnection = DataRetriever.openConnection()
         
-        sqlStatement = "SELECT userdata FROM " + tablename + " WHERE username='" + username +"';"
+        sqlStatement = "SELECT userdata FROM " + tablename + " WHERE username='" + username +"' AND datasource='"+datasource+"';"
          
         print(sqlStatement) 
 
