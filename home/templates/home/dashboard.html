@@ -257,7 +257,7 @@
                 </select>
                 <br/>
 
-                <label for="sectors1">Sector 1</label>
+                <label for="sectors1" class="mx-auto">Sector 1</label>
                 <div>
                     <select id="sectors1custom" class="form-control mr-3" name="sectors1custom"  width="100%">
                         {% for sector in sectors %}
@@ -267,13 +267,14 @@
                 </div>
                 <br/><br/>
                 <div>
-                    <select id="operatorCustom" class="form-control mr-3" name="operatorCustom" width="100%">
+                    <select id="operatorCustom" class="form-control mr-3 col-md-2 mx-auto" style="text-align-last: center" name="operatorCustom" width="100%">
                         <option value="+">+</option>
                         <option value="-">-</option>
                         <option value="*">*</option>
                     </select>                  
                 </div>
                 <br/><br/>
+                <label for="sectors2" class="mx-auto">Sector 2</label>
                 <div>
                     <select id="sectors2custom" class="form-control mr-3" name="sectors2custom" width="100%">
                         {% for sector in sectors %}

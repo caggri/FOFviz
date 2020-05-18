@@ -79,7 +79,7 @@ def handleDataSourceGraphRequest(request):
         selectedDataName = dataNames[0]
         a = pd.read_excel(path)
 
-        retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data","Hassnain Ali")
+        retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data",request.user.username)
     
         lenData = len(retrievedCustomData)
 
@@ -143,7 +143,7 @@ def handleCustomGraphRequest(request):
         sumFrameVals.columns = columnsList
         
         dataFrameInfo = pushFrameVals.to_csv() 
-        DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo)
+        DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo, request.user.username)
         
         a = pd.concat([a,sumFrameVals])
 
@@ -290,7 +290,7 @@ def home(request, copy=None):
                 **params
             )
 
-        fig.update_layout(height=450, paper_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(height=600, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
