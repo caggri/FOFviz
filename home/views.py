@@ -80,6 +80,7 @@ def handleDataSourceGraphRequest(request):
                 a = pd.read_excel(monthlyBalanceSheetPath)
             elif selectedDataName == dataNames[2]:
                 a = pd.read_excel(annualBalanceSheetPath)
+                print(a)
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(fofPath)
@@ -212,12 +213,10 @@ def home(request, copy=None):
     handlePredictionRequest(request)
     handleAddRemoveSectorRequest(request)
 
-    timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
+    timeFrame_column_names = a.columns[a.columns.str.startswith('20', na=False)]
     sectors =  a[a.columns[1]]
     
     handleListingRequest(request)
-
-    
 
     def getParams(chartType):
         if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
