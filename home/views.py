@@ -28,24 +28,30 @@ ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul, "/":
 #determine selection
 selectedPreviousDataName = None
 selectedDataName = None
-selectedSectors = [None,None,None,None]
-selected_data = [None,None,None,None]
+selectedSectors = [None,None,None]
+selected_data = [None,None,None]
 selectedImportantGraph = None
 selectedPreviousImportantGraph = None
 timeFrame_column_names = []
 sectors = []
-selectedSectorsDefinitions = [None,None,None,None]
+selectedSectorsDefinitions = [None,None,None]
 
 #List Elements
-dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
+dataNames = ['Flow of Funds', 'Balance Sheet (Monthly)', 'Balance Sheet (Annual)']
 importantGraphs = {'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)': 'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
                      'E.14.Official Reserves(Million USD)' : 'E.14.Official Reserves(Million USD)',
                       'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)(Equity-Debt)' : ['C.11.1.Equity Securities(Million USD)', 'C.11.2.Debt Securities(Million USD)']}
 predictionModes = ['Disable Forecast', 'Enable Forecast']
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
-path = os.path.dirname(os.path.realpath(__file__))
-path = os.path.join(path, 'EVDSdata.xlsx')
+fofPath = os.path.dirname(os.path.realpath(__file__))
+fofPath = os.path.join(fofPath, 'EVDSdata.xlsx')
+
+monthlyBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
+monthlyBalanceSheetPath = os.path.join(monthlyBalanceSheetPath, 'BalanceSheet-Monthly.xlsx')
+
+annualBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
+annualBalanceSheetPath = os.path.join(annualBalanceSheetPath, 'BalanceSheet-Annual.xlsx')
 
 def fillDefinitions():
     global selectedSectorsDefinitions
@@ -62,22 +68,21 @@ def fillDefinitions():
                 selectedSectorsDefinitions[i] = "Definition not available"
 
 def handleDataSourceGraphRequest(request):
-    global selectedPreviousDataName, selectedDataName, a
+    global selectedPreviousDataName, selectedDataName, a, dataNames
 
     selectedPreviousDataName = selectedDataName
     selectedDataName = request.GET.get('datas')
-
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
             if selectedDataName == dataNames[0]:
-                a = pd.read_excel(path)
+                a = pd.read_excel(fofPath)
             elif selectedDataName == dataNames[1]:
-                a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
+                a = pd.read_excel(monthlyBalanceSheetPath)
             elif selectedDataName == dataNames[2]:
-                a = DataRetrieve.DataRetriever.retrieveMonthlyData()
+                a = pd.read_excel(annualBalanceSheetPath)
     else:
         selectedDataName = dataNames[0]
-        a = pd.read_excel(path)
+        a = pd.read_excel(fofPath)
 
         retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data",request.user.username)
     
@@ -97,15 +102,15 @@ def handleImportantGraphRequest(request):
     selectedImportantGraph = request.GET.get('importantGraph')
 
     if selectedImportantGraph != None:
-        selectedDataName = dataNames[1]
-        a = DataRetrieve.DataRetriever.retrieveAnnuallyData()
+        selectedDataName = dataNames[2]
+        a = pd.read_excel(annualBalanceSheetPath)
 
-    if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
-        counterSector = 1
-        counterSectorArray = [counterSector]
-    elif selectedImportantGraph == list(importantGraphs)[2]:
-        counterSector = 2
-        counterSectorArray = [1, 2]
+        if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
+            counterSector = 1
+            counterSectorArray = [counterSector]
+        elif selectedImportantGraph == list(importantGraphs)[2]:
+            counterSector = 2
+            counterSectorArray = [1, 2]
 
 def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
@@ -173,7 +178,7 @@ def handleAddRemoveSectorRequest(request):
             counterSectorArray.pop()
 
 def handleListingRequest(request):
-    global selectedSectors, sectors, selectedImportantGraph
+    global selectedSectors, sectors, selectedImportantGraph, selected_data
 
     selectedSectors[0] = sectors[0]
 
@@ -199,7 +204,7 @@ def handleListingRequest(request):
 
 @csrf_exempt
 def home(request, copy=None):
-    global timeFrame_column_names, sectors
+    global timeFrame_column_names, sectors, a
 
     handleDataSourceGraphRequest(request)
     handleImportantGraphRequest(request)
@@ -209,8 +214,10 @@ def home(request, copy=None):
 
     timeFrame_column_names = a.columns[a.columns.str.startswith('20')]
     sectors =  a[a.columns[1]]
-
+    
     handleListingRequest(request)
+
+    
 
     def getParams(chartType):
         if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
@@ -223,7 +230,7 @@ def home(request, copy=None):
             params = {'x':'years', 'y':'value','color':'variable', 'barmode':'group'} 
         return params
 
-    def makePredictions(sectorsData):
+    def makePredictions(sectorsData): 
         #filtering data
         dates = sectorsData['years']
         futureStepsN = 10
@@ -255,9 +262,9 @@ def home(request, copy=None):
             if selectedDataName == dataNames[0]:
                 seasonality_m=4
             elif selectedDataName == dataNames[1]:
-                seasonality_m=1
-            elif selectedDataName == dataNames[2]:
                 seasonality_m=12
+            elif selectedDataName == dataNames[2]:
+                seasonality_m=1
 
             arima = pm.auto_arima(train, seasonal=True, m=seasonality_m, error_action='ignore', trace=True,
                                 suppress_warnings=True, maxiter=10)
@@ -336,6 +343,7 @@ def home(request, copy=None):
         context['plotTypes'] = list(plotDictionary.keys())
         context['importantGraphs'] = list(importantGraphs.keys())
         context['makePredictions'] = predictionModes
+        context['selectedDataName'] = selectedDataName
 
         return HttpResponse(json.dumps(context))
     else:
