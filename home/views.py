@@ -22,7 +22,7 @@ showPredictions = False
 plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 
 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 
 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
-ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul }
+ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv }
 
 
 #determine selection
@@ -91,7 +91,7 @@ def handleDataSourceGraphRequest(request):
     
 
 def handleImportantGraphRequest(request):
-    global selectedPreviousImportantGraph, selectedImportantGraph
+    global selectedPreviousImportantGraph, selectedImportantGraph, selectedDataName, a, counterSectorArray, counterSector, importantGraphs
 
     selectedPreviousImportantGraph = selectedImportantGraph
     selectedImportantGraph = request.GET.get('importantGraph')
@@ -148,7 +148,7 @@ def handleCustomGraphRequest(request):
         a = pd.concat([a,sumFrameVals])
 
 def handlePredictionRequest(request):
-    global selectedPredictionMode, predictionModes
+    global selectedPredictionMode, predictionModes, showPredictions
 
     selectedPredictionMode = request.GET.get('makePredictions')
     if selectedPredictionMode != None:
@@ -158,7 +158,7 @@ def handlePredictionRequest(request):
             showPredictions = True
 
 def handleAddRemoveSectorRequest(request):
-    global counterSector
+    global counterSector, counterSectorArray
 
     #handling button requests addSector-removeSector
     if (request.GET.get('addSector') != None):
@@ -171,7 +171,7 @@ def handleAddRemoveSectorRequest(request):
             counterSectorArray.pop()
 
 def handleListingRequest(request):
-    global selectedSectors, sectors
+    global selectedSectors, sectors, selectedImportantGraph
 
     selectedSectors[0] = sectors[0]
 
@@ -280,6 +280,7 @@ def home(request, copy=None):
 
         if (showPredictions):
             data = makePredictions(data)
+            print(data)
 
         df= (pd.DataFrame.from_dict(data,orient='index').transpose()).melt(id_vars="years")
 
