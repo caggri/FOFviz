@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $(function() {
+      $("select option:contains({{selectedTimeFrame}})").prop("selected", true);
+      $("select option:contains({{selectedDataName}})").prop("selected", true);
+      /*$("table tbody tr")
+        .filter(
+          $(this)
+            .find("td")
+            .eq(2)
+            .html() !==
+            $(this)
+              .find("td")
+              .eq(4)
+              .html()
+        )
+        .css("background-color", "#FF0000");*/
+    });
+  });
+</script>
+
+<form id="filter_form" method="GET" action=".">
+  <div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Flow Of Funds Data</h1>
+
+    <!-- DataTables-->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Available Data</h6>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-md-4 float-left">
+          <label for="dataName">Selected Data</label>
+          <select
+            id="dataName"
+            class="form-control"
+            name="dataName"
+            onchange="this.form.submit()"
+          >
+            <option selected disabled>Choose...</option>
+            {% for dataname in dataNames %}
+            <option value="{{ dataname }}">{{ dataname }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group col-md-4 float-right">
+          <label for="timeFrames">Time Frames</label>
+          <select
+            id="timeFrames"
+            class="form-control"
+            name="timeFrames"
+            onchange="this.form.submit()"
+          >
+            <option selected disabled>Choose...</option>
+            {% for timeframe in timeFrames %}
+            <option value="{{ timeframe }}">{{ timeframe }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          {{ table | safe }}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- /.container-fluid -->
+{% endblock %}
