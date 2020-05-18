@@ -111,41 +111,43 @@ def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
 
     requestGet = request.GET.get('saveCustom')
+    print("requestGet",requestGet)
+    print(type(requestGet))
     if (requestGet!= None):
-        customSector1Name = request.GET.get('sectors1custom')
-        customSector2Name = request.GET.get('sectors2custom')
-        operator = request.GET.get('operatorCustom')
-
-        firstEntry = a[a['Entry'] == customSector1Name]
-        firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
-        secondEntry = a[a['Entry'] == customSector2Name]
-        secondEntryVals = secondEntry.drop(secondEntry.columns[[0, 1]], axis=1).values
-        
-        newEntry = ops_dictionary[operator](firstEntryVals, secondEntryVals)
-        
-        columnsList = (firstEntry.iloc[:,2:].columns).tolist()
-        columnsList.insert(0,'Entry')
-
         newEntryName = request.GET.get('inputEntryName')
+        if(newEntryName != ""):
+            customSector1Name = request.GET.get('sectors1custom')
+            customSector2Name = request.GET.get('sectors2custom')
+            operator = request.GET.get('operatorCustom')
 
-        valuesList = newEntry.tolist()[0]
-        valuesList.insert(0, newEntryName)
+            firstEntry = a[a['Entry'] == customSector1Name]
+            firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
+            secondEntry = a[a['Entry'] == customSector2Name]
+            secondEntryVals = secondEntry.drop(secondEntry.columns[[0, 1]], axis=1).values
+            
+            newEntry = ops_dictionary[operator](firstEntryVals, secondEntryVals)
+            
+            columnsList = (firstEntry.iloc[:,2:].columns).tolist()
+            columnsList.insert(0,'Entry')
 
-        pushFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[2]).T)
-        pushFrameVals.columns = columnsList
+            valuesList = newEntry.tolist()[0]
+            valuesList.insert(0, newEntryName)
 
-        columnsList.insert(0, 'Unnamed: 0')
+            pushFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[2]).T)
+            pushFrameVals.columns = columnsList
 
-        valuesList.insert(0, 2)
+            columnsList.insert(0, 'Unnamed: 0')
 
-        sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
-        
-        sumFrameVals.columns = columnsList
-        
-        dataFrameInfo = pushFrameVals.to_csv() 
-        DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo, request.user.username)
-        
-        a = pd.concat([a,sumFrameVals])
+            valuesList.insert(0, 2)
+
+            sumFrameVals = (pd.DataFrame(valuesList, index=[columnsList], columns=[len(a.index)]).T)
+            
+            sumFrameVals.columns = columnsList
+            
+            dataFrameInfo = pushFrameVals.to_csv() 
+            DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo, request.user.username)
+            
+            a = pd.concat([a,sumFrameVals])
 
 def handlePredictionRequest(request):
     global selectedPredictionMode, predictionModes, showPredictions
