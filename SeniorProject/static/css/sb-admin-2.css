@@ -73,6 +73,12 @@ body {
   /* If max-width does not work, try using width instead */
   max-width: 400px !important;
 }
+ 
+#modal-notification {
+  display: none;
+  font-size: medium;
+  color: green;
+}
 
 .resizeImage {
   height: 120px;
@@ -7320,7 +7326,6 @@ button.bg-dark:focus {
   top: 0;
   right: 0;
   left: 0;
-  z-index: 1030;
 }
 
 .fixed-bottom {

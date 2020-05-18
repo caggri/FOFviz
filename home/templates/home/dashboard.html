@@ -112,10 +112,13 @@
         
         $.get('', req, function( data ) {
             appendToDropdown($("#inputEntryName").val())
-
+            $('#saveCustom').prop("disabled", false);
             $("#saveCustomSpinner").removeClass("spinner-border spinner-border-sm")
-            $("#saveCustomText").text("Saved")
+            $("#saveCustomText").text("Save")
             $("#inputEntryName").val("")
+            
+            $("#modal-notification").show().delay(2000).fadeOut(5000);
+            
     }, "json");
     })
       
@@ -307,9 +310,12 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Enter the name of the new Entry" type="text" id="inputEntryName" name="inputEntryName"/>
+                                    
                                 </div>
                             </div>
+                            
                             <div class="modal-footer">
+                                <span id="modal-notification">Custom Graph Saved Successfully.</span>
                                 <button id="saveCustom" name="saveCustom" class="btn btn-primary" type="button">
                                     <span id="saveCustomSpinner" class="" role="status" aria-hidden="true"></span>
                                     <span id="saveCustomText">Save</span>
