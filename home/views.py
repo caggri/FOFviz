@@ -162,7 +162,7 @@ def handleAddRemoveSectorRequest(request):
 
     #handling button requests addSector-removeSector
     if (request.GET.get('addSector') != None):
-        if (counterSector != 4):
+        if (counterSector != 3):
             counterSector = counterSector + 1
             counterSectorArray.append(counterSector)
     if (request.GET.get('removeSector') != None):
@@ -291,7 +291,7 @@ def home(request, copy=None):
                 **params
             )
 
-        fig.update_layout(height=600, paper_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(height=550, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
@@ -313,7 +313,6 @@ def home(request, copy=None):
         'selectedSector1': selectedSectors[0],
         'selectedSector2': selectedSectors[1],
         'selectedSector3': selectedSectors[2],
-        'selectedSector4': selectedSectors[3],
         'selectedSectors': selectedSectors,
 
         'counterSectorArray': counterSectorArray,
@@ -328,7 +327,6 @@ def home(request, copy=None):
         'selectedSectorsDefinitions1': selectedSectorsDefinitions[0],
         'selectedSectorsDefinitions2': selectedSectorsDefinitions[1],
         'selectedSectorsDefinitions3': selectedSectorsDefinitions[2],
-        'selectedSectorsDefinitions4': selectedSectorsDefinitions[3],
         'selectedSectorsDefinitions': selectedSectorsDefinitions
     }
     if request.is_ajax():
