@@ -83,6 +83,19 @@ def fillDefinitions():
             except:
                 selectedSectorsDefinitions[i] = "Definition not available"
 
+def getImportantGraphsRequest(request):
+    global importantGraphs
+    retrievedImportantData = DataRetrieve.DataRetriever.pullFromTable(request.user.username, selectedDataName,"important_request")
+
+    lenImportantData = len(retrievedImportantData)
+
+    if(lenImportantData>0):
+        for i in range(lenImportantData):
+            sectorsString = (str(retrievedImportantData[i][0]))[:-1]
+            usedSectorsList = sectorsString.split(",")
+            graphName = str(retrievedImportantData[i][1])
+            importantGraphs[graphName] = usedSectorsList
+
 def handleDataSourceGraphRequest(request):
     global selectedPreviousDataName, selectedDataName, a, dataNames, importantGraphs
 
@@ -90,6 +103,10 @@ def handleDataSourceGraphRequest(request):
     selectedDataName = request.GET.get('datas')
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
+            importantGraphs = {}
+            selectedImportantGraph = None
+            selectedPreviousImportantGraph = None
+
             if selectedDataName == dataNames[0]:
                 a = pd.read_excel(fofPath)
             elif selectedDataName == dataNames[1]:
@@ -111,18 +128,8 @@ def handleDataSourceGraphRequest(request):
                 retrieveDF = pd.read_csv(StringIO(retrievedString))
                 a = pd.concat([a,retrieveDF])
 
-        retrievedImportantData = DataRetrieve.DataRetriever.pullFromTable(request.user.username, selectedDataName,"important_request")
+        getImportantGraphsRequest(request)
 
-        lenImportantData = len(retrievedImportantData)
-
-        if(lenImportantData>0):
-            for i in range(lenImportantData):
-                sectorsString = (str(retrievedImportantData[i][0]))[:-1]
-                usedSectorsList = sectorsString.split(",")
-                graphName = str(retrievedImportantData[i][1])
-                importantGraphs[graphName] = usedSectorsList
-
-    
 def saveImportantGraphRequest(request):
     requestGet = request.GET.get('saveImportant')
     if (requestGet!= None):
@@ -137,7 +144,8 @@ def saveImportantGraphRequest(request):
             importantDescription = request.GET.get('inputImportantDescription')
             datasource = request.GET.get('datas')
             DataRetrieve.DataRetriever.pushToTable("", request.user.username, datasource, "important_request", usedGraphs, importantDescription, newEntryName)
-            
+            getImportantGraphsRequest(request)
+
 def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
 

@@ -76,6 +76,15 @@
         }
     }
 
+    function flushImportantGraphs(importantGraphs){
+        $.each(importantGraphs, function(index) {
+            $("<option />", {
+                val: importantGraphs[index],
+                text: importantGraphs[index]
+            }).appendTo($('#importantGraph'));
+        });
+    }
+
     function handleSectorVisibility(counterSectorArray, selectedSectors) {
         
         for(let i=1;i<=4;i++){
@@ -95,6 +104,10 @@
         $('#sectors2').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors3').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors4').append(`<option value="${chartName}"> ${chartName} </option>`);
+    }
+
+    function appendToImportantDropdown(chartName){
+        $('#importantGraph').append(`<option value="${chartName}"> ${chartName} </option>`);
     }
 
     $( "#plotType, .sectorDropdowns" ).change(function() {
@@ -165,7 +178,7 @@
         req.push({ name: "saveImportant", value: "" })
         
         $.get('', req, function( data ) {
-            appendToDropdown($("#inputImportantName").val())
+            appendToImportantDropdown($("#inputImportantName").val())
             $('#saveImportant').prop("disabled", false);
             $("#saveImportantSpinner").removeClass("spinner-border spinner-border-sm")
             $("#saveImportantText").text("Save")
@@ -209,11 +222,12 @@
 
     $('#dataName1').change(function(){
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
-        
+        $("#importantGraph").find('option').not(':first').remove();
+        $("#importantGraph").val($("#importantGraph option:first").val());
         $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
             $('#plot').html(data.plot)
-            
             flushSectors(data.sectors)
+            flushImportantGraphs(data.importantGraphs)
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
         }, "json");
     })
