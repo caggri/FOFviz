@@ -38,10 +38,14 @@ class DataRetriever:
     def retrieveAnnuallyData():
         return annually
 
-    def pushString(tablename, serializedString, username, datasource):
+    def pushToTable(userdata, username, datasource, requestType, usedGraphNames, description, graphName):
         dbConnection = DataRetriever.openConnection()
         
-        sqlStatement = "INSERT INTO "+ tablename + "(username, userdata, datasource) VALUES ('"+username+"', '"+ serializedString +"' , '" + datasource +"')"
+        if(requestType == "custom_request"):
+            sqlStatement = "INSERT INTO user_custom_data(username, userdata, datasource) VALUES ('"+username+"', '"+ userdata +"' , '" + datasource +"');"
+        elif(requestType == "important_request"):
+            sqlStatement = "INSERT INTO important_graph_data(username, usedgraphnames, graphName, datasource, description) VALUES ('"+username+"', '"+ usedGraphNames +"', '" + graphName +"', '"+ datasource +"', '"+ description+"');"
+        
         print(sqlStatement) 
 
         dbConnection.execute(sqlStatement)
@@ -49,11 +53,14 @@ class DataRetriever:
         dbConnection.close()
 
 
-    def pullString(tablename, username, datasource):
+    def pullFromTable(username, datasource, requestType):
         dbConnection = DataRetriever.openConnection()
         
-        sqlStatement = "SELECT userdata FROM " + tablename + " WHERE username='" + username +"' AND datasource='"+datasource+"';"
-         
+        if(requestType == "custom_request"):
+            sqlStatement = "SELECT userdata FROM user_custom_data WHERE username='" + username +"' AND datasource='"+datasource+"';"
+        elif(requestType == "important_request"):
+            sqlStatement = "SELECT usedgraphnames, graphName, description FROM important_graph_data WHERE username='" + username +"' AND graphdatasource='"+datasource+"';"
+
         print(sqlStatement) 
 
         rs = dbConnection.execute(sqlStatement).fetchall()

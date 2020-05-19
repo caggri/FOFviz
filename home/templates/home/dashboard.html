@@ -154,7 +154,28 @@
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
         }, "json");
         
-      })
+    })
+
+    $('#saveImportant').on('click', function(){
+        $(this).prop("disabled", true);
+        $("#saveImportantText").text("Saving...")
+        $("#saveImportantSpinner").addClass("spinner-border spinner-border-sm")
+
+        let req = $( "#select_filter_form" ).serializeArray()
+        req.push({ name: "saveImportant", value: "" })
+        
+        $.get('', req, function( data ) {
+            appendToDropdown($("#inputImportantName").val())
+            $('#saveImportant').prop("disabled", false);
+            $("#saveImportantSpinner").removeClass("spinner-border spinner-border-sm")
+            $("#saveImportantText").text("Save")
+            $("#inputImportantName").val("")
+            $("#inputImportantDescription").val("")
+            
+            $("#modal-notification").show().delay(2000).fadeOut(5000);
+            
+    }, "json");
+    })
       
     $('#saveCustom').on('click', function(){
         $(this).prop("disabled", true);
@@ -176,16 +197,16 @@
     }, "json");
     })
 
-    $('#importantGraph').change(function(){
-        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
+    // $('#importantGraph').change(function(){
+    //     $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
         
-        $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
-            $('#plot').html(data.plot)
-            $('#dataName1').val("Balance Sheet (Annual)")
-            //flushSectors()
-            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
-        }, "json");
-    })
+    //     $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
+    //         $('#plot').html(data.plot)
+    //         $('#dataName1').val("Balance Sheet (Annual)")
+    //         //flushSectors()
+    //         handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+    //     }, "json");
+    // })
 
     $('#dataName1').change(function(){
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
@@ -348,6 +369,43 @@
                             <option selected>Disable Forecast</option>
                             <option>Enable Forecast</option>
                         </select>
+                    </div>
+                </div>
+                <br/>
+                <button
+                    class="btn btn-outline-primary float-right" 
+                    type="button"
+                    onclick="return false"
+                    data-target="#saveImportantModal"
+                    data-toggle="modal"
+                    style="margin-bottom: 20px">Save as Important</button>
+
+
+                <div class="modal" id="saveImportantModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Important Graph Entry</h4>
+                                <button class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Enter the name of the new Entry" type="text" id="inputImportantName" name="inputImportantName"/>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Write a description for this graph" type="text" id="inputImportantDescription" name="inputImportantDescription"/>
+                                </div>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <span id="modal-notification">Important Graph Saved Successfully.</span>
+                                <button id="saveImportant" name="saveImportant" class="btn btn-primary" type="button">
+                                    <span id="saveImportantSpinner" class="" role="status" aria-hidden="true"></span>
+                                    <span id="saveImportantText">Save</span>
+                                </button>
+                                <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

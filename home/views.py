@@ -38,9 +38,7 @@ selectedSectorsDefinitions = [None,None,None,None]
 
 #List Elements
 dataNames = ['Flow of Funds', 'Balance Sheet (Monthly)', 'Balance Sheet (Annual)']
-importantGraphs = {'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)': 'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)',
-                     'E.14.Official Reserves(Million USD)' : 'E.14.Official Reserves(Million USD)',
-                      'C.11.Portfolio Invesment: Net incurrence of liabilities(Million USD)(Equity-Debt)' : ['C.11.1.Equity Securities(Million USD)', 'C.11.2.Debt Securities(Million USD)']}
+importantGraphs = []
 predictionModes = ['Disable Forecast', 'Enable Forecast']
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
@@ -83,35 +81,42 @@ def handleDataSourceGraphRequest(request):
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(fofPath)
-        
-        retrievedCustomData = DataRetrieve.DataRetriever.pullString("user_custom_data",request.user.username, selectedDataName)
     
-        lenData = len(retrievedCustomData)
+    if(selectedDataName != None and selectedDataName != selectedPreviousDataName):
+        retrievedCustomData = DataRetrieve.DataRetriever.pullFromTable(request.user.username, selectedDataName,"custom_request")
 
-        if(lenData>0):
-            for i in range(lenData):
+        lenCustomData = len(retrievedCustomData)
+
+        if(lenCustomData>0):
+            for i in range(lenCustomData):
                 retrievedString = retrievedCustomData[i][0]
                 retrieveDF = pd.read_csv(StringIO(retrievedString))
                 a = pd.concat([a,retrieveDF])
+
+        retrievedImportantData = DataRetrieve.DataRetriever.pullFromTable(request.user.username, selectedDataName,"important_request")
+
+        lenImportantData = len(retrievedImportantData)
+
+        if(lenImportantData>0):
+            for i in range(lenImportantData):
+                retrievedString = retrievedCustomData[i][0]
+                print(retrievedString)
     
-
-def handleImportantGraphRequest(request):
-    global selectedPreviousImportantGraph, selectedImportantGraph, selectedDataName, a, counterSectorArray, counterSector, importantGraphs
-
-    selectedPreviousImportantGraph = selectedImportantGraph
-    selectedImportantGraph = request.GET.get('importantGraph')
-
-    if selectedImportantGraph != None:
-        selectedDataName = dataNames[2]
-        a = pd.read_excel(annualBalanceSheetPath)
-
-        if selectedImportantGraph == list(importantGraphs)[0]  or selectedImportantGraph == list(importantGraphs)[1]:
-            counterSector = 1
-            counterSectorArray = [counterSector]
-        elif selectedImportantGraph == list(importantGraphs)[2]:
-            counterSector = 2
-            counterSectorArray = [1, 2]
-
+def saveImportantGraphRequest(request):
+    requestGet = request.GET.get('saveImportant')
+    if (requestGet!= None):
+        newEntryName = request.GET.get('inputImportantName')
+        usedGraphs = ""
+        if(newEntryName !=""):
+            for i in range(counterSector):
+                dropDownUIName = "sectors" + (i+1) 
+                sectorName = request.GET.get(dropDownUIName)
+                usedGraphs = usedGraphs + sectorName +","
+            
+            importantDescription = request.GET.get('inputImportantDescription')
+            datasource = request.GET.get('datas')
+            DataRetrieve.DataRetriever.pushToTable("", request.user.username, datasource, "important_request", usedGraphs, importantDescription, newEntryName)
+            
 def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
 
@@ -149,9 +154,16 @@ def handleCustomGraphRequest(request):
             sumFrameVals.columns = columnsList
             
             dataFrameInfo = pushFrameVals.to_csv() 
-            DataRetrieve.DataRetriever.pushString("user_custom_data",dataFrameInfo, request.user.username, datasource)
+            DataRetrieve.DataRetriever.pushToTable(dataFrameInfo, request.user.username, datasource, "custom_request", "", "", "")
             
             a = pd.concat([a,sumFrameVals])
+
+def handleImportantGraphRequest(request):
+    global selectedImportantGraph, selectedPreviousImportantGraph
+    selectedPreviousImportantGraph = selectedImportantGraph
+    selectedImportantGraph = request.GET.get('importantGraph')
+    if(selectedImportantGraph!=None and selectedImportantGraph!="Choose..." and selectedImportantGraph!=selectedPreviousImportantGraph):
+        print(selectedImportantGraph)
 
 def handlePredictionRequest(request):
     global selectedPredictionMode, predictionModes, showPredictions
@@ -188,13 +200,13 @@ def handleListingRequest(request):
         if (request.GET.get(requestString) != None and selectedDataName == selectedPreviousDataName):
             selectedSectors[i-1] = request.GET.get(requestString)
 
-        if selectedImportantGraph != None:
-            if selectedImportantGraph != list(importantGraphs)[2]:
-                selectedSectors[i-1] = selectedImportantGraph
-            else:
-                selectedSectors[i-1] = importantGraphs.get(selectedImportantGraph)[i-1]
-            if selectedImportantGraph == selectedPreviousImportantGraph:
-                selectedSectors[i-1] = request.GET.get(requestString)
+        # if selectedImportantGraph != None:
+        #     if selectedImportantGraph != list(importantGraphs)[2]:
+        #         selectedSectors[i-1] = selectedImportantGraph
+        #     else:
+        #         selectedSectors[i-1] = importantGraphs.get(selectedImportantGraph)[i-1]
+        #     if selectedImportantGraph == selectedPreviousImportantGraph:
+        #         selectedSectors[i-1] = request.GET.get(requestString)
         
 
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
@@ -203,11 +215,13 @@ def handleListingRequest(request):
 
 @csrf_exempt
 def home(request, copy=None):
+    print(request.is_ajax())
     global timeFrame_column_names, sectors, a
 
     handleDataSourceGraphRequest(request)
-    handleImportantGraphRequest(request)
     handleCustomGraphRequest(request)
+    saveImportantGraphRequest(request)
+    handleImportantGraphRequest(request)
     handlePredictionRequest(request)
     handleAddRemoveSectorRequest(request)
 
@@ -297,7 +311,7 @@ def home(request, copy=None):
                 **params
             )
 
-        fig.update_layout(height=600, paper_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(height=600, width=800, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
@@ -327,7 +341,7 @@ def home(request, copy=None):
         'selectedPlot': request.GET.get('plots'),
         'dataNames': dataNames,
         'selectedDataName': selectedDataName,
-        'importantGraphs': importantGraphs.keys(),
+        'importantGraphs': importantGraphs,
         'selectedImportantGraph': selectedImportantGraph,
         'selectedPredictionMode': selectedPredictionMode,
 
@@ -340,7 +354,7 @@ def home(request, copy=None):
     if request.is_ajax():
         context['sectors'] = sectors.tolist()
         context['plotTypes'] = list(plotDictionary.keys())
-        context['importantGraphs'] = list(importantGraphs.keys())
+        context['importantGraphs'] = importantGraphs
         context['makePredictions'] = predictionModes
         context['selectedDataName'] = selectedDataName
 
