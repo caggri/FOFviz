@@ -40,7 +40,7 @@ class DataRetriever:
 
     def pushToTable(userdata, username, datasource, requestType, usedGraphNames, description, graphName):
         dbConnection = DataRetriever.openConnection()
-        
+        description = description.replace("'", "''")
         if(requestType == "custom_request"):
             sqlStatement = "INSERT INTO user_custom_data(username, userdata, datasource) VALUES ('"+username+"', '"+ userdata +"' , '" + datasource +"');"
         elif(requestType == "important_request"):
