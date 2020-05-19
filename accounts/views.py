@@ -10,7 +10,7 @@ from .forms import Register, EditProfileForm
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
-
+from django import forms
 
 def register(request):
     form = Register(request.POST or None)
@@ -18,6 +18,10 @@ def register(request):
     if form.is_valid():
         new_user = form.save(commit=False)
         new_user.set_password(form.cleaned_data['password'])
+        passwd_len =len(str(form.cleaned_data['password']))
+        print(passwd_len)
+        
+            
         new_user.save()
         is_ok = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 

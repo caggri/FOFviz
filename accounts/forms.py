@@ -6,18 +6,31 @@ class Register(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(Register, self).__init__(*args,**kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs={'class':'form-control'}
+        #for field in self.fields:
+         #   self.fields[field].widget.attrs={'class':'form-control'}
+        
+
         self.fields['password'].widget=forms.PasswordInput(attrs={'class':'form-control'})
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ('username', 'email', 'password')
 
+    def clean_password(self):
+        original_password = self.cleaned_data['password']
+        if len(original_password) <  8 or original_password.isnumeric():
+            raise forms.ValidationError("Password needs to be at least 8 characters and both numeric and alphenumeric characters")
+
+        return original_password
+    
 
     def clean_email(self):
         email = self.cleaned_data['email']
         flag = len(User.objects.filter(email=email))
+        
+        if email == "":
+            raise forms.ValidationError('e-mail address cannot be blank.')
+
         if flag > 0:
             raise forms.ValidationError('This e-mail address already exist.')
 
