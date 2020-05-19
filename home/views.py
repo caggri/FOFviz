@@ -353,7 +353,7 @@ def home(request, copy=None):
                 **params
             )
 
-        fig.update_layout(height=600, width=800, paper_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(height=600, width=1000, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 

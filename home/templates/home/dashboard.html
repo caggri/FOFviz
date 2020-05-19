@@ -26,8 +26,10 @@
 
           $('#plotType option:contains({{selectedPlot}})').prop('selected',true);
           $('#makePredictions option:contains({{selectedPredictionMode}})').prop('selected',true);
-
+          
+        
       });
+
 
     /*function adjustVisibilityStart(){
         let counterSectorArray = "{{counterSectorArray}}";
@@ -249,7 +251,7 @@
 <form id="select_filter_form" method="GET" action="." >
     <div class="form-group col-md-3 float-left">
         <label for="importantGraph">Important Graphs</label>
-        <select id="importantGraph" class="form-control" name="importantGraph" width="100%">
+        <select id="importantGraph" class="form-control custom-select" name="importantGraph" width="100%">
             <option selected disabled>Choose...</option>
             {% for importantGraph in importantGraphs %}
             <option value="{{ importantGraph }}">{{ importantGraph }}</option>
@@ -257,7 +259,7 @@
         </select>
     </div>
 
-    <div class="form-group shadow-sm col-md-4 float-right" style="margin-top:90px">
+    <div class="form-group shadow-sm col-md-4 float-right" style="margin-top:90px; width:1400px">
         <!-- tab list -->
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -290,14 +292,14 @@
                     </svg>
                     {% endif %}
                 </label>
-                <select id="dataName1" class="form-control" name="datas" width="100%">
+                <select id="dataName1" class="form-control custom-select" name="datas" width="100%">
                     {% for dataName in dataNames %}
                     <option value="{{ dataName }}">{{ dataName }}</option>
                     {% endfor %}
                 </select>
                 <br/>
                 <label for="plotType">Plot type</label>
-                <select id="plotType" class="form-control" name="plots" width="100%">
+                <select id="plotType" class="form-control custom-select" name="plots" width="100%">
                     {% for plotType in plotTypes %}
                     <option value="{{ plotType }}">{{ plotType }}</option>
                     {% endfor %}
@@ -310,7 +312,7 @@
                     <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
                 </svg>
                 <div>
-                    <select id="sectors1" class="form-control mr-3 sectorDropdowns" name="sectors1" width="100%">
+                    <select id="sectors1" class="form-control custom-select mr-3 sectorDropdowns" name="sectors1" width="100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -326,7 +328,7 @@
                     <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
                 </svg>
                 <div>
-                    <select id="sectors2" class="form-control mr-3 sectorDropdowns" name="sectors2" width= "100%">
+                    <select id="sectors2" class="form-control custom-select mr-3 sectorDropdowns" name="sectors2" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -341,7 +343,7 @@
                     <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
                 </svg>
                 <div>
-                    <select id="sectors3" class="form-control mr-3 sectorDropdowns" name="sectors3" width= "100%">
+                    <select id="sectors3" class="form-control custom-select mr-3 sectorDropdowns" name="sectors3" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -356,7 +358,7 @@
                     <path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
                 </svg>
                 <div>
-                    <select id="sectors4" class="form-control mr-3 sectorDropdowns" name="sectors4" width= "100%">
+                    <select id="sectors4" class="form-control custom-select mr-3 sectorDropdowns" name="sectors4" width= "100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -381,14 +383,14 @@
                     </div>
                 </div>
                 <div>
-                    <select id="predictionTime" class="form-control col-md-2 d-inline float-right" name="predictionTime" width="100%">
+                    <select id="predictionTime" class="form-control custom-select col-md-2 d-inline float-right" name="predictionTime" width="100%">
                         <option selected>1</option>
                         <option>2</option>
                         <option>3</option>
                         <option>4</option>
                     </select>
                     <div class="form-group col-md-7 float-right">
-                        <select id="makePredictions" class="form-control" name="makePredictions" width="100%">
+                        <select id="makePredictions" class="form-control custom-select" name="makePredictions" width="100%">
                             <option selected>Disable Forecast</option>
                             <option>Enable Forecast</option>
                         </select>
@@ -436,7 +438,7 @@
             <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">
                 <label for="sectors1custom" class="mx-auto">Sector 1</label>
                 <div>
-                    <select id="sectors1custom" class="form-control mr-3" name="sectors1custom"  width="100%">
+                    <select id="sectors1custom" class="form-control custom-select mr-3" name="sectors1custom"  width="100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
@@ -445,16 +447,17 @@
                 </div>
                 <br/>
                 <div>
-                    <select id="operatorCustom" class="form-control mr-3 col-md-2 mx-auto" style="text-align-last: center" name="operatorCustom" width="100%">
+                    <select id="operatorCustom" class="form-control custom-select mr-3 col-md-2 mx-auto" style="text-align-last: center" name="operatorCustom" width="100%">
                         <option value="+">+</option>
                         <option value="-">-</option>
                         <option value="*">*</option>
                         <option value="/">/</option>
                     </select>                  
                 </div>
+                <br/>
                 <label for="sectors2custom" class="mx-auto">Sector 2</label>
                 <div>
-                    <select id="sectors2custom" class="form-control mr-3" name="sectors2custom" width="100%">
+                    <select id="sectors2custom" class="form-control custom-select mr-3" name="sectors2custom" width="100%">
                         <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
