@@ -7,12 +7,18 @@
 <script>
   $(document).ready(function() {
     $(function() {
+        
           $('#importantGraph option:contains({{selectedImportantGraph}})').prop('selected',true);
           $('#dataName1 option:contains({{selectedDataName}})').prop('selected',true);
         
+          //default state of sector dropdowns start
           $('#sectors2').prop("disabled", true);
           $('#sectors3').prop("disabled", true);
           $('#sectors4').prop("disabled", true);
+
+          for(let i=2;i<=4;i++)
+            $('#sectors'+i).val("Choose...")
+          //default state of sector dropdowns end
 
           $('#sectors1 option:contains({{selectedSector1}})').prop('selected',true);
           $('#sectors2 option:contains({{selectedSector2}})').prop('selected',false);
@@ -31,36 +37,20 @@
       });
 
 
-    /*function adjustVisibilityStart(){
-        let counterSectorArray = "{{counterSectorArray}}";
-        let selectedSector1 = "{{selectedSector1}}";
-        let selectedSector2 = "{{selectedSector2}}";
-        let selectedSector3 = "{{selectedSector3}}";
-        for(let i=1;i<=3;i++){
-            if(counterSectorArray.includes(i)){
-                console.log(i)
-                $('#sectors'+i).prop("disabled", false);
-
-                if(i === 1)
-                    $('#sectors'+i+' option:contains('+selectedSector1+')').prop('selected',true);
-                else if (i === 2)
-                    $('#sectors'+i+' option:contains('+selectedSector2+')').prop('selected',true);
-                else if( i === 3)
-                    $('#sectors'+i+' option:contains('+selectedSector3+')').prop('selected',true);
-            }
-            else{
-                $('#sectors'+i+' option:nth-child(1)').prop('selected',true);
-                $('#sectors'+i).prop("disabled", true);
-            }
-        }
-        }
-
-    adjustVisibilityStart()*/
+    function reloadTooltips(selectedSectorsDefinitions, counterSectorArray){
+        //reloading tooltips
+        for(var i=1;i<=counterSectorArray.length;i++)
+            $('#tooltip'+i).attr('data-original-title', selectedSectorsDefinitions[i-1])
+         
+        for(var i=4;i>counterSectorArray.length;i--)
+            $('#tooltip'+i).attr('data-original-title', 'None')
+        
+            
+        
+    }
 
     function flushSectors(sectors){
-
         //adding new sectors
-
         for(let i=1;i<=4;i++){
             $('#sectors'+i).empty()
 
@@ -126,15 +116,8 @@
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
         
         $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
-            
             $('#plot').html(data.plot)
-            
-            //reloading tooltips
-            $('#tooltip1').attr('data-original-title', data.selectedSectorsDefinitions[0])
-            $('#tooltip2').attr('data-original-title', data.selectedSectorsDefinitions[1])
-            $('#tooltip3').attr('data-original-title', data.selectedSectorsDefinitions[2])
-            $('#tooltip4').attr('data-original-title', data.selectedSectorsDefinitions[3])
-
+            reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
         }, "json");
       });
 
@@ -151,17 +134,18 @@
       
     $('input[value="+"]').on('click', function(){
 
-    event.preventDefault();
+        event.preventDefault();
 
-    let req = $( "#select_filter_form" ).serializeArray()
-    req.push({ name: "addSector", value: "+" })
-    
-    $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
+        let req = $( "#select_filter_form" ).serializeArray()
+        req.push({ name: "addSector", value: "+" })
+        
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
 
-    $.get('', req, function( data ) {
-        $('#plot').html(data.plot)
-        handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
-    }, "json");
+        $.get('', req, function( data ) {
+            $('#plot').html(data.plot)
+            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+            reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
+        }, "json");
     
     })
 
@@ -176,6 +160,7 @@
         $.get('', req, function( data ) {
             $('#plot').html(data.plot)
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+            reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
         }, "json");
         
     })
@@ -228,6 +213,7 @@
             $('#plot').html(data.plot)
             //flushSectors()
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+            reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
         }, "json");
     })
 
@@ -241,6 +227,7 @@
             flushCustomSectorsAndClone()
             flushImportantGraphs(data.importantGraphs)
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+            reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
         }, "json");
     })
       

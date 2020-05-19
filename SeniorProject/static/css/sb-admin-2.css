@@ -3601,12 +3601,12 @@ input[type="button"].btn-block {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #6e707e;
+  color: #000;
   vertical-align: middle;
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%235a5c69' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
   background-color: #fff;
-  border: 1px solid #d1d3e2;
-  border-radius: 0.35rem;
+  border: 1px solid #e0dfff;
+  border-radius: 1rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
