@@ -156,7 +156,7 @@ def handleCustomGraphRequest(request):
             customSector1Name = request.GET.get('sectors1custom')
             customSector2Name = request.GET.get('sectors2custom')
             operator = request.GET.get('operatorCustom')
-            datasource = request.GET.get('datas2')
+            datasource = request.GET.get('datas')
 
             firstEntry = a[a['Entry'] == customSector1Name]
             firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values

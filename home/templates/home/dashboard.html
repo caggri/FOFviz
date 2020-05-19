@@ -110,6 +110,13 @@
         $('#importantGraph').append(`<option value="${chartName}"> ${chartName} </option>`);
     }
 
+    function flushCustomSectorsAndClone(){
+        $('#sectors1custom').empty()
+        $('#sectors2custom').empty()
+        $('#sectors1 option').clone().appendTo('#sectors1custom');
+        $('#sectors1 option').clone().appendTo('#sectors2custom');
+    }
+
     $( "#plotType, .sectorDropdowns" ).change(function() {
         
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
@@ -227,6 +234,7 @@
         $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
             $('#plot').html(data.plot)
             flushSectors(data.sectors)
+            flushCustomSectorsAndClone()
             flushImportantGraphs(data.importantGraphs)
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
         }, "json");
@@ -424,17 +432,12 @@
             </div>
             <!-- Custom Graph Tab -->
             <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">
-                <label for="dataName">Data</label>
-                <select id="dataName" class="form-control" name="datas2" width="100%">
-                    {% for dataName in dataNames %}
-                    <option value="{{ dataName }}">{{ dataName }}</option>
-                    {% endfor %}
-                </select>
                 <br/>
 
-                <label for="sectors1" class="mx-auto">Sector 1</label>
+                <label for="sectors1custom" class="mx-auto">Sector 1</label>
                 <div>
                     <select id="sectors1custom" class="form-control mr-3" name="sectors1custom"  width="100%">
+                        <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
@@ -450,9 +453,10 @@
                     </select>                  
                 </div>
                 <br/><br/>
-                <label for="sectors2" class="mx-auto">Sector 2</label>
+                <label for="sectors2custom" class="mx-auto">Sector 2</label>
                 <div>
                     <select id="sectors2custom" class="form-control mr-3" name="sectors2custom" width="100%">
+                        <option selected disabled>Choose...</option>
                         {% for sector in sectors %}
                         <option value="{{ sector }}">{{ sector }}</option>
                         {% endfor %}
