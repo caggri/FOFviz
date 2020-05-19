@@ -37,19 +37,17 @@ sectors = []
 selectedSectorsDefinitions = [None,None,None,None]
 
 #List Elements
-dataNames = ['Flow of Funds', 'Balance Sheet (Monthly)', 'Balance Sheet (Annual)']
+dataNames = ['Flow of Funds', 'Balance of Payment (Monthly)', 'Balance of Payment (Annual)', 'Balance Sheet (Assets)', 'Balance Sheet (Liabilities)']
 predictionModes = ['Disable Forecast', 'Enable Forecast']
 importantGraphs = {}
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
-fofPath = os.path.dirname(os.path.realpath(__file__))
-fofPath = os.path.join(fofPath, 'EVDSdata.xlsx')
-
-monthlyBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
-monthlyBalanceSheetPath = os.path.join(monthlyBalanceSheetPath, 'BalanceSheet-Monthly.xlsx')
-
-annualBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
-annualBalanceSheetPath = os.path.join(annualBalanceSheetPath, 'BalanceSheet-Annual.xlsx')
+mainPath = os.path.dirname(os.path.realpath(__file__))
+fofPath = os.path.join(mainPath, 'EVDSdata.xlsx')
+monthlyBalanceSheetPath = os.path.join(mainPath, 'BalanceSheet-Monthly.xlsx')
+annualBalanceSheetPath = os.path.join(mainPath, 'BalanceSheet-Annual.xlsx')
+balanceSheetAssetsPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx')
+balanceSheetLiabilitiesPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx')
 
 def reset():
     global counterSector, counterSectorArray, showPredictions, selectedPreviousDataName, selectedDataName, \
@@ -73,12 +71,15 @@ def fillDefinitions():
     global selectedSectorsDefinitions
     for i in range(counterSector):
         s =  selectedSectors[i]
+        print(s)
         if(s!=None):
             s = s.split('.')[-1]
             if "(Thousand TRY)" in s: 
                 s = s.replace('(Thousand TRY)', '')
             elif "(Million USD)" in s: 
-                 s = s.replace('(Million USD)', '')
+                s = s.replace('(Million USD)', '')
+            elif "(Thousand TL)" in s: 
+                s = s.replace('(Thousand TL)', '')
             
             try:
                 selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=2)
@@ -116,6 +117,12 @@ def handleDataSourceGraphRequest(request):
                 a = pd.read_excel(monthlyBalanceSheetPath)
             elif selectedDataName == dataNames[2]:
                 a = pd.read_excel(annualBalanceSheetPath)
+            elif selectedDataName == dataNames[3]:
+                a = pd.read_excel(balanceSheetAssetsPath)
+            elif selectedDataName == dataNames[4]:
+                a = pd.read_excel(balanceSheetLiabilitiesPath, sheet_name=1)
+            
+            print(a)
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(fofPath)
@@ -292,7 +299,7 @@ def home(request, copy=None):
         if(selectedDataName == dataNames[0]):
             periodDifference = 91
             seasonality_m=4
-        elif(selectedDataName == dataNames[1]):
+        elif(selectedDataName == dataNames[1] or selectedDataName == dataNames[3] or selectedDataName == dataNames[4]):
             periodDifference = 30
             seasonality_m=12
         elif(selectedDataName == dataNames[2]):
@@ -353,7 +360,7 @@ def home(request, copy=None):
                 **params
             )
 
-        fig.update_layout(height=600, width=1000, paper_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(height=600, width=800, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 

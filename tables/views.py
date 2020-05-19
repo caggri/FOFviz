@@ -26,7 +26,7 @@ annualBalanceSheetPath = os.path.join(annualBalanceSheetPath, 'BalanceSheet-Annu
 
 dates = []
 prices = []
-dataNames = ['Flow of Funds', 'Balance Sheet (Annual)', 'Balance Sheet (Monthly)']
+dataNames = ['Flow of Funds', 'Balance of Payment (Annual)', 'Balance of Payment (Monthly)']
 currencyNames = [['Assets (Thousand TRY)','Liabilities (Thousand TRY)'],['Assets (Million USD)','Liabilities (Million USD)']]
 currencyPatternList = ["\(Thousand TRY\)","\(Million USD\)"]
 # Create your views here.
