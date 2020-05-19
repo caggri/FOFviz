@@ -44,7 +44,7 @@ class DataRetriever:
         if(requestType == "custom_request"):
             sqlStatement = "INSERT INTO user_custom_data(username, userdata, datasource) VALUES ('"+username+"', '"+ userdata +"' , '" + datasource +"');"
         elif(requestType == "important_request"):
-            sqlStatement = "INSERT INTO important_graph_data(username, usedgraphnames, graphName, datasource, description) VALUES ('"+username+"', '"+ usedGraphNames +"', '" + graphName +"', '"+ datasource +"', '"+ description+"');"
+            sqlStatement = "INSERT INTO important_graph_data(username, usedgraphnames, graphName, graphdatasource, description) VALUES ('"+username+"', '"+ usedGraphNames +"', '" + graphName +"', '"+ datasource +"', '"+ description+"');"
         
         print(sqlStatement) 
 
@@ -59,7 +59,7 @@ class DataRetriever:
         if(requestType == "custom_request"):
             sqlStatement = "SELECT userdata FROM user_custom_data WHERE username='" + username +"' AND datasource='"+datasource+"';"
         elif(requestType == "important_request"):
-            sqlStatement = "SELECT usedgraphnames, graphName, description FROM important_graph_data WHERE username='" + username +"' AND graphdatasource='"+datasource+"';"
+            sqlStatement = "SELECT usedgraphnames, graphname, description FROM important_graph_data WHERE username='" + username +"' AND graphdatasource='"+datasource+"';"
 
         print(sqlStatement) 
 

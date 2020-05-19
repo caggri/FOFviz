@@ -109,7 +109,7 @@
             $('#tooltip1').attr('data-original-title', data.selectedSectorsDefinitions[0])
             $('#tooltip2').attr('data-original-title', data.selectedSectorsDefinitions[1])
             $('#tooltip3').attr('data-original-title', data.selectedSectorsDefinitions[2])
-            $('#tooltip4').attr('data-original-title', data.selectedSectorsDefinitions[2])
+            $('#tooltip4').attr('data-original-title', data.selectedSectorsDefinitions[3])
 
         }, "json");
       });
@@ -197,16 +197,15 @@
     }, "json");
     })
 
-    // $('#importantGraph').change(function(){
-    //     $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
+    $('#importantGraph').change(function(){
+        $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
         
-    //     $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
-    //         $('#plot').html(data.plot)
-    //         $('#dataName1').val("Balance Sheet (Annual)")
-    //         //flushSectors()
-    //         handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
-    //     }, "json");
-    // })
+        $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
+            $('#plot').html(data.plot)
+            //flushSectors()
+            handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
+        }, "json");
+    })
 
     $('#dataName1').change(function(){
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')

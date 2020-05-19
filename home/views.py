@@ -38,8 +38,8 @@ selectedSectorsDefinitions = [None,None,None,None]
 
 #List Elements
 dataNames = ['Flow of Funds', 'Balance Sheet (Monthly)', 'Balance Sheet (Annual)']
-importantGraphs = []
 predictionModes = ['Disable Forecast', 'Enable Forecast']
+importantGraphs = {}
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
 fofPath = os.path.dirname(os.path.realpath(__file__))
@@ -50,6 +50,24 @@ monthlyBalanceSheetPath = os.path.join(monthlyBalanceSheetPath, 'BalanceSheet-Mo
 
 annualBalanceSheetPath = os.path.dirname(os.path.realpath(__file__))
 annualBalanceSheetPath = os.path.join(annualBalanceSheetPath, 'BalanceSheet-Annual.xlsx')
+
+def reset():
+    global counterSector, counterSectorArray, showPredictions, selectedPreviousDataName, selectedDataName, \
+     selectedSectors, selected_data, selectedImportantGraph, selectedPreviousImportantGraph, timeFrame_column_names, sectors, \
+     selectedSectorsDefinitions, importantGraphs
+    counterSector = 1
+    counterSectorArray = [counterSector]
+    showPredictions = False
+    selectedPreviousDataName = None
+    selectedDataName = None
+    selectedSectors = [None,None,None,None]
+    selected_data = [None,None,None,None]
+    selectedImportantGraph = None
+    selectedPreviousImportantGraph = None
+    timeFrame_column_names = []
+    sectors = []
+    selectedSectorsDefinitions = [None,None,None,None]
+    importantGraphs = {}
 
 def fillDefinitions():
     global selectedSectorsDefinitions
@@ -66,7 +84,7 @@ def fillDefinitions():
                 selectedSectorsDefinitions[i] = "Definition not available"
 
 def handleDataSourceGraphRequest(request):
-    global selectedPreviousDataName, selectedDataName, a, dataNames
+    global selectedPreviousDataName, selectedDataName, a, dataNames, importantGraphs
 
     selectedPreviousDataName = selectedDataName
     selectedDataName = request.GET.get('datas')
@@ -99,8 +117,11 @@ def handleDataSourceGraphRequest(request):
 
         if(lenImportantData>0):
             for i in range(lenImportantData):
-                retrievedString = retrievedCustomData[i][0]
-                print(retrievedString)
+                sectorsString = (str(retrievedImportantData[i][0]))[:-1]
+                usedSectorsList = sectorsString.split(",")
+                graphName = str(retrievedImportantData[i][1])
+                importantGraphs[graphName] = usedSectorsList
+
     
 def saveImportantGraphRequest(request):
     requestGet = request.GET.get('saveImportant')
@@ -109,7 +130,7 @@ def saveImportantGraphRequest(request):
         usedGraphs = ""
         if(newEntryName !=""):
             for i in range(counterSector):
-                dropDownUIName = "sectors" + (i+1) 
+                dropDownUIName = "sectors" + str(i+1) 
                 sectorName = request.GET.get(dropDownUIName)
                 usedGraphs = usedGraphs + sectorName +","
             
@@ -159,12 +180,23 @@ def handleCustomGraphRequest(request):
             a = pd.concat([a,sumFrameVals])
 
 def handleImportantGraphRequest(request):
-    global selectedImportantGraph, selectedPreviousImportantGraph
+    global selectedImportantGraph, selectedPreviousImportantGraph, counterSector, counterSectorArray, selectedSectors
     selectedPreviousImportantGraph = selectedImportantGraph
     selectedImportantGraph = request.GET.get('importantGraph')
     if(selectedImportantGraph!=None and selectedImportantGraph!="Choose..." and selectedImportantGraph!=selectedPreviousImportantGraph):
-        print(selectedImportantGraph)
+        usedSectors=importantGraphs[selectedImportantGraph]
+        counterSector = len(usedSectors)
+        counterSectorArray = []
+        for i in range(counterSector):
+            selectedSectors[i] = usedSectors[i]
+            counterSectorArray.append(i+1)
 
+        handleListingRequest(request, True)
+    else:
+        handleListingRequest(request,False)
+        
+        
+            
 def handlePredictionRequest(request):
     global selectedPredictionMode, predictionModes, showPredictions
 
@@ -188,47 +220,42 @@ def handleAddRemoveSectorRequest(request):
             counterSector = counterSector - 1
             counterSectorArray.pop()
 
-def handleListingRequest(request):
+def handleListingRequest(request, imp):
     global selectedSectors, sectors, selectedImportantGraph, selected_data
 
-    selectedSectors[0] = sectors[0]
+    if(not imp):
+        selectedSectors[0] = sectors[0]
 
     for i in counterSectorArray:
-        selectedSectors[i-1] = sectors[i]
-        requestString = 'sectors' + str(i)
+        if(not imp):
+            selectedSectors[i-1] = sectors[i]
+            requestString = 'sectors' + str(i)
 
-        if (request.GET.get(requestString) != None and selectedDataName == selectedPreviousDataName):
-            selectedSectors[i-1] = request.GET.get(requestString)
-
-        # if selectedImportantGraph != None:
-        #     if selectedImportantGraph != list(importantGraphs)[2]:
-        #         selectedSectors[i-1] = selectedImportantGraph
-        #     else:
-        #         selectedSectors[i-1] = importantGraphs.get(selectedImportantGraph)[i-1]
-        #     if selectedImportantGraph == selectedPreviousImportantGraph:
-        #         selectedSectors[i-1] = request.GET.get(requestString)
-        
-
+            if (request.GET.get(requestString) != None and selectedDataName == selectedPreviousDataName):
+                selectedSectors[i-1] = request.GET.get(requestString)
+            
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
         selected_data[i-1].drop(selected_data[i-1].columns[[0, 1]], axis=1, inplace=True)
+        print(selectedSectors[i-1])
 
 
 @csrf_exempt
 def home(request, copy=None):
-    print(request.is_ajax())
     global timeFrame_column_names, sectors, a
+
+    if (not request.is_ajax()):
+        reset()
 
     handleDataSourceGraphRequest(request)
     handleCustomGraphRequest(request)
     saveImportantGraphRequest(request)
-    handleImportantGraphRequest(request)
     handlePredictionRequest(request)
     handleAddRemoveSectorRequest(request)
 
     timeFrame_column_names = a.columns[a.columns.str.startswith('20', na=False)]
     sectors =  a[a.columns[1]]
     
-    handleListingRequest(request)
+    handleImportantGraphRequest(request)
 
     def getParams(chartType):
         if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
@@ -341,7 +368,7 @@ def home(request, copy=None):
         'selectedPlot': request.GET.get('plots'),
         'dataNames': dataNames,
         'selectedDataName': selectedDataName,
-        'importantGraphs': importantGraphs,
+        'importantGraphs': importantGraphs.keys(),
         'selectedImportantGraph': selectedImportantGraph,
         'selectedPredictionMode': selectedPredictionMode,
 
@@ -354,7 +381,7 @@ def home(request, copy=None):
     if request.is_ajax():
         context['sectors'] = sectors.tolist()
         context['plotTypes'] = list(plotDictionary.keys())
-        context['importantGraphs'] = importantGraphs
+        context['importantGraphs'] = list(importantGraphs.keys())
         context['makePredictions'] = predictionModes
         context['selectedDataName'] = selectedDataName
 
