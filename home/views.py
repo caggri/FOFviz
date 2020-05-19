@@ -71,17 +71,22 @@ def reset():
 
 def fillDefinitions():
     global selectedSectorsDefinitions
-    for i in range(len(selectedSectors)):
+    for i in range(counterSector):
         s =  selectedSectors[i]
         if(s!=None):
             s = s.split('.')[-1]
             if "(Thousand TRY)" in s: 
                 s = s.replace('(Thousand TRY)', '')
+            elif "(Million USD)" in s: 
+                 s = s.replace('(Million USD)', '')
             
             try:
                 selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=2)
             except:
                 selectedSectorsDefinitions[i] = "Definition not available"
+            
+            print(selectedSectorsDefinitions[i])
+
 
 def getImportantGraphsRequest(request):
     global importantGraphs
@@ -104,8 +109,6 @@ def handleDataSourceGraphRequest(request):
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
             importantGraphs = {}
-            selectedImportantGraph = None
-            selectedPreviousImportantGraph = None
 
             if selectedDataName == dataNames[0]:
                 a = pd.read_excel(fofPath)
@@ -259,11 +262,12 @@ def home(request, copy=None):
     saveImportantGraphRequest(request)
     handlePredictionRequest(request)
     handleAddRemoveSectorRequest(request)
-
+    
     timeFrame_column_names = a.columns[a.columns.str.startswith('20', na=False)]
     sectors =  a[a.columns[1]]
     
     handleImportantGraphRequest(request)
+    fillDefinitions()
 
     def getParams(chartType):
         if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
@@ -283,8 +287,20 @@ def home(request, copy=None):
         forecastDates = []
         lastDate = dates[-1]
 
+        seasonality_m=4
+        periodDifference=91
+        if(selectedDataName == dataNames[0]):
+            periodDifference = 91
+            seasonality_m=4
+        elif(selectedDataName == dataNames[1]):
+            periodDifference = 30
+            seasonality_m=12
+        elif(selectedDataName == dataNames[2]):
+            periodDifference = 365
+            seasonality_m=1
+
         for i in range(futureStepsN):
-            lastDate = lastDate + datetime.timedelta(days=91)
+            lastDate = lastDate + datetime.timedelta(days=periodDifference)
             forecastDates.append(lastDate)
         
         forecastDates = pd.to_datetime(forecastDates)
@@ -302,16 +318,7 @@ def home(request, copy=None):
 
             data.set_index('dates', inplace=True)
             train = data
-        
-            seasonality_m=4
-
-            if selectedDataName == dataNames[0]:
-                seasonality_m=4
-            elif selectedDataName == dataNames[1]:
-                seasonality_m=12
-            elif selectedDataName == dataNames[2]:
-                seasonality_m=1
-
+    
             arima = pm.auto_arima(train, seasonal=True, m=seasonality_m, error_action='ignore', trace=True,
                                 suppress_warnings=True, maxiter=10)
             
@@ -349,8 +356,6 @@ def home(request, copy=None):
         fig.update_layout(height=600, width=800, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
-
-        fillDefinitions()
 
         return plot_div
 

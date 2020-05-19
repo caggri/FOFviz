@@ -104,6 +104,8 @@
         $('#sectors2').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors3').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors4').append(`<option value="${chartName}"> ${chartName} </option>`);
+        $('#sectors1custom').append(`<option value="${chartName}"> ${chartName} </option>`);
+        $('#sectors2custom').append(`<option value="${chartName}"> ${chartName} </option>`);
     }
 
     function appendToImportantDropdown(chartName){
@@ -432,8 +434,6 @@
             </div>
             <!-- Custom Graph Tab -->
             <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">
-                <br/>
-
                 <label for="sectors1custom" class="mx-auto">Sector 1</label>
                 <div>
                     <select id="sectors1custom" class="form-control mr-3" name="sectors1custom"  width="100%">
@@ -443,7 +443,7 @@
                         {% endfor %}
                     </select>                  
                 </div>
-                <br/><br/>
+                <br/>
                 <div>
                     <select id="operatorCustom" class="form-control mr-3 col-md-2 mx-auto" style="text-align-last: center" name="operatorCustom" width="100%">
                         <option value="+">+</option>
@@ -452,7 +452,6 @@
                         <option value="/">/</option>
                     </select>                  
                 </div>
-                <br/><br/>
                 <label for="sectors2custom" class="mx-auto">Sector 2</label>
                 <div>
                     <select id="sectors2custom" class="form-control mr-3" name="sectors2custom" width="100%">
@@ -462,7 +461,7 @@
                         {% endfor %}
                     </select>                  
                 </div>
-                <br><br>
+                <br>
                 <button
                     class="btn btn-outline-primary float-right" 
                     type="button"
