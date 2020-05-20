@@ -19,9 +19,7 @@ from io import StringIO
 counterSector = 1
 counterSectorArray = [counterSector]
 showPredictions = False
-plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 
-'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 
-'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
+plotDictionary = {'Area Graph': 'area', 'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
 ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv }
 
 
@@ -368,7 +366,7 @@ def home(request, copy=None):
                 **params
             )
 
-        fig.update_layout(height=600, width=800, paper_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(height=520, width=800, paper_bgcolor='rgba(0,0,0,0)')
 
         plot_div = plot(fig, output_type='div', include_plotlyjs=False)
 
