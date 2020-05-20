@@ -40,6 +40,7 @@ selectedSectorsDefinitions = [None,None,None,None]
 dataNames = ['Flow of Funds', 'Balance of Payment (Monthly)', 'Balance of Payment (Annual)', 'Balance Sheet (Assets)', 'Balance Sheet (Liabilities)']
 predictionModes = ['Disable Forecast', 'Enable Forecast']
 importantGraphs = {}
+importantGraphDescriptions = {}
 
 #Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
 mainPath = os.path.dirname(os.path.realpath(__file__))
@@ -52,7 +53,7 @@ balanceSheetLiabilitiesPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analyti
 def reset():
     global counterSector, counterSectorArray, showPredictions, selectedPreviousDataName, selectedDataName, \
      selectedSectors, selected_data, selectedImportantGraph, selectedPreviousImportantGraph, timeFrame_column_names, sectors, \
-     selectedSectorsDefinitions, importantGraphs
+     selectedSectorsDefinitions, importantGraphs, importantGraphDescription
     counterSector = 1
     counterSectorArray = [counterSector]
     showPredictions = False
@@ -66,6 +67,7 @@ def reset():
     sectors = []
     selectedSectorsDefinitions = [None,None,None,None]
     importantGraphs = {}
+    importantGraphDescription = None
 
 def fillDefinitions():
     global selectedSectorsDefinitions
@@ -105,6 +107,7 @@ def getImportantGraphsRequest(request):
             usedSectorsList = sectorsString.split(",")
             graphName = str(retrievedImportantData[i][1])
             importantGraphs[graphName] = usedSectorsList
+            importantGraphDescriptions[graphName] = str(retrievedImportantData[i][2])
 
 def handleDataSourceGraphRequest(request):
     global selectedPreviousDataName, selectedDataName, a, dataNames, importantGraphs
@@ -202,11 +205,12 @@ def handleCustomGraphRequest(request):
             a = pd.concat([a,sumFrameVals])
 
 def handleImportantGraphRequest(request):
-    global selectedImportantGraph, selectedPreviousImportantGraph, counterSector, counterSectorArray, selectedSectors
+    global selectedImportantGraph, selectedPreviousImportantGraph, counterSector, counterSectorArray, selectedSectors, importantGraphDescription
     selectedPreviousImportantGraph = selectedImportantGraph
     selectedImportantGraph = request.GET.get('importantGraph')
     if(selectedImportantGraph!=None and selectedImportantGraph!="Choose..." and selectedImportantGraph!=selectedPreviousImportantGraph):
         usedSectors=importantGraphs[selectedImportantGraph]
+        importantGraphDescription=importantGraphDescriptions[selectedImportantGraph]
         counterSector = len(usedSectors)
         counterSectorArray = []
         for i in range(counterSector):
@@ -401,7 +405,8 @@ def home(request, copy=None):
         'selectedSectorsDefinitions3': selectedSectorsDefinitions[2],
         'selectedSectorsDefinitions4': selectedSectorsDefinitions[3],
         'selectedSectorsDefinitions': selectedSectorsDefinitions,
-        'selectedDataDefinition': selectedDataDefinition
+        'selectedDataDefinition': selectedDataDefinition,
+        'importantGraphDescription': importantGraphDescription
     }
     if request.is_ajax():
         context['sectors'] = sectors.tolist()
