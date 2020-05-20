@@ -6,6 +6,7 @@
     $(function() {
       $("select option:contains({{selectedTimeFrame}})").prop("selected", true);
       $("select option:contains({{selectedDataName}})").prop("selected", true);
+      $("#dataName").html("{{selectedDataName}}")
       /*$("table tbody tr")
         .filter(
           $(this)
@@ -25,7 +26,7 @@
 <form id="filter_form" method="GET" action=".">
   <div class="container-fluid">
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Flow Of Funds Data</h1>
+    <h1 id="dataName" class="h3 mb-4 mt-4 text-gray-800"></h1>
 
     <!-- DataTables-->
     <div class="card shadow mb-4">

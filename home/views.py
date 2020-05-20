@@ -69,9 +69,9 @@ def reset():
 
 def fillDefinitions():
     global selectedSectorsDefinitions
+    global selectedDataDefinition
     for i in range(counterSector):
         s =  selectedSectors[i]
-        print(s)
         if(s!=None):
             s = s.split('.')[-1]
             if "(Thousand TRY)" in s: 
@@ -85,9 +85,13 @@ def fillDefinitions():
                 selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=2)
             except:
                 selectedSectorsDefinitions[i] = "Definition not available"
-            
-            print(selectedSectorsDefinitions[i])
 
+    try:
+        selectedDataDefinition = wikipedia.summary(selectedDataName, sentences=1)
+    except:
+        selectedDataDefinition = "Definition not available"
+    
+    print("selectedDataDefinition",selectedDataDefinition)
 
 def getImportantGraphsRequest(request):
     global importantGraphs
@@ -122,7 +126,7 @@ def handleDataSourceGraphRequest(request):
             elif selectedDataName == dataNames[4]:
                 a = pd.read_excel(balanceSheetLiabilitiesPath, sheet_name=1)
             
-            print(a)
+            
     else:
         selectedDataName = dataNames[0]
         a = pd.read_excel(fofPath)
@@ -254,7 +258,7 @@ def handleListingRequest(request, imp):
             
         selected_data[i-1] = a[a['Entry'] == selectedSectors[i-1]]
         selected_data[i-1].drop(selected_data[i-1].columns[[0, 1]], axis=1, inplace=True)
-        print(selectedSectors[i-1])
+        
 
 
 @csrf_exempt
@@ -396,7 +400,8 @@ def home(request, copy=None):
         'selectedSectorsDefinitions2': selectedSectorsDefinitions[1],
         'selectedSectorsDefinitions3': selectedSectorsDefinitions[2],
         'selectedSectorsDefinitions4': selectedSectorsDefinitions[3],
-        'selectedSectorsDefinitions': selectedSectorsDefinitions
+        'selectedSectorsDefinitions': selectedSectorsDefinitions,
+        'selectedDataDefinition': selectedDataDefinition
     }
     if request.is_ajax():
         context['sectors'] = sectors.tolist()
