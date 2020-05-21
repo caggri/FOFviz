@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 selectedTimeFrame = None
 selectedDataName = None
 
+# paths for attaining data from local
 fofPath = os.path.dirname(os.path.realpath(__file__))
 fofPath = os.path.join(fofPath, 'EVDSdata.xlsx')
 
@@ -23,13 +24,16 @@ annualBOPPath = os.path.join(annualBOPPath, 'BalanceSheet-Annual.xlsx')
 balanceSheetPath = os.path.dirname(os.path.realpath(__file__))
 balanceSheetPath = os.path.join(balanceSheetPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx')
 
+# use this to retrieve data from the database
 # retriever = DataRetrieve.DataRetriever()
 # all_data = retriever.retrieve()
 # load_all_data = pd.read_excel(path)
 
 dates = []
 prices = []
+#initiliazing types of sheets
 dataNames = ['Flow of Funds', 'Balance of Payment (Annual)', 'Balance of Payment (Monthly)', 'Balance Sheet']
+#initializing important currencies and their patterns
 currencyNames = [['Assets (Thousand TRY)','Liabilities (Thousand TRY)'],['Assets (Million USD)','Liabilities (Million USD)'],['Assets (Thousand TL)','Liabilities (Thousand TL)']]
 currencyPatternList = ["\(Thousand TRY\)","\(Million USD\)","\(Thousand TL\)"]
 # Create your views here.
@@ -38,11 +42,11 @@ currencyPatternList = ["\(Thousand TRY\)","\(Million USD\)","\(Thousand TL\)"]
 # load_all_data = DataRetrieve.DataRetriever.retrieveAllData()
 
 def table(request):
-    global selectedDataName
+    global selectedDataName #the name of the data sheet selected
     global selectedPreviousDataName
-    global selectedTimeFrame    
-    global all_data
-    global assets_bs
+    global selectedTimeFrame #time frame for which values are to be shown
+    global all_data #contains all the excel data to be filtered
+    global assets_bs #balance sheet data is split into assets and liabilities using different excel sheets
     global liabilities_bs
     global dates
     global prices
@@ -58,6 +62,7 @@ def table(request):
     else:
         selectedDataName = dataNames[0]
 
+    #read the selected data sheet and the corresponding currency
     if selectedDataName == dataNames[0]:
         all_data = pd.read_excel(fofPath)
         currency = currencyNames[0]
@@ -70,6 +75,7 @@ def table(request):
         currency = currencyNames[1]
         currencyPattern = currencyPatternList[1]
     elif selectedDataName == dataNames[3]:
+        #clean data and adjust format according to requirements of displaying balance sheet
         currency = currency = currencyNames[2]
         currencyPattern = currencyPatternList[2]
         assets_bs = pd.read_excel(balanceSheetPath)
@@ -80,7 +86,8 @@ def table(request):
         assets_bs=assets_bs.drop(assets_bs[assets_bs.iloc[:, 0] == 'Computed Value'].index.values.astype(int)[0])
         assets_bs=assets_bs.drop(assets_bs[assets_bs.iloc[:, 0] == 'Time'].index.values.astype(int)[0])
         all_data = assets_bs #for timeframe
-        
+    
+    #data formatting 
     if(request.GET.get('timeFrames') != None and selectedPreviousDataName == selectedDataName):
         selectedTimeFrame = request.GET.get('timeFrames')
     elif selectedDataName == dataNames[3]:
@@ -89,15 +96,19 @@ def table(request):
         selectedTimeFrame = all_data.columns[-1]
     
     if selectedDataName == dataNames[0]:
-        assets_data = pd.DataFrame(all_data[all_data['Entry'].str.contains('__ VF.\d\D')], columns=['Entry', selectedTimeFrame])
-        liabilities_data = pd.DataFrame(all_data[all_data['Entry'].str.contains('__ YF.\d\D')], columns=['Entry', selectedTimeFrame])
-        assets_and_liabilities_data = pd.merge(assets_data, liabilities_data, on=assets_data.index, how='outer')
-        assets_and_liabilities_data.columns = ['EntryNo','Assets (Thousand TRY)',selectedTimeFrame, 'Liabilities (Thousand TRY)', selectedTimeFrame]
+        #Formatting data for Flow of funds accounts
+        assets_data = pd.DataFrame(all_data[all_data['Entry'].str.contains('__ VF.\d\D')], columns=['Entry', selectedTimeFrame]) #find assets based on excel cell entry format - VF indicates asset
+        liabilities_data = pd.DataFrame(all_data[all_data['Entry'].str.contains('__ YF.\d\D')], columns=['Entry', selectedTimeFrame]) #find assets based on excel cell entry format - YF indicates liability
+        assets_and_liabilities_data = pd.merge(assets_data, liabilities_data, on=assets_data.index, how='outer') #merging the two data sets
+        assets_and_liabilities_data.columns = ['EntryNo','Assets (Thousand TRY)',selectedTimeFrame, 'Liabilities (Thousand TRY)', selectedTimeFrame] #displaying them according to the selected timeframe
     
     elif selectedDataName == dataNames[1] or selectedDataName == dataNames[2]:
-        assets_data = pd.DataFrame(all_data[all_data['Entry'].str.contains(pat = '^[ABD][.]', regex = True)], columns=['Entry', selectedTimeFrame])
-        liabilities_data = pd.DataFrame(all_data[all_data['Entry'].str.contains(pat = '^[CE][.]', regex = True)], columns=['Entry', selectedTimeFrame])
-        assets_data.reset_index(drop=True, inplace=True)
+        #Formatting data for Balance of Payments sheets
+        assets_data = pd.DataFrame(all_data[all_data['Entry'].str.contains(pat = '^[ABD][.]', regex = True)], columns=['Entry', selectedTimeFrame]) #excel cell entries specify entries starting with A B and D as assets, clean data accordingly
+        liabilities_data = pd.DataFrame(all_data[all_data['Entry'].str.contains(pat = '^[CE][.]', regex = True)], columns=['Entry', selectedTimeFrame]) #C and E as liabilities
+        
+        #continuing with manipulation necessary for making it compatible with our data display format
+        assets_data.reset_index(drop=True, inplace=True) 
         liabilities_data.reset_index(drop=True, inplace=True)
         
         assets_and_liabilities_data = pd.concat([assets_data,liabilities_data], ignore_index=False, axis=1)
@@ -106,14 +117,17 @@ def table(request):
         assets_and_liabilities_data.columns = ['Assets (Million USD)',selectedTimeFrame, 'Liabilities (Million USD)', selectedTimeFrame]
         
     elif selectedDataName == dataNames[3]:
-        assets_data = pd.DataFrame(assets_bs, columns=['Unnamed: 0', selectedTimeFrame])
+        #Formatting data for balance sheet entries
+        assets_data = pd.DataFrame(assets_bs, columns=['Unnamed: 0', selectedTimeFrame]) #Appending necessary columns to make it compatible with the format of our other sheets
         liabilities_data = pd.DataFrame(liabilities_bs, columns=['Unnamed: 0', selectedTimeFrame])
+
+        #continuing with manipulation necessary for making it compatible with our data display format
         assets_data.reset_index(drop=True, inplace=True)
         liabilities_data.reset_index(drop=True, inplace=True)
         assets_and_liabilities_data = pd.concat([assets_data, liabilities_data], axis=1)
         assets_and_liabilities_data.columns = ['Assets (Thousand TL)',selectedTimeFrame, 'Liabilities (Thousand TL)', selectedTimeFrame]
         
-        
+    #Adjusting currency patterns for different data sheets
     assets_and_liabilities_data[currency[0]] = assets_and_liabilities_data[currency[0]].str.replace(currencyPattern,"")
     assets_and_liabilities_data[currency[1]] = assets_and_liabilities_data[currency[1]].str.replace(currencyPattern,"")
     

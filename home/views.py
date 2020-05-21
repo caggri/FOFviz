@@ -16,38 +16,42 @@ import operator
 import wikipedia
 from io import StringIO
 
-counterSector = 1
-counterSectorArray = [counterSector]
-showPredictions = False
-plotDictionary = {'Area Graph': 'area', 'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Density Contour': 'density_contour','Heat Map': 'density_heatmap'}
-ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv }
-
-
 #determine selection
 selectedPreviousDataName = None
-selectedDataName = None
-selectedSectors = [None,None,None,None]
-selected_data = [None,None,None,None]
-selectedImportantGraph = None
+showPredictions = False
+selectedDataName = None #the type of data sheet selected (balance sheet etc)
+selectedSectors = [None,None,None,None] #the names of the 4 selected sectors
+selected_data = [None,None,None,None] #the filtered values for the 4 selected sectors
+selectedImportantGraph = None  
 selectedPreviousImportantGraph = None
-timeFrame_column_names = []
-sectors = []
-selectedSectorsDefinitions = [None,None,None,None]
+timeFrame_column_names = [] #all avaialble time-frames
+sectors = [] #unfiltered data
+selectedSectorsDefinitions = [None,None,None,None] #wikipedia summary for the selected sectors
 
 #List Elements
-dataNames = ['Flow of Funds', 'Balance of Payment (Monthly)', 'Balance of Payment (Annual)', 'Balance Sheet (Assets)', 'Balance Sheet (Liabilities)']
+dataNames = ['Flow of Funds', 'Balance of Payment (Monthly)', 'Balance of Payment (Annual)', 'Balance Sheet (Assets)', 'Balance Sheet (Liabilities)'] #available data sheets
 predictionModes = ['Disable Forecast', 'Enable Forecast']
-importantGraphs = {}
-importantGraphDescriptions = {}
+importantGraphs = {} #to map all important graph names with the retrieved data from the database
+importantGraphDescriptions = {} #retrieved description for the graph from the database
+counterSector = 1 #number of sectors selected for comparison
+counterSectorArray = [counterSector] #to allow for easy looping
+plotDictionary = {'Line Plot': 'line', 'Stacked Bar Chart' : 'bar', 'Grouped Bar Chart' : 'bar', 
+'Scatter Plot': 'scatter', 'Alluvial Diagram': 'parallel_categories', 'Area Graph': 'area', 
+'Density Contour': 'density_contour','Heat Map': 'density_heatmap'} #names of plots mapped with their relevent Plotly functions
+ops_dictionary = { "+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv } #operators available for custom graph (ratio etc) calculations
 
-#Keep read function here so it only executes it ones and keep one list with all the data, don't end it, make copies of it for further work
-mainPath = os.path.dirname(os.path.realpath(__file__))
-fofPath = os.path.join(mainPath, 'EVDSdata.xlsx')
-monthlyBalanceSheetPath = os.path.join(mainPath, 'BalanceSheet-Monthly.xlsx')
-annualBalanceSheetPath = os.path.join(mainPath, 'BalanceSheet-Annual.xlsx')
-balanceSheetAssetsPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx')
-balanceSheetLiabilitiesPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx')
+#Keep read function here so it only executes it ones and keep one list with all the data, don't end it, 
+#Make copies of it for further work
+#Use retrieveAllData function instead from the DataRetriever class to retrieve data from the database
+#Retrieving data from local just for the local version
+mainPath = os.path.dirname(os.path.realpath(__file__)) #the current directory
+fofPath = os.path.join(mainPath, 'EVDSdata.xlsx') #Flow of Funds data
+monthlyBalanceSheetPath = os.path.join(mainPath, 'BalanceSheet-Monthly.xlsx') #Balance of Payments Monthly Data
+annualBalanceSheetPath = os.path.join(mainPath, 'BalanceSheet-Annual.xlsx') #Balance of Payments Annual Data
+balanceSheetAssetsPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx') #Balance Sheet Data Assets (sheet 0)
+balanceSheetLiabilitiesPath = os.path.join(mainPath, 'CB-2006-19-monthly-Analytical_Cleaned.xlsx') #Balance Sheet Data Liabilities (sheet 1)
 
+#this function resets the variables to start off fresh
 def reset():
     global counterSector, counterSectorArray, showPredictions, selectedPreviousDataName, selectedDataName, \
      selectedSectors, selected_data, selectedImportantGraph, selectedPreviousImportantGraph, timeFrame_column_names, sectors, \
@@ -67,13 +71,15 @@ def reset():
     importantGraphs = {}
     importantGraphDescription = None
 
+#this function populates the array with summaries from Wikipedia API
 def fillDefinitions():
     global selectedSectorsDefinitions
     global selectedDataDefinition
-    for i in range(counterSector):
-        s =  selectedSectors[i]
-        if(s!=None):
-            s = s.split('.')[-1]
+    for i in range(counterSector): #for all sectors selected
+        s =  selectedSectors[i] #retrieve the name
+        if(s!=None): 
+            #clean the string so that it can be searched using the API 
+            s = s.split('.')[-1]  
             if "(Thousand TRY)" in s: 
                 s = s.replace('(Thousand TRY)', '')
             elif "(Million USD)" in s: 
@@ -82,31 +88,35 @@ def fillDefinitions():
                 s = s.replace('(Thousand TL)', '')
             
             try:
-                selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=2)
+                selectedSectorsDefinitions[i] = wikipedia.summary(s, sentences=2) #You can easily increase the number of sentences
             except:
-                selectedSectorsDefinitions[i] = "Definition not available"
+                selectedSectorsDefinitions[i] = "Definition not available" #if couldn't find summary for fitlered string
 
     try:
-        selectedDataDefinition = wikipedia.summary(selectedDataName, sentences=1)
+        selectedDataDefinition = wikipedia.summary(selectedDataName, sentences=1) #to receive definitions for data sheets
     except:
-        selectedDataDefinition = "Definition not available"
+        selectedDataDefinition = "Definition not available" 
     
     print("selectedDataDefinition",selectedDataDefinition)
 
+#this function runs everytime a data sheet is changed and retrieves the latest saved important graphs
 def getImportantGraphsRequest(request):
     global importantGraphs
+    #to get the data for the important graphs from our database
     retrievedImportantData = DataRetrieve.DataRetriever.pullFromTable(request.user.username, selectedDataName,"important_request")
 
     lenImportantData = len(retrievedImportantData)
 
+    #for each retrieved ResultProxy (retrieved datatype), clean it up and retrieve necessary information like important graph name, description, its specific data sheet etc
     if(lenImportantData>0):
         for i in range(lenImportantData):
-            sectorsString = (str(retrievedImportantData[i][0]))[:-1]
-            usedSectorsList = sectorsString.split(",")
+            sectorsString = (str(retrievedImportantData[i][0]))[:-1] #remove the ending comma for the sector
+            usedSectorsList = sectorsString.split(",") #to retrieve a list of all the sectors used to generate this important graph
             graphName = str(retrievedImportantData[i][1])
-            importantGraphs[graphName] = usedSectorsList
-            importantGraphDescriptions[graphName] = str(retrievedImportantData[i][2])
+            importantGraphs[graphName] = usedSectorsList #populates the dictionary mapping each important graph name to the used sectors for it
+            importantGraphDescriptions[graphName] = str(retrievedImportantData[i][2]) #fills up an array containing the description for each of them
 
+#handle the AJAX request for when a data sheet is selected
 def handleDataSourceGraphRequest(request):
     global selectedPreviousDataName, selectedDataName, a, dataNames, importantGraphs
 
@@ -115,7 +125,7 @@ def handleDataSourceGraphRequest(request):
     if selectedDataName != None:
         if selectedDataName != selectedPreviousDataName:
             importantGraphs = {}
-
+            #load the data from specificed paths. Use DataRetriever to get it from database for the version uploaded to server.
             if selectedDataName == dataNames[0]:
                 a = pd.read_excel(fofPath)
             elif selectedDataName == dataNames[1]:
@@ -129,14 +139,15 @@ def handleDataSourceGraphRequest(request):
             
             
     else:
-        selectedDataName = dataNames[0]
+        selectedDataName = dataNames[0] #revert to fof data in case nothing selected
         a = pd.read_excel(fofPath)
     
     if(selectedDataName != None and selectedDataName != selectedPreviousDataName):
+        #retrieve all custom saved graphs for the logged in user
         retrievedCustomData = DataRetrieve.DataRetriever.pullFromTable(request.user.username, selectedDataName,"custom_request")
 
         lenCustomData = len(retrievedCustomData)
-
+        #Processing the ResultProxy datatype and converting it into a dataframe
         if(lenCustomData>0):
             for i in range(lenCustomData):
                 retrievedString = retrievedCustomData[i][0]
@@ -145,22 +156,25 @@ def handleDataSourceGraphRequest(request):
 
         getImportantGraphsRequest(request)
 
+#handle AJAX request for when user wants to save an important graph to their account
 def saveImportantGraphRequest(request):
     requestGet = request.GET.get('saveImportant')
     if (requestGet!= None):
         newEntryName = request.GET.get('inputImportantName')
         usedGraphs = ""
+        #retrieve all the selected sectrors and convert them into a comma-separated string to save to database
         if(newEntryName !=""):
             for i in range(counterSector):
-                dropDownUIName = "sectors" + str(i+1) 
+                dropDownUIName = "sectors" + str(i+1) #names of dropdowns for selected sectors
                 sectorName = request.GET.get(dropDownUIName)
                 usedGraphs = usedGraphs + sectorName +","
             
             importantDescription = request.GET.get('inputImportantDescription')
             datasource = request.GET.get('datas')
-            DataRetrieve.DataRetriever.pushToTable("", request.user.username, datasource, "important_request", usedGraphs, importantDescription, newEntryName)
+            DataRetrieve.DataRetriever.pushToTable("", request.user.username, datasource, "important_request", usedGraphs, importantDescription, newEntryName) #push entry to important graphs table in database
             getImportantGraphsRequest(request)
 
+#handle AJAX request for when user wants to save a custom generated graph to their account
 def handleCustomGraphRequest(request):
     global a, selectedImportantGraph, columnsList, valuesList
 
@@ -168,18 +182,22 @@ def handleCustomGraphRequest(request):
     if (requestGet!= None):
         newEntryName = request.GET.get('inputEntryName')
         if(newEntryName != ""):
+            #retrieve selected custom entries and the operator for calculation
             customSector1Name = request.GET.get('sectors1custom')
             customSector2Name = request.GET.get('sectors2custom')
             operator = request.GET.get('operatorCustom')
             datasource = request.GET.get('datas')
 
+            #clean up retrieved rows to retrieve values from them and perform the operation on each corresponding cell
             firstEntry = a[a['Entry'] == customSector1Name]
             firstEntryVals = firstEntry.drop(firstEntry.columns[[0, 1]], axis=1).values
             secondEntry = a[a['Entry'] == customSector2Name]
             secondEntryVals = secondEntry.drop(secondEntry.columns[[0, 1]], axis=1).values
             
+            #perform operation on cleaned rows
             newEntry = ops_dictionary[operator](firstEntryVals, secondEntryVals)
             
+            #data manipulation necessary to be able to save data to our database and match it up with the available dataframes
             columnsList = (firstEntry.iloc[:,2:].columns).tolist()
             columnsList.insert(0,'Entry')
 
@@ -197,30 +215,36 @@ def handleCustomGraphRequest(request):
             
             sumFrameVals.columns = columnsList
             
+            #push to database
             dataFrameInfo = pushFrameVals.to_csv() 
             DataRetrieve.DataRetriever.pushToTable(dataFrameInfo, request.user.username, datasource, "custom_request", "", "", "")
             
+            #append to dataframe in current instance as well for instant update (to allow a smooth transition)
             a = pd.concat([a,sumFrameVals])
 
+#handle user's AJAX request for an important graph
 def handleImportantGraphRequest(request):
     global selectedImportantGraph, selectedPreviousImportantGraph, counterSector, counterSectorArray, selectedSectors, importantGraphDescription
     selectedPreviousImportantGraph = selectedImportantGraph
     selectedImportantGraph = request.GET.get('importantGraph')
     if(selectedImportantGraph!=None and selectedImportantGraph!="Choose..." and selectedImportantGraph!=selectedPreviousImportantGraph):
+        #since we populate the important graphs dictionary when we load the datasheets to avoid continuous database connections
+        #and allow smooth retrievel, you can retrieve required information from the populated dictionary at this step
         usedSectors=importantGraphs[selectedImportantGraph]
         importantGraphDescription=importantGraphDescriptions[selectedImportantGraph]
         counterSector = len(usedSectors)
         counterSectorArray = []
+        #to select the sectors used to create the important graph
         for i in range(counterSector):
             selectedSectors[i] = usedSectors[i]
             counterSectorArray.append(i+1)
 
+        #populate the corresponding sector lists
         handleListingRequest(request, True)
     else:
         handleListingRequest(request,False)
         
-        
-            
+#assign prediction boolean based on request to be used while generating the graph
 def handlePredictionRequest(request):
     global selectedPredictionMode, predictionModes, showPredictions
 
@@ -231,6 +255,7 @@ def handlePredictionRequest(request):
         elif selectedPredictionMode == predictionModes[1]:
             showPredictions = True
 
+#allow you to append or remove sectors from the list based on user request
 def handleAddRemoveSectorRequest(request):
     global counterSector, counterSectorArray
 
@@ -244,6 +269,7 @@ def handleAddRemoveSectorRequest(request):
             counterSector = counterSector - 1
             counterSectorArray.pop()
 
+#this function populates the sector related arrays finally after all data manipulation is completed
 def handleListingRequest(request, imp):
     global selectedSectors, sectors, selectedImportantGraph, selected_data
 
@@ -267,21 +293,24 @@ def handleListingRequest(request, imp):
 def home(request, copy=None):
     global timeFrame_column_names, sectors, a
 
+    #on page reload, clean up selections
     if (not request.is_ajax()):
         reset()
 
+    #this order is important
     handleDataSourceGraphRequest(request)
     handleCustomGraphRequest(request)
     saveImportantGraphRequest(request)
     handlePredictionRequest(request)
     handleAddRemoveSectorRequest(request)
     
-    timeFrame_column_names = a.columns[a.columns.str.startswith('20', na=False)]
+    timeFrame_column_names = a.columns[a.columns.str.startswith('20', na=False)] #retrieve column names
     sectors =  a[a.columns[1]]
     
     handleImportantGraphRequest(request)
     fillDefinitions()
 
+    #returns parameters required for the selected chart type
     def getParams(chartType):
         if (chartType=='Line Plot' or chartType=='Scatter Plot' or chartType=='Stacked Bar Chart' or chartType == 'Area Graph' or chartType == 'Density Contour'):
             params = {'x':'years', 'y':'value','color':'variable'}
@@ -293,13 +322,17 @@ def home(request, copy=None):
             params = {'x':'years', 'y':'value','color':'variable', 'barmode':'group'} 
         return params
 
+    #Allows you to forecast using an ARIMA model
+    #All accuracy tests have been implemented in a separate module
     def makePredictions(sectorsData): 
         #filtering data
         dates = sectorsData['years']
-        futureStepsN = int(request.GET.get('predictionTime'))
+        futureStepsN = int(request.GET.get('predictionTime')) #decide how many timeframes further the prediction should be
         forecastDates = []
         lastDate = dates[-1]
 
+        #determines the seasonality parameter depending on timeframe difference in each specific data sheet
+        #determines the period of difference to determine how much further is each futurestep (3 months for quarterly data, 1 year for yearly data etc)
         seasonality_m=4
         periodDifference=91
         if(selectedDataName == dataNames[0]):
@@ -312,10 +345,13 @@ def home(request, copy=None):
             periodDifference = 365
             seasonality_m=1
 
+        #Determine dates for each future timeframe based on the difference of days between each timeframe in the specific datasheet selected
         for i in range(futureStepsN):
             lastDate = lastDate + datetime.timedelta(days=periodDifference)
             forecastDates.append(lastDate)
         
+        #a series of data manipulation to fit our values to the used model
+
         forecastDates = pd.to_datetime(forecastDates)
         sectorsData['years'] = sectorsData['years'].append(forecastDates)
         
@@ -334,6 +370,8 @@ def home(request, copy=None):
     
             arima = pm.auto_arima(train, seasonal=True, m=seasonality_m, error_action='ignore', trace=True,
                                 suppress_warnings=True, maxiter=10)
+            #keep the maxiter to a small number because the prediction happens in the realtime. For future expansion of
+            #this project, the user can be allowed to select maxiter from UI based on the accuracy of prediction they want to attain
             
             forecastValues = arima.predict(futureStepsN)
             
@@ -343,10 +381,12 @@ def home(request, copy=None):
 
         return sectorsData
 
+    #provides plotly all the required parameters in a very clean fashion using dictionaries 
     def drawChart(chartType):
-        x = pd.to_datetime(timeFrame_column_names)
+        x = pd.to_datetime(timeFrame_column_names) #for x axis
         data = {'years': x}
 
+        #set of values for each sector for each time frame
         for i in counterSectorArray:
             sectorName = 'Sector ' + str(i)
             y = selected_data[i-1].iloc[0]
@@ -356,7 +396,7 @@ def home(request, copy=None):
         if (showPredictions):
             data = makePredictions(data)
             
-
+        #converting into a plotly compatible format annd retrieving parameters from our other functions
         df= (pd.DataFrame.from_dict(data,orient='index').transpose()).melt(id_vars="years")
 
         params = getParams(chartType)        
@@ -380,6 +420,7 @@ def home(request, copy=None):
     
 
     context = {
+        #returning all arrays along with certain 'specific' array entries and keys for easy access
         'plot': getSelectedPlot,
         'sectors': sectors,
 
@@ -407,6 +448,7 @@ def home(request, copy=None):
         'importantGraphDescription': importantGraphDescription
     }
     if request.is_ajax():
+        #return any required data using ajax to allowed $.get response in frontend after a request is made
         context['sectors'] = sectors.tolist()
         context['plotTypes'] = list(plotDictionary.keys())
         context['importantGraphs'] = list(importantGraphs.keys())

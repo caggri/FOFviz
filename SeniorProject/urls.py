@@ -22,16 +22,21 @@ app_name = "SeniorProject"
 
 
 urlpatterns = [
+    #necessary url patterns to access our web pages
     path('', include('main.urls')),
     path('admin/', admin.site.urls),
+    #this is for the login pages - the account module
     path('accounts/', include('accounts.urls', "accounts")), # new
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/logout', include('django.contrib.auth.urls'), name='logout'),
     # path('accounts/password', include('accounts.urls'), name='password'),
     # path('accounts/password', include('accounts.urls'), name='password'),
     #path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    #this is for our tables menu
     path('tables/', include( 'tables.urls')),
+    #this is for our charts menu
     path('home/', include( 'home.urls')),
+    #necessary dash include
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
     path('upload/', include('upload.urls'))
 ]

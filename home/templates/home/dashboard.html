@@ -36,6 +36,8 @@
         
       });
 
+    //reloading tooltips. These sometimes happen in different functions to say in line with the order of requests
+
     function reloadDataTooltip(selectedDataDefinition){
         $('#tooltipDataName1').attr('data-original-title', selectedDataDefinition);
     }
@@ -53,6 +55,7 @@
             $('#tooltip'+i).attr('data-original-title', 'None')
     }
 
+    //to clean sector UI components before repopulating
     function flushSectors(sectors){
         //adding new sectors
         for(let i=1;i<=4;i++){
@@ -72,6 +75,7 @@
         }
     }
 
+    //to clean important graph UI components before repopulating
     function flushImportantGraphs(importantGraphs){
         $.each(importantGraphs, function(index) {
             $("<option />", {
@@ -85,6 +89,7 @@
         $('#tooltipImportantGraph').attr('data-original-title', "None");
     }
 
+    //handle visibility based on selected number of sectors - enhance ease of use
     function handleSectorVisibility(counterSectorArray, selectedSectors) {
         
         for(let i=1;i<=4;i++){
@@ -99,6 +104,7 @@
         }
       }
     
+    //instantly append any saved data to dropdowns to avoid sending a database query again
     function appendToDropdown(chartName){
         $('#sectors1').append(`<option value="${chartName}"> ${chartName} </option>`);
         $('#sectors2').append(`<option value="${chartName}"> ${chartName} </option>`);
@@ -112,6 +118,7 @@
         $('#importantGraph').append(`<option value="${chartName}"> ${chartName} </option>`);
     }
 
+    //clone and map any changes happening in the default tab sectors to the custom graph sectors
     function flushCustomSectorsAndClone(){
         $('#sectors1custom').empty()
         $('#sectors2custom').empty()
@@ -119,16 +126,19 @@
         $('#sectors1 option').clone().appendTo('#sectors2custom');
     }
 
+    //using ajax to retrieve any changes in filters and reload our plot
     $( "#plotType, .sectorDropdowns" ).change(function() {
         
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')         
         
         $.get('', $( "#select_filter_form" ).serialize(), function( data ) {
+            // update plots and and tooltips
             $('#plot').html(data.plot)
             reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
         }, "json");
       });
 
+    //retrieve new plot with forecasted values
     $("#makePredictions").change(function() {
         
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
@@ -140,6 +150,7 @@
 
     $('[data-toggle="tooltip"]').tooltip()
       
+    //handle add sector request
     $('input[value="+"]').on('click', function(){
 
         event.preventDefault();
@@ -157,6 +168,7 @@
     
     })
 
+    //handle remove sector request
     $('input[value="-"]').on('click', function(){
         event.preventDefault();
 
@@ -173,8 +185,10 @@
         
     })
 
+    //front-end updates for saving an important graph
     $('#saveImportant').on('click', function(){
         $(this).prop("disabled", true);
+        //show a visually appealing saving animation
         $("#saveImportantText").text("Saving...")
         $("#saveImportantSpinner").addClass("spinner-border spinner-border-sm")
 
@@ -186,6 +200,7 @@
             $('#saveImportant').prop("disabled", false);
             $("#saveImportantSpinner").removeClass("spinner-border spinner-border-sm")
             $("#saveImportantText").text("Save")
+            //Clear the input boxes when saved
             $("#inputImportantName").val("")
             $("#inputImportantDescription").val("")
             
@@ -194,6 +209,7 @@
     }, "json");
     })
       
+    //front-end updates for saving a custom graph
     $('#saveCustom').on('click', function(){
         $(this).prop("disabled", true);
         $("#saveCustomText").text("Saving...")
@@ -206,6 +222,7 @@
             appendToDropdown($("#inputEntryName").val())
             $('#saveCustom').prop("disabled", false);
             $("#saveCustomSpinner").removeClass("spinner-border spinner-border-sm")
+            //Clear the input boxes when saved
             $("#saveCustomText").text("Save")
             $("#inputEntryName").val("")
             
@@ -213,19 +230,22 @@
             
     }, "json");
     })
-
+    
+    //changes made when important graph dropdown changed
     $('#importantGraph').change(function(){
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
         
         $.get('', $( "#select_filter_form" ).serializeArray(), function( data ) {
             $('#plot').html(data.plot)
             //flushSectors()
+            //instantly update related UI elements
             handleSectorVisibility(data.counterSectorArray, data.selectedSectors)
             reloadTooltips(data.selectedSectorsDefinitions, data.counterSectorArray)
             reloadImportantGraphTooltip(data.importantGraphDescription)
         }, "json");
     })
 
+    //AJAX request made and updates to the UI when the data sheet is changed 
     $('#dataName1').change(function(){
         $("#plot").html('<div class="d-flex justify-content-center" style="padding-top:285px;padding-bottom:285px;"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>')
         $("#importantGraph").find('option').not(':first').remove();
@@ -247,6 +267,7 @@
 </script>
 
 <form id="select_filter_form" method="GET" action="." >
+    <!-- Important graph selection components at the top left - START -->
     <div class="form-group col-md-3 float-left">
         <label for="importantGraph">Important Graphs</label>
         <svg id="tooltipImportantGraph" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" title="" data-toggle="tooltip" data-placement="bottom">
@@ -260,17 +281,19 @@
             {% endfor %}
         </select>
     </div>
+    <!-- Important graph components - END -->
 
     <div class="form-group shadow-sm col-md-4 float-right" style="margin-top:90px">
-        <!-- tab list -->
+        <!-- tabbing list navbar - START -->
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-default-tab" data-toggle="tab" href="#nav-default" role="tab" aria-controls="nav-default" aria-selected="true">Default</a>
             <a class="nav-item nav-link" id="nav-custom-tab" data-toggle="tab" href="#nav-custom" role="tab" aria-controls="nav-custom" aria-selected="false">Add Customized Graph</a>
             </div>
         </nav>
+        <!-- tabbing list navbar - END -->
         <br/>
-        <!-- default tab -->
+        <!-- default tab - START -->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-default" role="tabpanel" aria-labelledby="nav-default-tab">
                 <label for="dataName1">Data </label>
@@ -293,6 +316,7 @@
                 </select>
                 <br/>
                 <br/>
+                <!-- SECTORS DROPDOWNS - START -->
                 <label for="sectors1">Sector 1</label>
                 <svg id="tooltip1" class="bi bi-question-circle" width="1.0em" height="1.0em" viewBox="0 0 16 16" fill="rgb(50, 50, 150)" xmlns="http://www.w3.org/2000/svg" title= "" data-toggle="tooltip" data-placement="bottom">
                     <path fill-rule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z" clip-rule="evenodd"/>
@@ -353,7 +377,9 @@
                     </select>
                 </div>
                 <br/>
+                <!-- SECTORS DROPDOWNS - END -->
                 
+                <!-- ADD/REMOVE SECTORS OPTIONS - START -->
                 <div class="row">
                     <div class="form-group col-md-9 ">
                         <input type="submit"
@@ -369,13 +395,16 @@
                                 ><span class="ml-2"><label>Add / Remove Sector</label></span>
                     </div>
                 </div>
+                <!-- ADD/REMOVE SECTORS OPTIONS - END -->
                 <div>
+                    <!-- This dropdown allows you to select the futuresteps upto 4 time periods-->
                     <select id="predictionTime" class="form-control custom-select col-md-2 d-inline float-right" name="predictionTime" width="100%">
                         <option selected>1</option>
                         <option>2</option>
                         <option>3</option>
                         <option>4</option>
                     </select>
+                    <!-- Enable or Disable Forcasting -->
                     <div class="form-group col-md-7 float-right">
                         <select id="makePredictions" class="form-control custom-select" name="makePredictions" width="100%">
                             <option selected>Disable Forecast</option>
@@ -392,7 +421,7 @@
                     data-toggle="modal"
                     style="margin-bottom: 20px">Save as Important</button>
 
-
+                <!-- Modal for saving important graphs - START -->
                 <div class="modal" id="saveImportantModal" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -420,8 +449,10 @@
                         </div>
                     </div>
                 </div>
+                <!-- Modal for saving important graphs - END -->
             </div>
-            <!-- Custom Graph Tab -->
+            <!-- default tab - END -->
+            <!-- Custom Graph Tab -START -->
             <div class="tab-pane fade" id="nav-custom" role="tabpanel" aria-labelledby="nav-custom-tab">
                 <label for="sectors1custom" class="mx-auto">Sector 1</label>
                 <div>
@@ -434,6 +465,7 @@
                 </div>
                 <br/>
                 <div>
+                    <!-- Operator choices for calculating custom graph values -->
                     <select id="operatorCustom" class="form-control custom-select mr-3 col-md-2 mx-auto" style="text-align-last: center" name="operatorCustom" width="100%">
                         <option value="+">+</option>
                         <option value="-">-</option>
@@ -460,7 +492,7 @@
                     data-toggle="modal"
                     style="margin-bottom: 20px">Create Custom Entry</button>
 
-
+                <!-- Custom Modal - START -->
                 <div class="modal" id="customNameModal" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -486,7 +518,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- Custom Modal - END -->
             </div>
+            <!-- Custom Graph Tab -END -->
         </div>
     </div>
     <div id="plot" class="p-3 mb-5 bg-transparent text-white rounded col-sm-8 float-left">
