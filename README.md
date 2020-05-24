@@ -1,9 +1,9 @@
-![FOFviz Poster](POSTER/Poster.jpg)
-
 # FOFviz: Flow of Funds Analysis System
 FOFviz is a Web-Based User-Friendly Solution for Macroeconomic Data Visualization, Analysis and Financial Forecasting.
 
 Project Advisor: Asst. Prof. Seyid Amjad Ali
+
+![FOFviz Poster](POSTER/Poster.jpg)
 
 # Running the project
 
