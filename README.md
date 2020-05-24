@@ -3,7 +3,7 @@ FOFViz is an senior year project. FOFviz is a web-based user friendly solution
 for macroeconomic data visualization and
 financial forecasting
 
-Instructor: Asst. Prof. Seyid Amjad Ali
+Project Advisor: Asst. Prof. Seyid Amjad Ali
 
 # Running the project
 
