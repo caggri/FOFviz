@@ -59,7 +59,7 @@ Instructor: Asst. Prof. Seyid Amjad Ali
     
     * Virtual environment is started if you see name of virtual environment's name inside parentheses 
     
-* All project dependencies listed in requirements.txt file in back-end folder.
+* All project dependencies listed in reqs.txt file.
     * to install dependencies, type
         ```
         pip install -r reqs.txt
