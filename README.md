@@ -1,7 +1,7 @@
+![FOFviz Poster](POSTER/Poster.jpg)
+
 # FOFviz: Flow of Funds Analysis System
-FOFViz is an senior year project. FOFviz is a web-based user friendly solution
-for macroeconomic data visualization and
-financial forecasting
+FOFviz is a Web-Based User-Friendly Solution for Macroeconomic Data Visualization, Analysis and Financial Forecasting.
 
 Project Advisor: Asst. Prof. Seyid Amjad Ali
 
@@ -85,4 +85,4 @@ python manage.py runserver
 deactivate
 ```
 
-![FOFviz Poster](POSTER/Poster.jpg)
+
