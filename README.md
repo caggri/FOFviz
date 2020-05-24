@@ -84,3 +84,5 @@ python manage.py runserver
 ```
 deactivate
 ```
+
+![FOFviz Poster](POSTER/Poster.jpg)
